@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes -->
+
+	<changeSet id="billing_billable_service-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_billable_service" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_billable_service table
+		</comment>
+		<createTable tableName="billing_billable_service">
+			<column name="service_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="concept_id" type="int" />
+			<column name="name" type="varchar(255)" />
+			<column name="short_name" type="varchar(255)" />
+			<column name="price" type="decimal" />
+			<column name="disable" type="boolean" />
+			<column name="category" type="int" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="billing_billable_service_concept_id"
+			baseTableName="billing_billable_service" baseColumnNames="concept_id"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_billable_service_category"
+			baseTableName="billing_billable_service" baseColumnNames="category"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+	</changeSet>
+	
+	<changeSet id="opd-test-order-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="opd_test_order" />
+			</not>
+		</preConditions>
+		<comment>
+			Create opd_test_order table
+		</comment>
+		<createTable tableName="opd_test_order">
+			<column name="opd_order_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="patient_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="encounter_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="billable_service_id" type="int" />
+			<column name="concept_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="type_concept" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="value_coded" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_by" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_on" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="schedule_date" type="datetime" />
+			<column name="billing_status" type="int" />
+			<column name="cancel_status" type="int" />
+			<column name="indoor_status" type="int" />
+			<column name="referral_ward_name" type="varchar(100)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="opd_test_order_patient_id"
+			baseTableName="opd_test_order" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+		<addForeignKeyConstraint
+			constraintName="opd_test_order_encounter_id"
+			baseTableName="opd_test_order" baseColumnNames="encounter_id"
+			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+		<addForeignKeyConstraint
+			constraintName="opd_test_order_billable_service_id"
+			baseTableName="opd_test_order" baseColumnNames="billable_service_id"
+			referencedTableName="billing_billable_service"
+			referencedColumnNames="service_id" />
+		<addForeignKeyConstraint
+			constraintName="opd_test_order_value_coded"
+			baseTableName="opd_test_order" baseColumnNames="value_coded"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="opd_test_order_created_by"
+			baseTableName="opd_test_order" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+</databaseChangeLog>
