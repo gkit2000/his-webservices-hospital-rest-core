@@ -1,0 +1,1 @@
+# his-webservices-hospital-rest-core
