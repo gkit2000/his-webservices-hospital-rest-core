@@ -10,10 +10,26 @@ import java.util.List;
  *
  */
 public class OrderDetails {
+	private String patient;
 	private List<String> procedures;
 	private List<String> investigations;
 
 //private List<String> drugs;
+
+	/**
+	 * @return the patient
+	 */
+	public String getPatient() {
+		return patient;
+	}
+
+	/**
+	 * @param patient the patient to set
+	 */
+	public void setPatient(String patient) {
+		this.patient = patient;
+	}
+
 	/**
 	 * @return the procedures
 	 */

@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.openmrs.User;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.OrderDetails;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
@@ -40,6 +44,38 @@ public class TestOrderController extends BaseRestController {
 		//ServletOutputStream out = response.getOutputStream();
 		
 		//new ObjectMapper().writeValue(out, patientVisitDetails);
+		
+		User user = Context.getAuthenticatedUser();
+		PatientService ps = Context.getPatientService();
+		
+		/*
+		orderDetails.getProcedures().stream().forEach(ord -> {
+			OpdTestOrder opdTestOrder = new OpdTestOrder();
+			opdTestOrder.setPatient(patient);
+			opdTestOrder.setEncounter(encounter);
+			opdTestOrder.setConcept(conpro);
+			opdTestOrder.setTypeConcept(DepartmentConcept.TYPES[1]);
+			opdTestOrder.setValueCoded(conceptService.getConcept(pId));
+			opdTestOrder.setCreator(user);
+			opdTestOrder.setCreatedOn(date);
+			opdTestOrder.setBillableService(billableService);	
+			opdTestOrder.setScheduleDate(date);
+			patientDashboardService.saveOrUpdateOpdOrder(opdTestOrder);
+		});
+		
+orderDetails.getInvestigations().stream().forEach(inv -> {
+	OpdTestOrder opdTestOrder = new OpdTestOrder();
+	opdTestOrder.setPatient(patient);
+	opdTestOrder.setEncounter(encounter);
+	opdTestOrder.setConcept(conpro);
+	opdTestOrder.setTypeConcept(DepartmentConcept.TYPES[1]);
+	opdTestOrder.setValueCoded(conceptService.getConcept(pId));
+	opdTestOrder.setCreator(user);
+	opdTestOrder.setCreatedOn(date);
+	opdTestOrder.setBillableService(billableService);
+	opdTestOrder.setScheduleDate(date);
+	patientDashboardService.saveOrUpdateOpdOrder(opdTestOrder);
+		});*/
 		  return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 }
