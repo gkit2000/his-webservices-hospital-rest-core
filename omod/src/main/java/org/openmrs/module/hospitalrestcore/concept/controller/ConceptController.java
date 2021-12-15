@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/conceptDetails")
 public class ConceptController {
-	@RequestMapping(value = "/patient", method = RequestMethod.GET)
+	@RequestMapping(value = "/concept", method = RequestMethod.GET)
 	public void getConceptDetails(HttpServletResponse response, HttpServletRequest request,
 			@RequestParam(value = "concept") String conceptUuid)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -40,8 +40,6 @@ public class ConceptController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 		Concept concept = Context.getService(ConceptService.class).getConceptByUuid(conceptUuid);
-		//Locale lastLocale = (Locale) request.getSession().getAttribute("lastLocale");
-		//Locale currentLocale = Context.getLocale().set
 		if(concept!=null) {
 			conceptDetails.setShortName(concept.getShortNameInLocale(Locale.ENGLISH).getName());
 		}
