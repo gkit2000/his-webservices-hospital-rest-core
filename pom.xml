@@ -50,6 +50,7 @@
 	<properties>
 		<openMRSVersion>1.11.6</openMRSVersion>
 		<webservicesRestVersion>2.28.0</webservicesRestVersion>
+		<appointmentSchedulingVersion>1.14.0-SNAPSHOT</appointmentSchedulingVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
