@@ -11,7 +11,7 @@
 			unsaved-value="0">
 				<generator class="native" />
 		</id>
-		<many-to-one name="conceptId" column="concept_id" class="org.openmrs.Concept"/>
+		<many-to-one name="concept" column="concept_id" class="org.openmrs.Concept"/>
 		<property name="name" column="name" />
 		<property name="shortName" column="short_name" />
 		<property name="price" column="price"  />

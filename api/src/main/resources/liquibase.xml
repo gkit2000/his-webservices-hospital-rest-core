@@ -93,6 +93,10 @@
 			baseTableName="opd_test_order" baseColumnNames="billable_service_id"
 			referencedTableName="billing_billable_service"
 			referencedColumnNames="service_id" />
+			<addForeignKeyConstraint
+			constraintName="opd_test_order_concept_id"
+			baseTableName="opd_test_order" baseColumnNames="concept_id"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
 		<addForeignKeyConstraint
 			constraintName="opd_test_order_value_coded"
 			baseTableName="opd_test_order" baseColumnNames="value_coded"

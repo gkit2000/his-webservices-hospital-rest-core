@@ -18,96 +18,58 @@
  *
  **/
 
+
+
 package org.openmrs.module.hospitalrestcore.billing;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.Date;
 
 import org.openmrs.Concept;
-import org.openmrs.module.hospitalrestcore.Money;
 
 /**
+ * @author Ghanshyam
  *
  */
-
-public class BillableService implements Serializable {
-
-	/**
-	 * 
-	 */
+public class DepartmentConcept implements Serializable {
+	public static final int[] TYPES = {1,2,3,4}; // 1= Diagnosis, 2=Procedure, 3=Investigation,4=Symptom
 	private static final long serialVersionUID = 1L;
-
-	private Integer serviceId;
-
-	private String name;
-
-	private String shortName;
-
-	private BigDecimal price;
-
+	private Integer id;
+	private Integer typeConcept;
+	//private Department department;
 	private Concept concept;
-
-	private Boolean disable = false;
-
-	private Concept category;
-
-	public Integer getServiceId() {
-		return serviceId;
+	private Date createdOn;
+	private String createdBy;
+	public Integer getId() {
+		return id;
 	}
-
-	public void setServiceId(Integer serviceId) {
-		this.serviceId = serviceId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
-
-	public String getName() {
-		return name;
+	
+	public Integer getTypeConcept() {
+		return typeConcept;
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setTypeConcept(Integer typeConcept) {
+		this.typeConcept = typeConcept;
 	}
-
-	public String getShortName() {
-		return shortName;
-	}
-
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public String getTextPrice() {
-		return new Money(this.price).toString();
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
 	public Concept getConcept() {
 		return concept;
 	}
-
 	public void setConcept(Concept concept) {
 		this.concept = concept;
 	}
-
-	public Boolean getDisable() {
-		return disable;
+	public Date getCreatedOn() {
+		return createdOn;
 	}
-
-	public void setDisable(Boolean disable) {
-		this.disable = disable;
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
 	}
-
-	public Concept getCategory() {
-		return category;
+	public String getCreatedBy() {
+		return createdBy;
 	}
-
-	public void setCategory(Concept category) {
-		this.category = category;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
+	
 }

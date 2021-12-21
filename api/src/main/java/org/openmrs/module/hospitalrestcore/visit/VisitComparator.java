@@ -20,9 +20,16 @@ import org.openmrs.Visit;
  * @author Ghanshyam
  */
 public class VisitComparator implements Comparator<Visit> {
-	
+
 	@Override
-	public int compare(Visit a, Visit b) {
-		return a.getVisitId() < b.getVisitId() ? -1 : a.getVisitId() == b.getVisitId() ? 0 : 1;
+	public int compare(Visit v1, Visit v2) {
+		// return v1.getVisitId() < v2.getVisitId() ? -1 : v1.getVisitId() == v2.getVisitId() ? 0 : 1;
+		if (v1.getVisitId() == v2.getVisitId()) {
+			return 0;
+		} else if (v1.getVisitId() < v2.getVisitId()) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 }
