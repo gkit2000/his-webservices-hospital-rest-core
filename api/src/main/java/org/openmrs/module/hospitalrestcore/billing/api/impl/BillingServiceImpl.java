@@ -13,11 +13,22 @@
  */
 package org.openmrs.module.hospitalrestcore.billing.api.impl;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.Patient;
+import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.hospitalrestcore.billing.BillableService;
+import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
-import org.openmrs.module.hospitalrestcore.billing.api.db.BillingDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * It is a default implementation of {@link BillingService}.
@@ -27,17 +38,73 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 
 	protected final Log log = LogFactory.getLog(this.getClass());
 
-	public BillingServiceImpl() {
+	private BillableServiceDAO billableServiceDAO;
+
+	private OpdTestOrderDAO opdTestOrderDAO;
+
+	/**
+	 * @return the billableServiceDAO
+	 */
+	public BillableServiceDAO getBillableServiceDAO() {
+		return billableServiceDAO;
 	}
 
-	protected BillingDAO billingDAO;
-
-	public BillingDAO getBillingDAO() {
-		return billingDAO;
+	/**
+	 * @param billableServiceDAO the billableServiceDAO to set
+	 */
+	public void setBillableServiceDAO(BillableServiceDAO billableServiceDAO) {
+		this.billableServiceDAO = billableServiceDAO;
 	}
 
-	public void setBillingDAO(BillingDAO billingDAO) {
-		this.billingDAO = billingDAO;
+	/**
+	 * @return the opdTestOrderDAO
+	 */
+	public OpdTestOrderDAO getOpdTestOrderDAO() {
+		return opdTestOrderDAO;
+	}
+
+	/**
+	 * @param opdTestOrderDAO the opdTestOrderDAO to set
+	 */
+	public void setOpdTestOrderDAO(OpdTestOrderDAO opdTestOrderDAO) {
+		this.opdTestOrderDAO = opdTestOrderDAO;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<BillableService> getAllServices() throws APIException {
+		return getBillableServiceDAO().getAllServices();
+	}
+
+	@Override
+	@Transactional
+	public BillableService saveBillableService(BillableService billableService) throws APIException {
+		// ValidateUtil.validate(appointmentType);
+		return (BillableService) getBillableServiceDAO().saveOrUpdate(billableService);
+	}
+
+	@Override
+	@Transactional
+	public List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException {
+		return (List<BillableService>) getBillableServiceDAO().saveOrUpdate(billableServices);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BillableService getServiceByConcept(Concept concept) throws APIException {
+		return getBillableServiceDAO().getServiceByConcept(concept);
+	}
+
+	@Override
+	@Transactional
+	public OpdTestOrder saveOpdTestOrder(OpdTestOrder opdTestOrder) throws APIException {
+		return (OpdTestOrder) getOpdTestOrderDAO().saveOrUpdate(opdTestOrder);
+	}
+
+	@Override
+	@Transactional
+	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException {
+		return  (List<OpdTestOrder>) getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
 	}
 
 }

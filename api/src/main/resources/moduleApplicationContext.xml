@@ -37,8 +37,15 @@
         </property>
         <property name="target">
             <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.impl.BillingServiceImpl">
-                <property name="billingDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillingDAO">
+                <property name="billableServiceDAO">
+                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillableServiceDAO">
+                        <property name="sessionFactory">
+                            <ref bean="dbSessionFactory" />
+                        </property>
+                    </bean>
+                </property>
+                 <property name="opdTestOrderDAO">
+                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateOpdTestOrderDAO">
                         <property name="sessionFactory">
                             <ref bean="dbSessionFactory" />
                         </property>

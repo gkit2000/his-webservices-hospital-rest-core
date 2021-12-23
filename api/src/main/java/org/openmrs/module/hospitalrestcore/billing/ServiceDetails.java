@@ -5,14 +5,23 @@ package org.openmrs.module.hospitalrestcore.billing;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * @author Ghanshyam
  *
  */
 public class ServiceDetails {
 
+	@NotNull(message = "Please provide billable service concept")
+	@NotBlank(message = "Please provide billable service concept")
 	private String conUuid;
+	
+	@NotNull(message = "Please provide billable service price")
 	private BigDecimal price;
+	
 	private Boolean disable;
 
 	/**

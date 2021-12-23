@@ -13,7 +13,16 @@
  */
 package org.openmrs.module.hospitalrestcore.billing.api;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import org.openmrs.Concept;
+import org.openmrs.Patient;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.hospitalrestcore.billing.BillableService;
+import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -28,4 +37,15 @@ import org.openmrs.api.OpenmrsService;
  */
 public interface BillingService extends OpenmrsService {
 
+	List<BillableService> getAllServices() throws APIException;
+
+	BillableService saveBillableService(BillableService billableService) throws APIException;
+
+	List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException;
+
+	BillableService getServiceByConcept(Concept concept) throws APIException;
+
+	OpdTestOrder saveOpdTestOrder(OpdTestOrder OpdTestOrder) throws APIException;
+
+	List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException;
 }

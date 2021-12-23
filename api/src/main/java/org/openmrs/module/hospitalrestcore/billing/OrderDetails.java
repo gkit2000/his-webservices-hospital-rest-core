@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class OrderDetails {
 	private String patient;
+	private String location;
 	private List<String> procedures;
 	private List<String> investigations;
 
@@ -28,6 +29,20 @@ public class OrderDetails {
 	 */
 	public void setPatient(String patient) {
 		this.patient = patient;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	/**

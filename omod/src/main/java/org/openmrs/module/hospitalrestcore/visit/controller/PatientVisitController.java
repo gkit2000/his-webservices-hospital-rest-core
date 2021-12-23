@@ -27,6 +27,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.visit.PatientVisitDetails;
+import org.openmrs.module.hospitalrestcore.visit.VisitComparator;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -52,9 +53,8 @@ public class PatientVisitController extends BaseRestController {
 		Patient patient = Context.getService(PatientService.class).getPatientByUuid(patientUuid);
 		if (patient != null) {
 			List<Visit> visits = Context.getService(VisitService.class).getVisitsByPatient(patient);
-			// Collections.sort(visits,new VisitComparator());
 			if (visits != null && visits.size() > 0) {
-				Collections.sort(visits, Collections.reverseOrder());
+				Collections.sort(visits, new VisitComparator());
 				patientVisitDetails.setVisitId(visits.get(0).getVisitId());
 				patientVisitDetails.setVisitUuid(visits.get(0).getUuid());
 			}
