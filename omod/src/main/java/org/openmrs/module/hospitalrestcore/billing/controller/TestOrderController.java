@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class TestOrderController extends BaseRestController {
 
 	@RequestMapping(value = "/patient", method = RequestMethod.POST)
-	public ResponseEntity<Void> getLastVisit(HttpServletResponse response, HttpServletRequest request,
+	public ResponseEntity<Void> generateOrders(HttpServletResponse response, HttpServletRequest request,
 			@RequestBody OrderDetails orderDetails)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 

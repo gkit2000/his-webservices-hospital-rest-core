@@ -14,11 +14,13 @@
 package org.openmrs.module.hospitalrestcore.billing.api.impl;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
+import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
@@ -80,7 +82,7 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 		// ValidateUtil.validate(appointmentType);
 		return (BillableService) getBillableServiceDAO().saveOrUpdate(billableService);
 	}
-	
+
 	@Override
 	@Transactional
 	public List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException {
@@ -97,6 +99,12 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	@Transactional
 	public OpdTestOrder saveOpdTestOrder(OpdTestOrder opdTestOrder) throws APIException {
 		return (OpdTestOrder) getOpdTestOrderDAO().saveOrUpdate(opdTestOrder);
+	}
+
+	@Override
+	@Transactional
+	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException {
+		return  (List<OpdTestOrder>) getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
 	}
 
 }

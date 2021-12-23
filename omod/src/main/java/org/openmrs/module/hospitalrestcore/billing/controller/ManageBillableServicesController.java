@@ -4,12 +4,14 @@
 package org.openmrs.module.hospitalrestcore.billing.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
@@ -28,6 +31,7 @@ import org.openmrs.module.hospitalrestcore.concept.ConceptNode;
 import org.openmrs.module.hospitalrestcore.concept.TestTree;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,7 +45,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/services")
-public class ManageBillableServicesController {
+public class ManageBillableServicesController extends BaseRestController {
+
+	@RequestMapping(value = "/billable", method = RequestMethod.GET)
+	public void getServicesPrice(HttpServletResponse response, HttpServletRequest request)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+		
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+		
+		BillingService billingService = Context.getService(BillingService.class);
+		List<BillableService> services = billingService.getAllServices();
+
+		Map<String, BigDecimal> servicesPriceMap = new LinkedHashMap<String, BigDecimal>();
+		for (BillableService ser : services) {
+			servicesPriceMap.put(ser.getConcept().getUuid(), ser.getPrice());
+		}
+		
+		new ObjectMapper().writeValue(out, servicesPriceMap);
+	}
 
 	@RequestMapping(value = "/billable", method = RequestMethod.POST)
 	public ResponseEntity<Void> manageBillableServices(HttpServletResponse response, HttpServletRequest request,
@@ -55,7 +77,7 @@ public class ManageBillableServicesController {
 		BillingService billingService = Context.getService(BillingService.class);
 		List<BillableService> services = billingService.getAllServices();
 
-		Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
+		Map<Integer, BillableService> mapServices = new LinkedHashMap<Integer, BillableService>();
 
 		for (BillableService ser : services) {
 			mapServices.put(ser.getConcept().getId(), ser);
