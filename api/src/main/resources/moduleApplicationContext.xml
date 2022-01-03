@@ -51,6 +51,20 @@
                         </property>
                     </bean>
                 </property>
+                <property name="billingReceiptDAO">
+                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillingReceiptDAO">
+                        <property name="sessionFactory">
+                            <ref bean="dbSessionFactory" />
+                        </property>
+                    </bean>
+                </property>
+                <property name="patientServiceBillDAO">
+                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernatePatientServiceBillDAO">
+                        <property name="sessionFactory">
+                            <ref bean="dbSessionFactory" />
+                        </property>
+                    </bean>
+                </property>
             </bean>
         </property>
         <property name="preInterceptors">

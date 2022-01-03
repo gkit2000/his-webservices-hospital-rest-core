@@ -100,7 +100,7 @@ public class ManageBillableServicesController extends BaseRestController {
 					if (serviceDetails.getPrice() != null) {
 						service.setPrice(serviceDetails.getPrice());
 					}
-					service.setDisable(serviceDetails.getDisable());
+					service.setEnable(serviceDetails.getEnable());
 					if (rootServiceconcept != null) {
 						TestTree tree = new TestTree(rootServiceconcept);
 						ConceptNode node = tree.findNode(serviceConcept);
@@ -122,7 +122,7 @@ public class ManageBillableServicesController extends BaseRestController {
 				if (serviceDetails.getPrice() != null) {
 					service.setPrice(serviceDetails.getPrice());
 				}
-				service.setDisable(serviceDetails.getDisable());
+				service.setEnable(serviceDetails.getEnable());
 				if (rootServiceconcept != null) {
 					TestTree tree = new TestTree(rootServiceconcept);
 					ConceptNode node = tree.findNode(serviceConcept);

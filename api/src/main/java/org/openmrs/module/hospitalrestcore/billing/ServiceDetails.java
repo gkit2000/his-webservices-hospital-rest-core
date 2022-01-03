@@ -22,7 +22,7 @@ public class ServiceDetails {
 	@NotNull(message = "Please provide billable service price")
 	private BigDecimal price;
 	
-	private Boolean disable;
+	private Boolean enable;
 
 	/**
 	 * @return the conUuid
@@ -53,17 +53,17 @@ public class ServiceDetails {
 	}
 
 	/**
-	 * @return the disable
+	 * @return the enable
 	 */
-	public Boolean getDisable() {
-		return disable;
+	public Boolean getEnable() {
+		return enable;
 	}
 
 	/**
-	 * @param disable the disable to set
+	 * @param enable the enable to set
 	 */
-	public void setDisable(Boolean disable) {
-		this.disable = disable;
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
 	}
 
 }

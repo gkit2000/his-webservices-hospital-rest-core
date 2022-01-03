@@ -112,7 +112,7 @@ public class TestOrderController extends BaseRestController {
 					opdTestOrder.setCreatedOn(date);
 					opdTestOrder.setBillableService(billableService);
 					opdTestOrder.setScheduleDate(date);
-					billingService.saveOpdTestOrder(opdTestOrder);
+					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
 				}
 			}
 
@@ -125,12 +125,12 @@ public class TestOrderController extends BaseRestController {
 					opdTestOrder.setEncounter(encounter);
 					opdTestOrder.setConcept(coninvt);
 					opdTestOrder.setTypeConcept(DepartmentConcept.TYPES[2]);
-					opdTestOrder.setValueCoded(coninvt);
+					opdTestOrder.setValueCoded(concept);
 					opdTestOrder.setCreator(user);
 					opdTestOrder.setCreatedOn(date);
 					opdTestOrder.setBillableService(billableService);
 					opdTestOrder.setScheduleDate(date);
-					billingService.saveOpdTestOrder(opdTestOrder);
+					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
 				}
 			}
 		}

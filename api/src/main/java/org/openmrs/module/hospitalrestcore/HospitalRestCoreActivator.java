@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.hospitalrestcore;
 
+import java.math.RoundingMode;
+import java.util.Currency;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.ModuleActivator;
@@ -51,6 +54,7 @@ public class HospitalRestCoreActivator implements ModuleActivator {
 	 */
 	public void started() {
 		log.info("Hospital Rest Core Module started");
+		Money.init(Currency.getInstance("INR"), RoundingMode.HALF_EVEN);
 	}
 
 	/**

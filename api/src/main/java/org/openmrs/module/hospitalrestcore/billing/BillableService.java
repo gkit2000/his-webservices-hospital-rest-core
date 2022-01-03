@@ -47,7 +47,7 @@ public class BillableService implements Serializable {
 
 	private Concept concept;
 
-	private Boolean disable = false;
+	private Boolean enable = true;
 
 	private Concept category;
 
@@ -95,12 +95,16 @@ public class BillableService implements Serializable {
 		this.concept = concept;
 	}
 
-	public Boolean getDisable() {
-		return disable;
+	public Boolean getEnable() {
+		return enable;
 	}
 
-	public void setDisable(Boolean disable) {
-		this.disable = disable;
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public Concept getCategory() {

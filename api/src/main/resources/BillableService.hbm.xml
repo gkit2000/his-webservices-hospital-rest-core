@@ -15,7 +15,7 @@
 		<property name="name" column="name" />
 		<property name="shortName" column="short_name" />
 		<property name="price" column="price"  />
-		<property name="disable" column="disable" />
+		<property name="enable" column="enable" />
 		<many-to-one name="category" column="category" class="org.openmrs.Concept"/>
 	</class>
 </hibernate-mapping>

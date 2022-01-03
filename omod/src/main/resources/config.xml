@@ -54,6 +54,9 @@
 	<mappingFiles>
 		OpdTestOrder.hbm.xml
 		BillableService.hbm.xml
+		BillingReceipt.hbm.xml
+		PatientServiceBill.hbm.xml
+		PatientServiceBillItem.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
