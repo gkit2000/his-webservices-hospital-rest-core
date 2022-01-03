@@ -24,10 +24,14 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
+import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
+import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -41,6 +45,10 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	private BillableServiceDAO billableServiceDAO;
 
 	private OpdTestOrderDAO opdTestOrderDAO;
+
+	private BillingReceiptDAO billingReceiptDAO;
+
+	private PatientServiceBillDAO patientServiceBillDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -70,6 +78,34 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 		this.opdTestOrderDAO = opdTestOrderDAO;
 	}
 
+	/**
+	 * @return the billingReceiptDAO
+	 */
+	public BillingReceiptDAO getBillingReceiptDAO() {
+		return billingReceiptDAO;
+	}
+
+	/**
+	 * @param billingReceiptDAO the billingReceiptDAO to set
+	 */
+	public void setBillingReceiptDAO(BillingReceiptDAO billingReceiptDAO) {
+		this.billingReceiptDAO = billingReceiptDAO;
+	}
+
+	/**
+	 * @return the patientServiceBillDAO
+	 */
+	public PatientServiceBillDAO getPatientServiceBillDAO() {
+		return patientServiceBillDAO;
+	}
+
+	/**
+	 * @param patientServiceBillDAO the patientServiceBillDAO to set
+	 */
+	public void setPatientServiceBillDAO(PatientServiceBillDAO patientServiceBillDAO) {
+		this.patientServiceBillDAO = patientServiceBillDAO;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<BillableService> getAllServices() throws APIException {
@@ -97,14 +133,33 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 
 	@Override
 	@Transactional
-	public OpdTestOrder saveOpdTestOrder(OpdTestOrder opdTestOrder) throws APIException {
+	public OpdTestOrder saveOrUpdateOpdTestOrder(OpdTestOrder opdTestOrder) throws APIException {
 		return (OpdTestOrder) getOpdTestOrderDAO().saveOrUpdate(opdTestOrder);
 	}
 
 	@Override
 	@Transactional
+	public OpdTestOrder getOpdTestOrderById(Integer opdOrderId) throws APIException {
+		return (OpdTestOrder) getOpdTestOrderDAO().getOpdTestOrderById(opdOrderId);
+	}
+
+	@Override
+	@Transactional
 	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException {
-		return  (List<OpdTestOrder>) getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
+		return (List<OpdTestOrder>) getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
+	}
+
+	@Override
+	@Transactional
+	public BillingReceipt createReceipt(BillingReceipt receipt) throws APIException {
+		return (BillingReceipt) getBillingReceiptDAO().saveOrUpdate(receipt);
+	}
+
+	@Override
+	@Transactional
+	public PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill)
+			throws APIException {
+		return (PatientServiceBill) getPatientServiceBillDAO().saveOrUpdate(patientServiceBill);
 	}
 
 }

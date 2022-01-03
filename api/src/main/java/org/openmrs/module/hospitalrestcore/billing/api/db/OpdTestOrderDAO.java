@@ -16,5 +16,8 @@ import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
  *
  */
 public interface OpdTestOrderDAO extends SingleClassDAO {
-	public List<OpdTestOrder>getOpdTestOrder(Patient patient, Date creationDate) throws DAOException;
+
+	public OpdTestOrder getOpdTestOrderById(Integer  opdOrderId) throws DAOException;
+	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws DAOException;
+
 }

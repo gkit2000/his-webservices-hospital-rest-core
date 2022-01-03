@@ -25,7 +25,7 @@
 			<column name="name" type="varchar(255)" />
 			<column name="short_name" type="varchar(255)" />
 			<column name="price" type="decimal" />
-			<column name="disable" type="boolean" />
+			<column name="enable" type="boolean" />
 			<column name="category" type="int" />
 		</createTable>
 		<addForeignKeyConstraint
@@ -37,7 +37,7 @@
 			baseTableName="billing_billable_service" baseColumnNames="category"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 	</changeSet>
-	
+
 	<changeSet id="opd-test-order-table-create"
 		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
@@ -75,9 +75,10 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="schedule_date" type="datetime" />
-			<column name="billing_status" type="int" />
-			<column name="cancel_status" type="int" />
-			<column name="indoor_status" type="int" />
+			<column name="billing_status" type="boolean" />
+			<column name="cancel_status" type="boolean" />
+			<column name="cancel_comment" type="varchar(100)" />
+			<column name="indoor_status" type="boolean" />
 			<column name="referral_ward_name" type="varchar(100)" />
 		</createTable>
 		<addForeignKeyConstraint
@@ -93,7 +94,7 @@
 			baseTableName="opd_test_order" baseColumnNames="billable_service_id"
 			referencedTableName="billing_billable_service"
 			referencedColumnNames="service_id" />
-			<addForeignKeyConstraint
+		<addForeignKeyConstraint
 			constraintName="opd_test_order_concept_id"
 			baseTableName="opd_test_order" baseColumnNames="concept_id"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
@@ -106,4 +107,130 @@
 			baseTableName="opd_test_order" baseColumnNames="created_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
+
+	<changeSet id="billing_receipt-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_receipt" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_receipt table
+		</comment>
+		<createTable tableName="billing_receipt">
+			<column name="billing_receipt_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="paid_date" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="billing_patient_service_bill-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_patient_service_bill" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_patient_service_bill table
+		</comment>
+		<createTable tableName="billing_patient_service_bill">
+			<column name="patient_service_bill_id" type="int"
+				autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" />
+			<column name="creator" type="int" />
+			<column name="amount" type="decimal" />
+			<column name="printed" type="boolean" />
+			<column name="created_date" type="datetime" />
+			<column name="voided" type="boolean" />
+			<column name="voided_by" type="int" />
+			<column name="voided_date" type="datetime" />
+			<column name="bill_type" type="varchar(15)" />
+			<column name="actual_amount" type="decimal" />
+			<column name="patient_category" type="varchar(100)" />
+			<column name="patient_subcategory" type="varchar(100)" />
+			<column name="comment" type="varchar(50)" />
+			<column name="patient_id" type="int" />
+			<column name="receipt_id" type="int" />
+			<column name="waiver_percetage" type="decimal" />
+			<column name="waiver_amount" type="decimal" />
+			<column name="amount_payable" type="decimal" />
+			<column name="amount_given" type="int" />
+			<column name="amount_returned" type="int" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_creator"
+			baseTableName="billing_patient_service_bill"
+			baseColumnNames="creator" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_voided_by"
+			baseTableName="billing_patient_service_bill"
+			baseColumnNames="voided_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_patient_id"
+			baseTableName="billing_patient_service_bill"
+			baseColumnNames="patient_id" referencedTableName="patient"
+			referencedColumnNames="patient_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_receipt_id"
+			baseTableName="billing_patient_service_bill"
+			baseColumnNames="receipt_id" referencedTableName="billing_receipt"
+			referencedColumnNames="billing_receipt_id" />
+	</changeSet>
+
+	<changeSet
+		id="billing_patient_service_bill_item-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="billing_patient_service_bill_item" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_patient_service_bill_item table
+		</comment>
+		<createTable tableName="billing_patient_service_bill_item">
+			<column name="patient_service_bill_item_id" type="int"
+				autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="service_id" type="int" />
+			<column name="patient_service_bill_id" type="int" />
+			<column name="unitPrice" type="decimal" />
+			<column name="amount" type="decimal" />
+			<column name="quantity" type="int" />
+			<column name="name" type="varchar(255)" />
+			<column name="created_date" type="datetime" />
+			<column name="voided" type="boolean" />
+			<column name="voided_date" type="datetime" />
+			<column name="voided_by" type="int" />
+			<column name="order_id" type="int" />
+			<column name="actual_amount" type="decimal" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_item_service_id"
+			baseTableName="billing_patient_service_bill_item" baseColumnNames="service_id"
+			referencedTableName="billing_billable_service" referencedColumnNames="service_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_item_patient_service_bill_id"
+			baseTableName="billing_patient_service_bill_item" baseColumnNames="patient_service_bill_id"
+			referencedTableName="billing_patient_service_bill" referencedColumnNames="patient_service_bill_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_item_order_id"
+			baseTableName="billing_patient_service_bill_item"
+			baseColumnNames="order_id" referencedTableName="orders"
+			referencedColumnNames="order_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_item_voided_by"
+			baseTableName="billing_patient_service_bill_item"
+			baseColumnNames="voided_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
 </databaseChangeLog>

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.module.hospitalrestcore.api.db.hibernate.HibernateSingleClassDAO;
@@ -34,11 +33,23 @@ public class HibernateOpdTestOrderDAO extends HibernateSingleClassDAO implements
 
 		return query.list();
 	}*/
+	
+	@Override
+	@Transactional(readOnly = true)
+	public OpdTestOrder getOpdTestOrderById(Integer  opdOrderId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("opdOrderId", opdOrderId));
+		return (OpdTestOrder) criteria.uniqueResult();
+	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.isNotNull("billableService"));
+		criteria.add(Restrictions.eq("billingStatus", false));
+		criteria.add(Restrictions.eq("cancelStatus", false));
+		criteria.add(Restrictions.eq("indoorStatus", false));
 		if (patient != null) {
 			criteria.add(Restrictions.eq("patient", patient));
 		}

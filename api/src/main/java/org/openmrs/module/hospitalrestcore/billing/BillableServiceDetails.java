@@ -14,6 +14,7 @@ public class BillableServiceDetails {
 private String conUuid;
 private String conName;
 private BigDecimal price;
+private Integer opdOrderId;
 
 /**
  * @return the conUuid
@@ -50,6 +51,18 @@ public BigDecimal getPrice() {
  */
 public void setPrice(BigDecimal price) {
 	this.price = price;
+}
+/**
+ * @return the opdOrderId
+ */
+public Integer getOpdOrderId() {
+	return opdOrderId;
+}
+/**
+ * @param opdOrderId the opdOrderId to set
+ */
+public void setOpdOrderId(Integer opdOrderId) {
+	this.opdOrderId = opdOrderId;
 }
 
 }

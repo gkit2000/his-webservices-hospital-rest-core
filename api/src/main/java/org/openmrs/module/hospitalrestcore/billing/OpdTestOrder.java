@@ -26,11 +26,12 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 	private Concept valueCoded;
 	private User creator;
 	private Date createdOn;
-	private int billingStatus; //0=not yet billed,1=billed
-	private int cancelStatus; //0=not yet canceled,1=canceled
+	private Boolean billingStatus = false; // false=0=not yet billed,true=1=billed
+	private Boolean cancelStatus = false; // false=0=not yet canceled,true=1=canceled
+	private String cancelComment;
 	private BillableService billableService;
 	private Date scheduleDate;
-	private int indoorStatus;
+	private Boolean indoorStatus = false; // false=0=not indoor,true=1=indoor
 	private String fromDept;
 
 	public Integer getOpdOrderId() {
@@ -97,20 +98,28 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 		this.createdOn = createdOn;
 	}
 
-	public int getBillingStatus() {
+	public Boolean getBillingStatus() {
 		return billingStatus;
 	}
 
-	public void setBillingStatus(int billingStatus) {
+	public void setBillingStatus(Boolean billingStatus) {
 		this.billingStatus = billingStatus;
 	}
 
-	public int getCancelStatus() {
+	public Boolean getCancelStatus() {
 		return cancelStatus;
 	}
 
-	public void setCancelStatus(int cancelStatus) {
+	public void setCancelStatus(Boolean cancelStatus) {
 		this.cancelStatus = cancelStatus;
+	}
+
+	public String getCancelComment() {
+		return cancelComment;
+	}
+
+	public void setCancelComment(String cancelComment) {
+		this.cancelComment = cancelComment;
 	}
 
 	public BillableService getBillableService() {
@@ -129,11 +138,11 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 		this.scheduleDate = scheduleDate;
 	}
 
-	public int getIndoorStatus() {
+	public Boolean getIndoorStatus() {
 		return indoorStatus;
 	}
 
-	public void setIndoorStatus(int indoorStatus) {
+	public void setIndoorStatus(Boolean indoorStatus) {
 		this.indoorStatus = indoorStatus;
 	}
 
@@ -154,8 +163,7 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 	@Override
 	public void setId(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
-
