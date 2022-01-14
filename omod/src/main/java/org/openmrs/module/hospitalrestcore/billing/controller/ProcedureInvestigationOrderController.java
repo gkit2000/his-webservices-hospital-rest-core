@@ -23,9 +23,14 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Location;
 import org.openmrs.Patient;
-import org.openmrs.api.ConceptService;
+import org.openmrs.PatientIdentifierType;
+import org.openmrs.Visit;
+import org.openmrs.VisitAttribute;
 import org.openmrs.api.EncounterService;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.Money;
@@ -69,6 +74,8 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		PatientService ps = Context.getPatientService();
+		LocationService ls = Context.getLocationService();
+		BillingService bs = Context.getService(BillingService.class);
 		Patient patient = null;
 		if (patientUuid != null && !patientUuid.isEmpty()) {
 			patient = ps.getPatientByUuid(patientUuid);
@@ -89,30 +96,56 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			if (opdTestOrderMap.containsKey(key)) {
 				List<BillableServiceDetails> list = opdTestOrderMap.get(key);
 				BillableServiceDetails billableServiceDetails = new BillableServiceDetails();
-				billableServiceDetails.setConUuid(opdTestOrder.getBillableService().getConcept().getUuid());
-				billableServiceDetails.setConName(opdTestOrder.getBillableService().getConcept().getName().getName());
+				billableServiceDetails
+						.setServiceConUuid(opdTestOrder.getBillableService().getServiceConcept().getUuid());
+				billableServiceDetails
+						.setServiceConName(opdTestOrder.getBillableService().getServiceConcept().getName().getName());
 				billableServiceDetails.setPrice(opdTestOrder.getBillableService().getPrice());
 				billableServiceDetails.setOpdOrderId(opdTestOrder.getOpdOrderId());
+				billableServiceDetails.setLocationId(opdTestOrder.getLocation().getLocationId());
+				billableServiceDetails.setLocationUuid(opdTestOrder.getLocation().getUuid());
+				billableServiceDetails.setLocationName(opdTestOrder.getLocation().getName());
 				list.add(billableServiceDetails);
 
 			} else {
 				List<BillableServiceDetails> list = new ArrayList<BillableServiceDetails>();
 				BillableServiceDetails billableServiceDetails = new BillableServiceDetails();
-				billableServiceDetails.setConUuid(opdTestOrder.getBillableService().getConcept().getUuid());
-				billableServiceDetails.setConName(opdTestOrder.getBillableService().getConcept().getName().getName());
+				billableServiceDetails
+						.setServiceConUuid(opdTestOrder.getBillableService().getServiceConcept().getUuid());
+				billableServiceDetails
+						.setServiceConName(opdTestOrder.getBillableService().getServiceConcept().getName().getName());
 				billableServiceDetails.setPrice(opdTestOrder.getBillableService().getPrice());
 				billableServiceDetails.setOpdOrderId(opdTestOrder.getOpdOrderId());
+				billableServiceDetails.setLocationId(opdTestOrder.getLocation().getLocationId());
+				billableServiceDetails.setLocationUuid(opdTestOrder.getLocation().getUuid());
+				billableServiceDetails.setLocationName(opdTestOrder.getLocation().getName());
 				list.add(billableServiceDetails);
 				opdTestOrderMap.put(key, list);
 			}
 		}
 
+		PatientIdentifierType pit = ps.getPatientIdentifierTypeByUuid("05a29f94-c0ed-11e2-94be-8c13b969e334");
+
 		for (Map.Entry<Integer, List<BillableServiceDetails>> entry : opdTestOrderMap.entrySet()) {
 			TestOrderDetails orders = new TestOrderDetails();
-			orders.setEncounterId(es.getEncounter(entry.getKey()).getId());
-			orders.setEncounterUuid(es.getEncounter(entry.getKey()).getUuid());
-			orders.setPatientId(es.getEncounter(entry.getKey()).getPatient().getId());
-			orders.setPatientUuid(es.getEncounter(entry.getKey()).getPatient().getUuid());
+			Encounter encounter = es.getEncounter(entry.getKey());
+			orders.setEncounterId(encounter.getId());
+			orders.setEncounterUuid(encounter.getUuid());
+			orders.setPatientId(encounter.getPatient().getPatientIdentifier(pit).getIdentifier());
+			orders.setPatientUuid(encounter.getUuid());
+			orders.setPatientName(getName(encounter.getPatient()));
+			orders.setGender(encounter.getPatient().getGender());
+			orders.setAge(encounter.getPatient().getAge());
+			Visit visit = encounter.getVisit();
+			for (VisitAttribute va : visit.getActiveAttributes()) {
+				if (va.getAttributeType().getUuid().equals("80c68ebe-d696-4b8e-8aa0-53018f8e5d7b")) {
+					orders.setPatientCategory(va.getValueReference());
+				}
+			}
+			Location location = ls.getLocationByUuid(entry.getValue().get(0).getLocationUuid());
+			orders.setLocationId(location.getLocationId());
+			orders.setLocationUuid(location.getUuid());
+			orders.setLocationName(location.getName());
 			orders.setBillableServiceDetails(entry.getValue());
 			listOforders.add(orders);
 
@@ -127,9 +160,6 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			@Valid @RequestBody BillingOrderDetails billingOrderDetails)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		HttpSession httpSession = request.getSession();
-
-		PatientService ps = Context.getPatientService();
-		ConceptService conceptService = Context.getService(ConceptService.class);
 
 		BillingService billingService = Context.getService(BillingService.class);
 
@@ -159,7 +189,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			if (osd.getBilled()) {
 
 				patient = opdTestOrder.getPatient();
-				Concept service = opdTestOrder.getBillableService().getConcept();
+				Concept service = opdTestOrder.getBillableService().getServiceConcept();
 				Integer quantity = osd.getQuantity();
 				BigDecimal unitPrice = opdTestOrder.getBillableService().getPrice();
 
@@ -213,6 +243,20 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		bill = billingService.saveOrUpdatePatientServiceBill(bill);
 
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+
+	public String getName(Patient patient) {
+		String name = "";
+		if (patient.getGivenName() != null) {
+			name = patient.getGivenName();
+		}
+		if (patient.getMiddleName() != null) {
+			name = name + " " + patient.getMiddleName();
+		}
+		if (patient.getFamilyName() != null) {
+			name = name + " " + patient.getFamilyName();
+		}
+		return name;
 	}
 
 }

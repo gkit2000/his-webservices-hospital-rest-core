@@ -6,10 +6,12 @@ package org.openmrs.module.hospitalrestcore.billing.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -50,19 +52,29 @@ public class ManageBillableServicesController extends BaseRestController {
 	@RequestMapping(value = "/billable", method = RequestMethod.GET)
 	public void getServicesPrice(HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
-		
+
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
-		
+
 		BillingService billingService = Context.getService(BillingService.class);
 		List<BillableService> services = billingService.getAllServices();
-
-		Map<String, BigDecimal> servicesPriceMap = new LinkedHashMap<String, BigDecimal>();
+		Set<Concept> priceCategorySet = new HashSet<Concept>();
 		for (BillableService ser : services) {
-			servicesPriceMap.put(ser.getConcept().getUuid(), ser.getPrice());
+			priceCategorySet.add(ser.getPriceCategoryConcept());
 		}
-		
-		new ObjectMapper().writeValue(out, servicesPriceMap);
+
+		Map<String, Map<String, BigDecimal>> priceCategoryMap = new LinkedHashMap<String, Map<String, BigDecimal>>();
+
+		for (Concept priceCategory : priceCategorySet) {
+			List<BillableService> servicesByPriceCategory = billingService.getServicesByPriceCategory(priceCategory);
+			Map<String, BigDecimal> servicesPriceMap = new LinkedHashMap<String, BigDecimal>();
+			for (BillableService ser : servicesByPriceCategory) {
+				servicesPriceMap.put(ser.getServiceConcept().getUuid(), ser.getPrice());
+			}
+			priceCategoryMap.put(priceCategory.getUuid(), servicesPriceMap);
+		}
+
+		new ObjectMapper().writeValue(out, priceCategoryMap);
 	}
 
 	@RequestMapping(value = "/billable", method = RequestMethod.POST)
@@ -80,27 +92,24 @@ public class ManageBillableServicesController extends BaseRestController {
 		Map<Integer, BillableService> mapServices = new LinkedHashMap<Integer, BillableService>();
 
 		for (BillableService ser : services) {
-			mapServices.put(ser.getConcept().getId(), ser);
+			mapServices.put(ser.getServiceConcept().getId(), ser);
 		}
 
 		// servicesDetails
 		List<ServiceDetails> servicesList = servicesDetails.getServicesDetails();
 
 		for (ServiceDetails serviceDetails : servicesList) {
-			Concept serviceConcept = conceptService.getConceptByUuid(serviceDetails.getConUuid());
+			Concept serviceConcept = conceptService.getConceptByUuid(serviceDetails.getServiceConUuid());
+			Concept priceCategoryConcept = conceptService.getConceptByUuid(serviceDetails.getPriceCategoryConUuid());
 			BillableService service = mapServices.get(serviceConcept.getId());
 			if (service == null) {
 				if (serviceConcept != null) {
 					service = new BillableService();
-					service.setConcept(serviceConcept);
+					service.setServiceConcept(serviceConcept);
 					service.setName(serviceConcept.getName().getName());
 					if (serviceConcept.getShortNameInLocale(Locale.ENGLISH) != null) {
 						service.setShortName(serviceConcept.getShortNameInLocale(Locale.ENGLISH).getName());
 					}
-					if (serviceDetails.getPrice() != null) {
-						service.setPrice(serviceDetails.getPrice());
-					}
-					service.setEnable(serviceDetails.getEnable());
 					if (rootServiceconcept != null) {
 						TestTree tree = new TestTree(rootServiceconcept);
 						ConceptNode node = tree.findNode(serviceConcept);
@@ -108,9 +117,14 @@ public class ManageBillableServicesController extends BaseRestController {
 							while (!node.getParent().equals(tree.getRootLab())) {
 								node = node.getParent();
 							}
-							service.setCategory(node.getConcept());
+							service.setServiceCategoryConcept(node.getConcept());
 						}
 					}
+					service.setPriceCategoryConcept(priceCategoryConcept);
+					if (serviceDetails.getPrice() != null) {
+						service.setPrice(serviceDetails.getPrice());
+					}
+					service.setEnable(serviceDetails.getEnable());
 					mapServices.put(serviceConcept.getId(), service);
 					billingService.saveBillableService(service);
 				}
@@ -119,10 +133,6 @@ public class ManageBillableServicesController extends BaseRestController {
 				if (serviceConcept.getShortNameInLocale(Locale.ENGLISH) != null) {
 					service.setShortName(serviceConcept.getShortNameInLocale(Locale.ENGLISH).getName());
 				}
-				if (serviceDetails.getPrice() != null) {
-					service.setPrice(serviceDetails.getPrice());
-				}
-				service.setEnable(serviceDetails.getEnable());
 				if (rootServiceconcept != null) {
 					TestTree tree = new TestTree(rootServiceconcept);
 					ConceptNode node = tree.findNode(serviceConcept);
@@ -130,9 +140,14 @@ public class ManageBillableServicesController extends BaseRestController {
 						while (!node.getParent().equals(tree.getRootLab())) {
 							node = node.getParent();
 						}
-						service.setCategory(node.getConcept());
+						service.setServiceCategoryConcept(node.getConcept());
 					}
 				}
+				service.setPriceCategoryConcept(priceCategoryConcept);
+				if (serviceDetails.getPrice() != null) {
+					service.setPrice(serviceDetails.getPrice());
+				}
+				service.setEnable(serviceDetails.getEnable());
 				mapServices.remove(serviceConcept.getId());
 				mapServices.put(serviceConcept.getId(), service);
 				billingService.saveBillableService(service);

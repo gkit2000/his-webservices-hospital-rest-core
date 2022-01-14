@@ -17,7 +17,7 @@
 			class="org.openmrs.Patient" />
 		<many-to-one name="encounter" column="encounter_id"
 			class="org.openmrs.Encounter" cascade="all" />
-		<many-to-one name="concept" column="concept_id"
+		<many-to-one name="serviceConcept" column="service_concept"
 			class="org.openmrs.Concept" />
 		<property name="typeConcept" column="type_concept" />
 		<many-to-one name="valueCoded" column="value_coded"
@@ -28,14 +28,13 @@
 			column="created_on" not-null="true" length="19" />
 		<property name="billingStatus" column="billing_status" />
 		<property name="cancelStatus" column="cancel_status" />
-		<property name="cancelComment" column="cancel_comment" />
+		<property name="comment" column="comment" />
 		<many-to-one name="billableService"
 			column="billable_service_id"
 			class="org.openmrs.module.hospitalrestcore.billing.BillableService" />
 		<property name="scheduleDate" type="java.util.Date"
 			column="schedule_date" length="19" />
 		<property name="indoorStatus" column="indoor_status" />
-		<property name="fromDept" column="referral_ward_name"
-			length="100" />
+		<many-to-one name="location" column="location_id" class="org.openmrs.Location" not-null="true" />
 	</class>
 </hibernate-mapping>

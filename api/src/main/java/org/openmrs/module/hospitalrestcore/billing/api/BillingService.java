@@ -22,9 +22,9 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
+import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
-import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -41,20 +41,22 @@ public interface BillingService extends OpenmrsService {
 
 	List<BillableService> getAllServices() throws APIException;
 
+	List<BillableService> getServicesByPriceCategory(Concept priceCategory) throws APIException;
+
 	BillableService saveBillableService(BillableService billableService) throws APIException;
 
 	List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException;
 
-	BillableService getServiceByConcept(Concept concept) throws APIException;
+	BillableService getServiceByConcept(Concept serviceConcept) throws APIException;
 
 	OpdTestOrder saveOrUpdateOpdTestOrder(OpdTestOrder OpdTestOrder) throws APIException;
-	
-	OpdTestOrder getOpdTestOrderById(Integer  opdOrderId) throws APIException;
+
+	OpdTestOrder getOpdTestOrderById(Integer opdOrderId) throws APIException;
 
 	List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException;
-	
+
 	PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill) throws APIException;
-	
+
 	BillingReceipt createReceipt(BillingReceipt receipt) throws APIException;
-	
+
 }

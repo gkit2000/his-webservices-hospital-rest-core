@@ -11,34 +11,37 @@ import java.math.BigDecimal;
  */
 public class BillableServiceDetails {
 	
-private String conUuid;
-private String conName;
+private String serviceConUuid;
+private String serviceConName;
 private BigDecimal price;
 private Integer opdOrderId;
+private Integer locationId;
+private String locationUuid;
+private String locationName;
 
 /**
- * @return the conUuid
+ * @return the serviceConUuid
  */
-public String getConUuid() {
-	return conUuid;
+public String getServiceConUuid() {
+	return serviceConUuid;
 }
 /**
- * @param conUuid the conUuid to set
+ * @param serviceConUuid the serviceConUuid to set
  */
-public void setConUuid(String conUuid) {
-	this.conUuid = conUuid;
+public void setServiceConUuid(String serviceConUuid) {
+	this.serviceConUuid = serviceConUuid;
 }
 /**
- * @return the conName
+ * @return the serviceConName
  */
-public String getConName() {
-	return conName;
+public String getServiceConName() {
+	return serviceConName;
 }
 /**
- * @param conName the conName to set
+ * @param serviceConName the serviceConName to set
  */
-public void setConName(String conName) {
-	this.conName = conName;
+public void setServiceConName(String serviceConName) {
+	this.serviceConName = serviceConName;
 }
 /**
  * @return the price
@@ -63,6 +66,42 @@ public Integer getOpdOrderId() {
  */
 public void setOpdOrderId(Integer opdOrderId) {
 	this.opdOrderId = opdOrderId;
+}
+/**
+ * @return the locationId
+ */
+public Integer getLocationId() {
+	return locationId;
+}
+/**
+ * @param locationId the locationId to set
+ */
+public void setLocationId(Integer locationId) {
+	this.locationId = locationId;
+}
+/**
+ * @return the locationUuid
+ */
+public String getLocationUuid() {
+	return locationUuid;
+}
+/**
+ * @param locationUuid the locationUuid to set
+ */
+public void setLocationUuid(String locationUuid) {
+	this.locationUuid = locationUuid;
+}
+/**
+ * @return the locationName
+ */
+public String getLocationName() {
+	return locationName;
+}
+/**
+ * @param locationName the locationName to set
+ */
+public void setLocationName(String locationName) {
+	this.locationName = locationName;
 }
 
 }

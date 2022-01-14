@@ -113,6 +113,12 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public List<BillableService> getServicesByPriceCategory(Concept priceCategory) throws APIException {
+		return getBillableServiceDAO().getAllServices();
+	}
+
+	@Override
 	@Transactional
 	public BillableService saveBillableService(BillableService billableService) throws APIException {
 		// ValidateUtil.validate(appointmentType);
@@ -127,8 +133,8 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 
 	@Override
 	@Transactional(readOnly = true)
-	public BillableService getServiceByConcept(Concept concept) throws APIException {
-		return getBillableServiceDAO().getServiceByConcept(concept);
+	public BillableService getServiceByConcept(Concept serviceConcept) throws APIException {
+		return getBillableServiceDAO().getServiceByConcept(serviceConcept);
 	}
 
 	@Override
@@ -140,13 +146,13 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	@Override
 	@Transactional
 	public OpdTestOrder getOpdTestOrderById(Integer opdOrderId) throws APIException {
-		return (OpdTestOrder) getOpdTestOrderDAO().getOpdTestOrderById(opdOrderId);
+		return getOpdTestOrderDAO().getOpdTestOrderById(opdOrderId);
 	}
 
 	@Override
 	@Transactional
 	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException {
-		return (List<OpdTestOrder>) getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
+		return getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
 	}
 
 	@Override

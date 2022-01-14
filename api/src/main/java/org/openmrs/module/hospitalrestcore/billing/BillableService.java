@@ -24,14 +24,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.openmrs.Concept;
-import org.openmrs.module.hospitalrestcore.Money;
 
 /**
  *
  */
 
 public class BillableService implements Serializable {
-
 	/**
 	 * 
 	 */
@@ -39,17 +37,19 @@ public class BillableService implements Serializable {
 
 	private Integer serviceId;
 
+	private Concept serviceConcept;
+
 	private String name;
 
 	private String shortName;
 
+	private Concept serviceCategoryConcept;
+
+	private Concept priceCategoryConcept;
+
 	private BigDecimal price;
 
-	private Concept concept;
-
 	private Boolean enable = true;
-
-	private Concept category;
 
 	public Integer getServiceId() {
 		return serviceId;
@@ -57,6 +57,14 @@ public class BillableService implements Serializable {
 
 	public void setServiceId(Integer serviceId) {
 		this.serviceId = serviceId;
+	}
+
+	public Concept getServiceConcept() {
+		return serviceConcept;
+	}
+
+	public void setServiceConcept(Concept serviceConcept) {
+		this.serviceConcept = serviceConcept;
 	}
 
 	public String getName() {
@@ -75,24 +83,28 @@ public class BillableService implements Serializable {
 		this.shortName = shortName;
 	}
 
+	public Concept getServiceCategoryConcept() {
+		return serviceCategoryConcept;
+	}
+
+	public void setServiceCategoryConcept(Concept serviceCategoryConcept) {
+		this.serviceCategoryConcept = serviceCategoryConcept;
+	}
+
+	public Concept getPriceCategoryConcept() {
+		return priceCategoryConcept;
+	}
+
+	public void setPriceCategoryConcept(Concept priceCategoryConcept) {
+		this.priceCategoryConcept = priceCategoryConcept;
+	}
+
 	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public String getTextPrice() {
-		return new Money(this.price).toString();
-	}
-
 	public void setPrice(BigDecimal price) {
 		this.price = price;
-	}
-
-	public Concept getConcept() {
-		return concept;
-	}
-
-	public void setConcept(Concept concept) {
-		this.concept = concept;
 	}
 
 	public Boolean getEnable() {
@@ -103,15 +115,4 @@ public class BillableService implements Serializable {
 		this.enable = enable;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public Concept getCategory() {
-		return category;
-	}
-
-	public void setCategory(Concept category) {
-		this.category = category;
-	}
 }

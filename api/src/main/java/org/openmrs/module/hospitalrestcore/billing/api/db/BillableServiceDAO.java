@@ -18,6 +18,8 @@ public interface BillableServiceDAO extends SingleClassDAO {
 	
 	public List<BillableService> getAllServices() throws DAOException;
 	
-	public BillableService getServiceByConcept(Concept concept) throws DAOException;
+	public List<BillableService> getServicesByPriceCategory(Concept priceCategory) throws DAOException;
+	
+	public BillableService getServiceByConcept(Concept serviceConcept) throws DAOException;
 	
 }
