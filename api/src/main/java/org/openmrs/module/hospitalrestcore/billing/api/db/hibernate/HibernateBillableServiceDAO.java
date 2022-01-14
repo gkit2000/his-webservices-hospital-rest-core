@@ -35,25 +35,34 @@ public class HibernateBillableServiceDAO extends HibernateSingleClassDAO impleme
 		return query.list();
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public List<BillableService> getServicesByPriceCategory(Concept priceCategory) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+				mappedClass);
+		criteria.add(Restrictions.eq("priceCategory", priceCategory));
+		return criteria.list();
+	}
+	
 	/*@Override
 	@Transactional(readOnly = true)
-	public BillableService getServiceByConcept(Concept concept) {
+	public BillableService getServiceByConcept(Concept serviceConcept) {
 		String sQuery = "from BillableService as billableService";
 
 		Query query = super.sessionFactory.getCurrentSession().createQuery(
 				sQuery);
 		
-		query.setParameter("concept", concept);
+		query.setParameter("serviceConcept", serviceConcept);
 
 		return (BillableService) query.uniqueResult();
 	}*/
 	
 	@Override
 	@Transactional(readOnly = true)
-	public BillableService getServiceByConcept(Concept concept) {
+	public BillableService getServiceByConcept(Concept serviceConcept) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
 				mappedClass);
-		criteria.add(Restrictions.eq("concept", concept));
+		criteria.add(Restrictions.eq("serviceConcept", serviceConcept));
 		return (BillableService) criteria.uniqueResult();
 	}
 	

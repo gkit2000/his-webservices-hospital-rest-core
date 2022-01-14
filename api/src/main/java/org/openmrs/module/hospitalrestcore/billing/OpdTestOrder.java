@@ -9,6 +9,7 @@ import java.util.Date;
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.User;
 
@@ -21,18 +22,18 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 	private Integer opdOrderId;
 	private Patient patient;
 	private Encounter encounter;
-	private Concept concept;
+	private Concept serviceConcept;
 	private Integer typeConcept;
 	private Concept valueCoded;
 	private User creator;
 	private Date createdOn;
 	private Boolean billingStatus = false; // false=0=not yet billed,true=1=billed
 	private Boolean cancelStatus = false; // false=0=not yet canceled,true=1=canceled
-	private String cancelComment;
+	private String comment;
 	private BillableService billableService;
 	private Date scheduleDate;
 	private Boolean indoorStatus = false; // false=0=not indoor,true=1=indoor
-	private String fromDept;
+	private Location location;
 
 	public Integer getOpdOrderId() {
 		return opdOrderId;
@@ -58,12 +59,12 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 		this.encounter = encounter;
 	}
 
-	public Concept getConcept() {
-		return concept;
+	public Concept getServiceConcept() {
+		return serviceConcept;
 	}
 
-	public void setConcept(Concept concept) {
-		this.concept = concept;
+	public void setServiceConcept(Concept serviceConcept) {
+		this.serviceConcept = serviceConcept;
 	}
 
 	public Integer getTypeConcept() {
@@ -114,12 +115,12 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 		this.cancelStatus = cancelStatus;
 	}
 
-	public String getCancelComment() {
-		return cancelComment;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setCancelComment(String cancelComment) {
-		this.cancelComment = cancelComment;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public BillableService getBillableService() {
@@ -146,12 +147,12 @@ public class OpdTestOrder extends BaseOpenmrsData implements Serializable {
 		this.indoorStatus = indoorStatus;
 	}
 
-	public String getFromDept() {
-		return fromDept;
+	public Location getLocation() {
+		return location;
 	}
 
-	public void setFromDept(String fromDept) {
-		this.fromDept = fromDept;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	@Override

@@ -15,53 +15,48 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class ServiceDetails {
 
-	@NotNull(message = "Please provide billable service concept")
-	@NotBlank(message = "Please provide billable service concept")
-	private String conUuid;
+	@NotNull(message = "Please provide billable service concept uuid")
+	@NotBlank(message = "Please provide billable service concept uuid")
+	private String serviceConUuid;
+	
+	@NotNull(message = "Please provide billable service price category concept uuid")
+	@NotBlank(message = "Please provide billable service price category concept uuid")
+	private String priceCategoryConUuid;
 	
 	@NotNull(message = "Please provide billable service price")
 	private BigDecimal price;
 	
 	private Boolean enable;
+	
 
-	/**
-	 * @return the conUuid
-	 */
-	public String getConUuid() {
-		return conUuid;
+	public String getServiceConUuid() {
+		return serviceConUuid;
 	}
 
-	/**
-	 * @param conUuid the conUuid to set
-	 */
-	public void setConUuid(String conUuid) {
-		this.conUuid = conUuid;
+	public void setServiceConUuid(String serviceConUuid) {
+		this.serviceConUuid = serviceConUuid;
 	}
 
-	/**
-	 * @return the price
-	 */
+	public String getPriceCategoryConUuid() {
+		return priceCategoryConUuid;
+	}
+
+	public void setPriceCategoryConUuid(String priceCategoryConUuid) {
+		this.priceCategoryConUuid = priceCategoryConUuid;
+	}
+
 	public BigDecimal getPrice() {
 		return price;
 	}
 
-	/**
-	 * @param price the price to set
-	 */
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
-	/**
-	 * @return the enable
-	 */
 	public Boolean getEnable() {
 		return enable;
 	}
 
-	/**
-	 * @param enable the enable to set
-	 */
 	public void setEnable(Boolean enable) {
 		this.enable = enable;
 	}

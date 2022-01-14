@@ -21,20 +21,25 @@
 			<column name="service_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="concept_id" type="int" />
+			<column name="service_concept" type="int" />
 			<column name="name" type="varchar(255)" />
 			<column name="short_name" type="varchar(255)" />
+			<column name="service_category_concept" type="int" />
+			<column name="price_category_concept" type="int" />
 			<column name="price" type="decimal" />
 			<column name="enable" type="boolean" />
-			<column name="category" type="int" />
 		</createTable>
 		<addForeignKeyConstraint
-			constraintName="billing_billable_service_concept_id"
-			baseTableName="billing_billable_service" baseColumnNames="concept_id"
+			constraintName="billing_billable_service_concept"
+			baseTableName="billing_billable_service" baseColumnNames="service_concept"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 		<addForeignKeyConstraint
-			constraintName="billing_billable_service_category"
-			baseTableName="billing_billable_service" baseColumnNames="category"
+			constraintName="billing_billable_service_service_category_concept"
+			baseTableName="billing_billable_service" baseColumnNames="service_category_concept"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_billable_service_price_category_concept"
+			baseTableName="billing_billable_service" baseColumnNames="price_category_concept"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 	</changeSet>
 
@@ -59,7 +64,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="billable_service_id" type="int" />
-			<column name="concept_id" type="int">
+			<column name="service_concept" type="int">
 				<constraints nullable="false" />
 			</column>
 			<column name="type_concept" type="int">
@@ -77,9 +82,11 @@
 			<column name="schedule_date" type="datetime" />
 			<column name="billing_status" type="boolean" />
 			<column name="cancel_status" type="boolean" />
-			<column name="cancel_comment" type="varchar(100)" />
+			<column name="comment" type="varchar(200)" />
 			<column name="indoor_status" type="boolean" />
-			<column name="referral_ward_name" type="varchar(100)" />
+			<column name="location_id" type="int">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint
 			constraintName="opd_test_order_patient_id"
@@ -95,8 +102,8 @@
 			referencedTableName="billing_billable_service"
 			referencedColumnNames="service_id" />
 		<addForeignKeyConstraint
-			constraintName="opd_test_order_concept_id"
-			baseTableName="opd_test_order" baseColumnNames="concept_id"
+			constraintName="opd_test_order_service_concept"
+			baseTableName="opd_test_order" baseColumnNames="service_concept"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 		<addForeignKeyConstraint
 			constraintName="opd_test_order_value_coded"
@@ -106,6 +113,10 @@
 			constraintName="opd_test_order_created_by"
 			baseTableName="opd_test_order" baseColumnNames="created_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="opd_test_order_location_id"
+			baseTableName="opd_test_order" baseColumnNames="location_id"
+			referencedTableName="location" referencedColumnNames="location_id" />
 	</changeSet>
 
 	<changeSet id="billing_receipt-table-create"
@@ -119,7 +130,8 @@
 			Create billing_receipt table
 		</comment>
 		<createTable tableName="billing_receipt">
-			<column name="billing_receipt_id" type="int" autoIncrement="true">
+			<column name="billing_receipt_id" type="int"
+				autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="paid_date" type="datetime" />
@@ -215,12 +227,16 @@
 		</createTable>
 		<addForeignKeyConstraint
 			constraintName="billing_patient_service_bill_item_service_id"
-			baseTableName="billing_patient_service_bill_item" baseColumnNames="service_id"
-			referencedTableName="billing_billable_service" referencedColumnNames="service_id" />
+			baseTableName="billing_patient_service_bill_item"
+			baseColumnNames="service_id"
+			referencedTableName="billing_billable_service"
+			referencedColumnNames="service_id" />
 		<addForeignKeyConstraint
 			constraintName="billing_patient_service_bill_item_patient_service_bill_id"
-			baseTableName="billing_patient_service_bill_item" baseColumnNames="patient_service_bill_id"
-			referencedTableName="billing_patient_service_bill" referencedColumnNames="patient_service_bill_id" />
+			baseTableName="billing_patient_service_bill_item"
+			baseColumnNames="patient_service_bill_id"
+			referencedTableName="billing_patient_service_bill"
+			referencedColumnNames="patient_service_bill_id" />
 		<addForeignKeyConstraint
 			constraintName="billing_patient_service_bill_item_order_id"
 			baseTableName="billing_patient_service_bill_item"
