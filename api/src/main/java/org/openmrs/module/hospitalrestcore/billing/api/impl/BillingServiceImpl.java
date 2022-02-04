@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -115,7 +116,14 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	@Override
 	@Transactional(readOnly = true)
 	public List<BillableService> getServicesByPriceCategory(Concept priceCategory) throws APIException {
-		return getBillableServiceDAO().getAllServices();
+		return getBillableServiceDAO().getServicesByPriceCategory(priceCategory);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BillableService getServicesByServiceConceptAndPriceCategory(Concept serviceConcept, Concept priceCategory)
+			throws APIException {
+		return getBillableServiceDAO().getServicesByServiceConceptAndPriceCategory(serviceConcept, priceCategory);
 	}
 
 	@Override
@@ -153,6 +161,12 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	@Transactional
 	public List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException {
 		return getOpdTestOrderDAO().getOpdTestOrder(patient, creationDate);
+	}
+
+	@Override
+	@Transactional
+	public List<OpdTestOrder> getOpdTestOrderByEncounter(Encounter encounter) throws APIException {
+		return getOpdTestOrderDAO().getOpdTestOrderByEncounter(encounter);
 	}
 
 	@Override
