@@ -15,9 +15,6 @@ private String serviceConUuid;
 private String serviceConName;
 private BigDecimal price;
 private Integer opdOrderId;
-private Integer locationId;
-private String locationUuid;
-private String locationName;
 
 /**
  * @return the serviceConUuid
@@ -66,42 +63,6 @@ public Integer getOpdOrderId() {
  */
 public void setOpdOrderId(Integer opdOrderId) {
 	this.opdOrderId = opdOrderId;
-}
-/**
- * @return the locationId
- */
-public Integer getLocationId() {
-	return locationId;
-}
-/**
- * @param locationId the locationId to set
- */
-public void setLocationId(Integer locationId) {
-	this.locationId = locationId;
-}
-/**
- * @return the locationUuid
- */
-public String getLocationUuid() {
-	return locationUuid;
-}
-/**
- * @param locationUuid the locationUuid to set
- */
-public void setLocationUuid(String locationUuid) {
-	this.locationUuid = locationUuid;
-}
-/**
- * @return the locationName
- */
-public String getLocationName() {
-	return locationName;
-}
-/**
- * @param locationName the locationName to set
- */
-public void setLocationName(String locationName) {
-	this.locationName = locationName;
 }
 
 }

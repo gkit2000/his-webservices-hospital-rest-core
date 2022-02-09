@@ -19,31 +19,39 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 public class HibernateBillableServiceDAO extends HibernateSingleClassDAO implements BillableServiceDAO {
-	
+
 	public HibernateBillableServiceDAO() {
 		super(BillableService.class);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<BillableService> getAllServices() {
 		String sQuery = "from BillableService as billableService";
 
-		Query query = super.sessionFactory.getCurrentSession().createQuery(
-				sQuery);
+		Query query = super.sessionFactory.getCurrentSession().createQuery(sQuery);
 
 		return query.list();
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<BillableService> getServicesByPriceCategory(Concept priceCategory) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				mappedClass);
-		criteria.add(Restrictions.eq("priceCategory", priceCategory));
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("priceCategoryConcept", priceCategory));
 		return criteria.list();
 	}
-	
+
+	@Override
+	@Transactional(readOnly = true)
+	public BillableService getServicesByServiceConceptAndPriceCategory(Concept serviceConcept,
+			Concept priceCategory) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("serviceConcept", serviceConcept));
+		criteria.add(Restrictions.eq("priceCategoryConcept", priceCategory));
+		return (BillableService) criteria.uniqueResult();
+	}
+
 	/*@Override
 	@Transactional(readOnly = true)
 	public BillableService getServiceByConcept(Concept serviceConcept) {
@@ -56,14 +64,13 @@ public class HibernateBillableServiceDAO extends HibernateSingleClassDAO impleme
 
 		return (BillableService) query.uniqueResult();
 	}*/
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public BillableService getServiceByConcept(Concept serviceConcept) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				mappedClass);
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.eq("serviceConcept", serviceConcept));
 		return (BillableService) criteria.uniqueResult();
 	}
-	
+
 }

@@ -11,46 +11,14 @@ import java.util.List;
  */
 public class TestOrderDetails {
 
-	private Integer encounterId;
-	private String encounterUuid;
 	private String patientId;
 	private String patientUuid;
 	private String patientName;
 	private String gender;
 	private Integer age;
+	private String birthDate;
 	private String patientCategory;
-	private Integer locationId;
-	private String locationUuid;
-	private String locationName;
-	private List<BillableServiceDetails> billableServiceDetails;
-
-	/**
-	 * @return the encounterId
-	 */
-	public Integer getEncounterId() {
-		return encounterId;
-	}
-
-	/**
-	 * @param encounterId the encounterId to set
-	 */
-	public void setEncounterId(Integer encounterId) {
-		this.encounterId = encounterId;
-	}
-
-	/**
-	 * @return the encounterUuid
-	 */
-	public String getEncounterUuid() {
-		return encounterUuid;
-	}
-
-	/**
-	 * @param encounterUuid the encounterUuid to set
-	 */
-	public void setEncounterUuid(String encounterUuid) {
-		this.encounterUuid = encounterUuid;
-	}
+	private List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder;
 
 	/**
 	 * @return the patientId
@@ -123,6 +91,20 @@ public class TestOrderDetails {
 	}
 
 	/**
+	 * @return the birthDate
+	 */
+	public String getBirthDate() {
+		return birthDate;
+	}
+
+	/**
+	 * @param birthDate the birthDate to set
+	 */
+	public void setBirthDate(String birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	/**
 	 * @return the patientCategory
 	 */
 	public String getPatientCategory() {
@@ -137,59 +119,17 @@ public class TestOrderDetails {
 	}
 
 	/**
-	 * @return the locationId
+	 * @return the serviceDetailsForTestOrder
 	 */
-	public Integer getLocationId() {
-		return locationId;
+	public List<ServiceDetailsForTestOrder> getServiceDetailsForTestOrder() {
+		return serviceDetailsForTestOrder;
 	}
 
 	/**
-	 * @param locationId the locationId to set
+	 * @param serviceDetailsForTestOrder the serviceDetailsForTestOrder to set
 	 */
-	public void setLocationId(Integer locationId) {
-		this.locationId = locationId;
-	}
-
-	/**
-	 * @return the locationUuid
-	 */
-	public String getLocationUuid() {
-		return locationUuid;
-	}
-
-	/**
-	 * @param locationUuid the locationUuid to set
-	 */
-	public void setLocationUuid(String locationUuid) {
-		this.locationUuid = locationUuid;
-	}
-
-	/**
-	 * @return the locationName
-	 */
-	public String getLocationName() {
-		return locationName;
-	}
-
-	/**
-	 * @param locationName the locationName to set
-	 */
-	public void setLocationName(String locationName) {
-		this.locationName = locationName;
-	}
-
-	/**
-	 * @return the billableServiceDetails
-	 */
-	public List<BillableServiceDetails> getBillableServiceDetails() {
-		return billableServiceDetails;
-	}
-
-	/**
-	 * @param billableServiceDetails the billableServiceDetails to set
-	 */
-	public void setBillableServiceDetails(List<BillableServiceDetails> billableServiceDetails) {
-		this.billableServiceDetails = billableServiceDetails;
+	public void setServiceDetailsForTestOrder(List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder) {
+		this.serviceDetailsForTestOrder = serviceDetailsForTestOrder;
 	}
 
 }

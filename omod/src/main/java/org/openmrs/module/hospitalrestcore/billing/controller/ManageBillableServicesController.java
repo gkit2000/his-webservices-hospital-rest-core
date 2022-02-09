@@ -4,7 +4,6 @@
 package org.openmrs.module.hospitalrestcore.billing.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -26,6 +25,7 @@ import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
+import org.openmrs.module.hospitalrestcore.billing.BillableServiceConfigurationDetails;
 import org.openmrs.module.hospitalrestcore.billing.ServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.ServicesDetails;
 import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
@@ -63,13 +63,16 @@ public class ManageBillableServicesController extends BaseRestController {
 			priceCategorySet.add(ser.getPriceCategoryConcept());
 		}
 
-		Map<String, Map<String, BigDecimal>> priceCategoryMap = new LinkedHashMap<String, Map<String, BigDecimal>>();
+		Map<String, Map<String, BillableServiceConfigurationDetails>> priceCategoryMap = new LinkedHashMap<String, Map<String, BillableServiceConfigurationDetails>>();
 
 		for (Concept priceCategory : priceCategorySet) {
 			List<BillableService> servicesByPriceCategory = billingService.getServicesByPriceCategory(priceCategory);
-			Map<String, BigDecimal> servicesPriceMap = new LinkedHashMap<String, BigDecimal>();
+			Map<String, BillableServiceConfigurationDetails> servicesPriceMap = new LinkedHashMap<String, BillableServiceConfigurationDetails>();
 			for (BillableService ser : servicesByPriceCategory) {
-				servicesPriceMap.put(ser.getServiceConcept().getUuid(), ser.getPrice());
+				BillableServiceConfigurationDetails bscd = new BillableServiceConfigurationDetails();
+				bscd.setPrice(ser.getPrice());
+				bscd.setEnable(ser.getEnable());
+				servicesPriceMap.put(ser.getServiceConcept().getUuid(), bscd);
 			}
 			priceCategoryMap.put(priceCategory.getUuid(), servicesPriceMap);
 		}
@@ -101,7 +104,8 @@ public class ManageBillableServicesController extends BaseRestController {
 		for (ServiceDetails serviceDetails : servicesList) {
 			Concept serviceConcept = conceptService.getConceptByUuid(serviceDetails.getServiceConUuid());
 			Concept priceCategoryConcept = conceptService.getConceptByUuid(serviceDetails.getPriceCategoryConUuid());
-			BillableService service = mapServices.get(serviceConcept.getId());
+			BillableService service = billingService.getServicesByServiceConceptAndPriceCategory(serviceConcept,
+					priceCategoryConcept);
 			if (service == null) {
 				if (serviceConcept != null) {
 					service = new BillableService();

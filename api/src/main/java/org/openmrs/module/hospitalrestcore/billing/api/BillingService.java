@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -43,6 +44,9 @@ public interface BillingService extends OpenmrsService {
 
 	List<BillableService> getServicesByPriceCategory(Concept priceCategory) throws APIException;
 
+	BillableService getServicesByServiceConceptAndPriceCategory(Concept serviceConcept, Concept priceCategory)
+			throws APIException;
+
 	BillableService saveBillableService(BillableService billableService) throws APIException;
 
 	List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException;
@@ -54,6 +58,8 @@ public interface BillingService extends OpenmrsService {
 	OpdTestOrder getOpdTestOrderById(Integer opdOrderId) throws APIException;
 
 	List<OpdTestOrder> getOpdTestOrder(Patient patient, Date creationDate) throws APIException;
+
+	List<OpdTestOrder> getOpdTestOrderByEncounter(Encounter encounter) throws APIException;
 
 	PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill) throws APIException;
 

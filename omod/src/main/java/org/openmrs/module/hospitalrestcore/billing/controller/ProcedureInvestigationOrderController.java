@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,8 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.Money;
+import org.openmrs.module.hospitalrestcore.OpenmrsHispIndiaConstants;
+import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.billing.BillableServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingOrderDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
@@ -42,6 +45,7 @@ import org.openmrs.module.hospitalrestcore.billing.OrderDTO;
 import org.openmrs.module.hospitalrestcore.billing.OrderServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
+import org.openmrs.module.hospitalrestcore.billing.ServiceDetailsForTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.TestOrderDetails;
 import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -75,10 +79,12 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		PatientService ps = Context.getPatientService();
 		LocationService ls = Context.getLocationService();
-		BillingService bs = Context.getService(BillingService.class);
 		Patient patient = null;
 		if (patientUuid != null && !patientUuid.isEmpty()) {
 			patient = ps.getPatientByUuid(patientUuid);
+			if (patient == null) {
+				throw new ResourceNotFoundException(OpenmrsHispIndiaConstants.VALIDATION_ERROR_NOT_VALID_UUID);
+			}
 		}
 		EncounterService es = Context.getEncounterService();
 		BillingService billingService = Context.getService(BillingService.class);
@@ -87,68 +93,73 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			creationDate = formatter.parse(date);
 		}
 		List<OpdTestOrder> opdTestOrders = billingService.getOpdTestOrder(patient, creationDate);
-		OrderDTO orderDTO = new OrderDTO();
-		List<TestOrderDetails> listOforders = new ArrayList<TestOrderDetails>();
-		Map<Integer, List<BillableServiceDetails>> opdTestOrderMap = new LinkedHashMap<Integer, List<BillableServiceDetails>>();
-
+		Map<Integer, Location> encounterAndLocationMap = new LinkedHashMap<Integer, Location>();
 		for (OpdTestOrder opdTestOrder : opdTestOrders) {
-			Integer key = opdTestOrder.getEncounter().getId();
-			if (opdTestOrderMap.containsKey(key)) {
-				List<BillableServiceDetails> list = opdTestOrderMap.get(key);
-				BillableServiceDetails billableServiceDetails = new BillableServiceDetails();
-				billableServiceDetails
-						.setServiceConUuid(opdTestOrder.getBillableService().getServiceConcept().getUuid());
-				billableServiceDetails
-						.setServiceConName(opdTestOrder.getBillableService().getServiceConcept().getName().getName());
-				billableServiceDetails.setPrice(opdTestOrder.getBillableService().getPrice());
-				billableServiceDetails.setOpdOrderId(opdTestOrder.getOpdOrderId());
-				billableServiceDetails.setLocationId(opdTestOrder.getLocation().getLocationId());
-				billableServiceDetails.setLocationUuid(opdTestOrder.getLocation().getUuid());
-				billableServiceDetails.setLocationName(opdTestOrder.getLocation().getName());
-				list.add(billableServiceDetails);
-
-			} else {
-				List<BillableServiceDetails> list = new ArrayList<BillableServiceDetails>();
-				BillableServiceDetails billableServiceDetails = new BillableServiceDetails();
-				billableServiceDetails
-						.setServiceConUuid(opdTestOrder.getBillableService().getServiceConcept().getUuid());
-				billableServiceDetails
-						.setServiceConName(opdTestOrder.getBillableService().getServiceConcept().getName().getName());
-				billableServiceDetails.setPrice(opdTestOrder.getBillableService().getPrice());
-				billableServiceDetails.setOpdOrderId(opdTestOrder.getOpdOrderId());
-				billableServiceDetails.setLocationId(opdTestOrder.getLocation().getLocationId());
-				billableServiceDetails.setLocationUuid(opdTestOrder.getLocation().getUuid());
-				billableServiceDetails.setLocationName(opdTestOrder.getLocation().getName());
-				list.add(billableServiceDetails);
-				opdTestOrderMap.put(key, list);
-			}
+			encounterAndLocationMap.put(opdTestOrder.getEncounter().getId(), opdTestOrder.getLocation());
 		}
 
+		OrderDTO orderDTO = new OrderDTO();
+		List<TestOrderDetails> listOforders = new ArrayList<TestOrderDetails>();
+		Map<Integer, List<ServiceDetailsForTestOrder>> opdTestOrderMap = new LinkedHashMap<Integer, List<ServiceDetailsForTestOrder>>();
+
+		for (Map.Entry<Integer, Location> entry : encounterAndLocationMap.entrySet()) {
+			Integer encounterId = entry.getKey();
+			Location location = entry.getValue();
+			Encounter encounter = es.getEncounter(entry.getKey());
+			List<OpdTestOrder> opdTestOrdersByEncounter = billingService.getOpdTestOrderByEncounter(encounter);
+			List<BillableServiceDetails> billableServiceDetails = new LinkedList<BillableServiceDetails>();
+			billableServiceDetails.clear();
+			for (OpdTestOrder opdTestOrderByEncounter : opdTestOrdersByEncounter) {
+				BillableServiceDetails bsd = new BillableServiceDetails();
+				bsd.setServiceConUuid(opdTestOrderByEncounter.getBillableService().getServiceConcept().getUuid());
+				bsd.setServiceConName(
+						opdTestOrderByEncounter.getBillableService().getServiceConcept().getName().getName());
+				bsd.setPrice(opdTestOrderByEncounter.getBillableService().getPrice());
+				bsd.setOpdOrderId(opdTestOrderByEncounter.getOpdOrderId());
+				billableServiceDetails.add(bsd);
+			}
+
+			List<ServiceDetailsForTestOrder> serviceDetailsForTestOrders = new ArrayList<ServiceDetailsForTestOrder>();
+			ServiceDetailsForTestOrder serviceDetailsForTestOrder = new ServiceDetailsForTestOrder();
+			serviceDetailsForTestOrders.clear();
+			serviceDetailsForTestOrder.setEncounterId(encounter.getId());
+			serviceDetailsForTestOrder.setEncounterUuid(encounter.getUuid());
+			serviceDetailsForTestOrder.setLocationId(location.getLocationId());
+			serviceDetailsForTestOrder.setLocationUuid(location.getUuid());
+			serviceDetailsForTestOrder.setLocationName(location.getName());
+			serviceDetailsForTestOrder.setBillableServiceDetails(billableServiceDetails);
+			serviceDetailsForTestOrders.add(serviceDetailsForTestOrder);
+			opdTestOrderMap.put(encounterId, serviceDetailsForTestOrders);
+		}
+
+		Map<Integer, Encounter> patientEncounterMap = new LinkedHashMap<Integer, Encounter>();
 		PatientIdentifierType pit = ps.getPatientIdentifierTypeByUuid("05a29f94-c0ed-11e2-94be-8c13b969e334");
 
-		for (Map.Entry<Integer, List<BillableServiceDetails>> entry : opdTestOrderMap.entrySet()) {
-			TestOrderDetails orders = new TestOrderDetails();
+		for (Map.Entry<Integer, List<ServiceDetailsForTestOrder>> entry : opdTestOrderMap.entrySet()) {
 			Encounter encounter = es.getEncounter(entry.getKey());
-			orders.setEncounterId(encounter.getId());
-			orders.setEncounterUuid(encounter.getUuid());
-			orders.setPatientId(encounter.getPatient().getPatientIdentifier(pit).getIdentifier());
-			orders.setPatientUuid(encounter.getUuid());
-			orders.setPatientName(getName(encounter.getPatient()));
-			orders.setGender(encounter.getPatient().getGender());
-			orders.setAge(encounter.getPatient().getAge());
-			Visit visit = encounter.getVisit();
+			patientEncounterMap.put(encounter.getPatient().getId(), encounter);
+		}
+
+		for (Map.Entry<Integer, Encounter> entry : patientEncounterMap.entrySet()) {
+			TestOrderDetails orders = new TestOrderDetails();
+			Patient pat = ps.getPatient(entry.getKey());
+			Encounter enc = entry.getValue();
+			orders.setPatientId(pat.getPatientIdentifier(pit).getIdentifier());
+			orders.setPatientUuid(pat.getUuid());
+			orders.setPatientName(getName(pat));
+			orders.setGender(pat.getGender());
+			orders.setAge(pat.getAge());
+			if (pat.getBirthdate() != null) {
+				orders.setBirthDate(formatter.format(pat.getBirthdate()));
+			}
+			Visit visit = enc.getVisit();
 			for (VisitAttribute va : visit.getActiveAttributes()) {
 				if (va.getAttributeType().getUuid().equals("80c68ebe-d696-4b8e-8aa0-53018f8e5d7b")) {
 					orders.setPatientCategory(va.getValueReference());
 				}
 			}
-			Location location = ls.getLocationByUuid(entry.getValue().get(0).getLocationUuid());
-			orders.setLocationId(location.getLocationId());
-			orders.setLocationUuid(location.getUuid());
-			orders.setLocationName(location.getName());
-			orders.setBillableServiceDetails(entry.getValue());
+			orders.setServiceDetailsForTestOrder(opdTestOrderMap.get(enc.getId()));
 			listOforders.add(orders);
-
 		}
 		orderDTO.setTestOrderDetails(listOforders);
 
@@ -185,38 +196,41 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		for (OrderServiceDetails osd : billingOrderDetails.getOrderServiceDetails()) {
 
 			OpdTestOrder opdTestOrder = billingService.getOpdTestOrderById(osd.getOpdOrderId());
+			if (opdTestOrder != null) {
+				if (osd.getBilled()) {
 
-			if (osd.getBilled()) {
+					patient = opdTestOrder.getPatient();
+					Concept service = opdTestOrder.getBillableService().getServiceConcept();
+					Integer quantity = osd.getQuantity();
+					BigDecimal unitPrice = opdTestOrder.getBillableService().getPrice();
 
-				patient = opdTestOrder.getPatient();
-				Concept service = opdTestOrder.getBillableService().getServiceConcept();
-				Integer quantity = osd.getQuantity();
-				BigDecimal unitPrice = opdTestOrder.getBillableService().getPrice();
+					mUnitPrice = new Money(unitPrice);
+					itemAmount = mUnitPrice.times(quantity);
+					totalAmount = totalAmount.plus(itemAmount);
 
-				mUnitPrice = new Money(unitPrice);
-				itemAmount = mUnitPrice.times(quantity);
-				totalAmount = totalAmount.plus(itemAmount);
+					item = new PatientServiceBillItem();
+					item.setCreatedDate(new Date());
+					item.setName(service.getName().getName());
+					item.setPatientServiceBill(bill);
+					item.setQuantity(quantity);
+					item.setBillableService(opdTestOrder.getBillableService());
+					item.setUnitPrice(unitPrice);
+					item.setAmount(itemAmount.getAmount());
 
-				item = new PatientServiceBillItem();
-				item.setCreatedDate(new Date());
-				item.setName(service.getName().getName());
-				item.setPatientServiceBill(bill);
-				item.setQuantity(quantity);
-				item.setBillableService(opdTestOrder.getBillableService());
-				item.setUnitPrice(unitPrice);
-				item.setAmount(itemAmount.getAmount());
+					rate = new BigDecimal(1);
+					item.setActualAmount(item.getAmount().multiply(rate));
+					totalActualAmount = totalActualAmount.add(item.getActualAmount());
+					bill.addBillItem(item);
 
-				rate = new BigDecimal(1);
-				item.setActualAmount(item.getAmount().multiply(rate));
-				totalActualAmount = totalActualAmount.add(item.getActualAmount());
-				bill.addBillItem(item);
+					opdTestOrder.setBillingStatus(true);
+					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
 
-				opdTestOrder.setBillingStatus(true);
-				billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
-
+				} else {
+					opdTestOrder.setCancelStatus(true);
+					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+				}
 			} else {
-				opdTestOrder.setCancelStatus(true);
-				billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+				throw new ResourceNotFoundException(OpenmrsHispIndiaConstants.VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID);
 			}
 
 		}
