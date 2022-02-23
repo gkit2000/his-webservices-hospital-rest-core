@@ -35,7 +35,7 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.Money;
-import org.openmrs.module.hospitalrestcore.OpenmrsHispIndiaConstants;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.billing.BillableServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingOrderDetails;
@@ -45,6 +45,7 @@ import org.openmrs.module.hospitalrestcore.billing.OrderDTO;
 import org.openmrs.module.hospitalrestcore.billing.OrderServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
+import org.openmrs.module.hospitalrestcore.billing.ProcessOrdersResponseDTO;
 import org.openmrs.module.hospitalrestcore.billing.ServiceDetailsForTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.TestOrderDetails;
 import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
@@ -83,7 +84,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		if (patientUuid != null && !patientUuid.isEmpty()) {
 			patient = ps.getPatientByUuid(patientUuid);
 			if (patient == null) {
-				throw new ResourceNotFoundException(OpenmrsHispIndiaConstants.VALIDATION_ERROR_NOT_VALID_UUID);
+				throw new ResourceNotFoundException(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_UUID);
 			}
 		}
 		EncounterService es = Context.getEncounterService();
@@ -167,8 +168,8 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 	}
 
 	@RequestMapping(value = "/patient", method = RequestMethod.POST)
-	public ResponseEntity<Void> processOrders(HttpServletResponse response, HttpServletRequest request,
-			@Valid @RequestBody BillingOrderDetails billingOrderDetails)
+	public ResponseEntity<ProcessOrdersResponseDTO> processOrders(HttpServletResponse response,
+			HttpServletRequest request, @Valid @RequestBody BillingOrderDetails billingOrderDetails)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		HttpSession httpSession = request.getSession();
 
@@ -230,7 +231,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
 				}
 			} else {
-				throw new ResourceNotFoundException(OpenmrsHispIndiaConstants.VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID);
+				throw new ResourceNotFoundException(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID);
 			}
 
 		}
@@ -256,7 +257,11 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 		bill = billingService.saveOrUpdatePatientServiceBill(bill);
 
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		ProcessOrdersResponseDTO processOrdersResponseDTO = new ProcessOrdersResponseDTO();
+
+		processOrdersResponseDTO.setBillId(bill.getPatientServiceBillId());
+
+		return new ResponseEntity<ProcessOrdersResponseDTO>(processOrdersResponseDTO, HttpStatus.CREATED);
 	}
 
 	public String getName(Patient patient) {

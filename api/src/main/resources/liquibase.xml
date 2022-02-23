@@ -31,15 +31,18 @@
 		</createTable>
 		<addForeignKeyConstraint
 			constraintName="billing_billable_service_concept"
-			baseTableName="billing_billable_service" baseColumnNames="service_concept"
-			referencedTableName="concept" referencedColumnNames="concept_id" />
+			baseTableName="billing_billable_service"
+			baseColumnNames="service_concept" referencedTableName="concept"
+			referencedColumnNames="concept_id" />
 		<addForeignKeyConstraint
 			constraintName="billing_billable_service_service_category_concept"
-			baseTableName="billing_billable_service" baseColumnNames="service_category_concept"
+			baseTableName="billing_billable_service"
+			baseColumnNames="service_category_concept"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 		<addForeignKeyConstraint
 			constraintName="billing_billable_service_price_category_concept"
-			baseTableName="billing_billable_service" baseColumnNames="price_category_concept"
+			baseTableName="billing_billable_service"
+			baseColumnNames="price_category_concept"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 	</changeSet>
 
@@ -246,6 +249,55 @@
 			constraintName="billing_patient_service_bill_item_voided_by"
 			baseTableName="billing_patient_service_bill_item"
 			baseColumnNames="voided_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="billing_category_location-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_category_location" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_category_location table
+		</comment>
+		<createTable tableName="billing_category_location">
+			<column name="category_location_mapping_id" type="int"
+				autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="price_category_concept" type="int" />
+			<column name="location_id" type="int" />
+			<column name="deleted" type="boolean" />
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="billing_category_location_price_category_concept"
+			baseTableName="billing_category_location"
+			baseColumnNames="price_category_concept"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_category_location_price_category_concept"
+			baseTableName="billing_category_location"
+			baseColumnNames="location_id" referencedTableName="location"
+			referencedColumnNames="location_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_category_location_creator_fk"
+			baseTableName="billing_category_location" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="billing_category_location_changed_by_fk"
+			baseTableName="billing_category_location"
+			baseColumnNames="changed_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 	</changeSet>
 

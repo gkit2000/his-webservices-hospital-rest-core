@@ -21,16 +21,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
+import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +53,8 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	private BillingReceiptDAO billingReceiptDAO;
 
 	private PatientServiceBillDAO patientServiceBillDAO;
+	
+	private CategoryLocationDAO categoryLocationDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -107,6 +112,20 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 		this.patientServiceBillDAO = patientServiceBillDAO;
 	}
 
+	/**
+	 * @return the categoryLocationDAO
+	 */
+	public CategoryLocationDAO getCategoryLocationDAO() {
+		return categoryLocationDAO;
+	}
+
+	/**
+	 * @param categoryLocationDAO the categoryLocationDAO to set
+	 */
+	public void setCategoryLocationDAO(CategoryLocationDAO categoryLocationDAO) {
+		this.categoryLocationDAO = categoryLocationDAO;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<BillableService> getAllServices() throws APIException {
@@ -137,12 +156,6 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	@Transactional
 	public List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException {
 		return (List<BillableService>) getBillableServiceDAO().saveOrUpdate(billableServices);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public BillableService getServiceByConcept(Concept serviceConcept) throws APIException {
-		return getBillableServiceDAO().getServiceByConcept(serviceConcept);
 	}
 
 	@Override
@@ -180,6 +193,36 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	public PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill)
 			throws APIException {
 		return (PatientServiceBill) getPatientServiceBillDAO().saveOrUpdate(patientServiceBill);
+	}
+	
+	@Override
+	@Transactional
+	public List<CategoryLocation> getAllCategoryLocation() throws APIException {
+		return getCategoryLocationDAO().getAllCategoryLocation();
+	}
+	
+	@Override
+	@Transactional
+	public List<CategoryLocation> getCategoryLocationByPriceCategory(Concept priceCategoryConcept) throws APIException {
+		return getCategoryLocationDAO().getCategoryLocationByPriceCategory(priceCategoryConcept);
+	}
+	
+	@Override
+	@Transactional
+	public CategoryLocation getCategoryLocationByLocation(Location location) throws APIException {
+		return getCategoryLocationDAO().getCategoryLocationByLocation(location);
+	}
+	
+	@Override
+	@Transactional
+	public CategoryLocation getCategoryLocationByPriceCategoryAndLocation(Concept priceCategoryConcept,Location location) throws APIException {
+		return getCategoryLocationDAO().getCategoryLocationByPriceCategoryAndLocation(priceCategoryConcept,location);
+	}
+	
+	@Override
+	@Transactional
+	public CategoryLocation saveOrUpdateCategoryLocation(CategoryLocation categoryLocation) throws APIException {
+		return (CategoryLocation) getCategoryLocationDAO().saveOrUpdate(categoryLocation);
 	}
 
 }

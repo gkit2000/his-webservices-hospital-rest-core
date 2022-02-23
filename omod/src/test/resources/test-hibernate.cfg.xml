@@ -10,5 +10,6 @@
 		<mapping resource="BillingReceipt.hbm.xml" />
 		<mapping resource="PatientServiceBill.hbm.xml" />
 		<mapping resource="PatientServiceBillItem.hbm.xml" />
+		<mapping resource="CategoryLocation.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

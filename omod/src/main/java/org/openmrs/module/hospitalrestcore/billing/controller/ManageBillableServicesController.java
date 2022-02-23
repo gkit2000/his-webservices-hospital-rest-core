@@ -87,7 +87,7 @@ public class ManageBillableServicesController extends BaseRestController {
 		HttpSession httpSession = request.getSession();
 
 		ConceptService conceptService = Context.getService(ConceptService.class);
-		Concept rootServiceconcept = Context.getConceptService().getConceptByName("SERVICES ORDERED");
+		Concept rootServiceconcept = conceptService.getConceptByName("SERVICES ORDERED");
 
 		BillingService billingService = Context.getService(BillingService.class);
 		List<BillableService> services = billingService.getAllServices();
