@@ -65,12 +65,4 @@ public class HibernateBillableServiceDAO extends HibernateSingleClassDAO impleme
 		return (BillableService) query.uniqueResult();
 	}*/
 
-	@Override
-	@Transactional(readOnly = true)
-	public BillableService getServiceByConcept(Concept serviceConcept) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-		criteria.add(Restrictions.eq("serviceConcept", serviceConcept));
-		return (BillableService) criteria.uniqueResult();
-	}
-
 }

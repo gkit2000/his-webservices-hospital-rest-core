@@ -19,11 +19,13 @@ import java.util.List;
 
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
+import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 
@@ -51,8 +53,6 @@ public interface BillingService extends OpenmrsService {
 
 	List<BillableService> saveBillableService(Collection<BillableService> billableServices) throws APIException;
 
-	BillableService getServiceByConcept(Concept serviceConcept) throws APIException;
-
 	OpdTestOrder saveOrUpdateOpdTestOrder(OpdTestOrder OpdTestOrder) throws APIException;
 
 	OpdTestOrder getOpdTestOrderById(Integer opdOrderId) throws APIException;
@@ -64,5 +64,15 @@ public interface BillingService extends OpenmrsService {
 	PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill) throws APIException;
 
 	BillingReceipt createReceipt(BillingReceipt receipt) throws APIException;
+	
+	List<CategoryLocation> getAllCategoryLocation() throws APIException;
+	
+	List<CategoryLocation> getCategoryLocationByPriceCategory(Concept priceCategoryConcept) throws APIException;
+	
+	CategoryLocation getCategoryLocationByLocation(Location location) throws APIException;
+	
+	CategoryLocation getCategoryLocationByPriceCategoryAndLocation(Concept priceCategoryConcept,Location location) throws APIException;
+	
+	CategoryLocation saveOrUpdateCategoryLocation(CategoryLocation categoryLocation) throws APIException;
 
 }

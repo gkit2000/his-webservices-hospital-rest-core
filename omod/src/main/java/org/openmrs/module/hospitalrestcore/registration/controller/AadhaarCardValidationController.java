@@ -16,7 +16,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.hospitalrestcore.OpenmrsHispIndiaConstants;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
@@ -53,7 +53,7 @@ public class AadhaarCardValidationController extends BaseRestController {
 		log.info("patients size-" + patients.size());
 		if (yearsBetween > 10) {
 			if (patients.size() > 0) {
-				throw new ResourceNotFoundException(OpenmrsHispIndiaConstants.VALIDATION_ERROR_AADHAR);
+				throw new ResourceNotFoundException(OpenmrsCustomConstants.VALIDATION_ERROR_AADHAR);
 			}
 		}
 

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping
+	package="org.openmrs.module.hospitalrestcore.billing">
+
+	<class name="CategoryLocation" table="billing_category_location"
+		batch-size="500">
+
+		<id name="categoryLocationMappingId" type="int"
+			column="category_location_mapping_id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<many-to-one name="priceCategoryConcept"
+			column="price_category_concept" class="org.openmrs.Concept" />
+		<many-to-one name="location" column="location_id"
+			class="org.openmrs.Location" />
+		<property name="deleted" column="deleted" />
+		<many-to-one name="creator" column="creator"
+			class="org.openmrs.User" />
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" column="changed_by"
+			class="org.openmrs.User" />
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed" length="19" />
+		<property name="uuid" type="java.lang.String" column="uuid"
+			length="38" unique="true" />
+	</class>
+</hibernate-mapping>
