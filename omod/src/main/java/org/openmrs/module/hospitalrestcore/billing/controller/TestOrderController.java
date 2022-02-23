@@ -27,7 +27,10 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
+import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
+import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.DepartmentConcept;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.OrderDetails;
@@ -79,9 +82,22 @@ public class TestOrderController extends BaseRestController {
 		Concept conpro = conceptService.getConceptByName("Post for procedure");
 		Concept coninvt = conceptService.getConceptByName("Investigation");
 
-		EncounterType encounterType = Context.getEncounterService().getEncounterType("Check In");
+		EncounterType encounterType = Context.getEncounterService()
+				.getEncounterType(OpenmrsCustomConstants.ENCOUNTER_TYPE_CHECK_IN);
 
 		Location location = locationService.getLocationByUuid(orderDetails.getLocation());
+
+		if (location == null) {
+			throw new ResourceNotFoundException(
+					String.format(OpenmrsCustomConstants.VALIDATION_ERROR_LOCATION, orderDetails.getLocation()));
+		}
+
+		CategoryLocation categoryLocation = billingService.getCategoryLocationByLocation(location);
+
+		if (categoryLocation == null) {
+			throw new ResourceNotFoundException(
+					String.format(OpenmrsCustomConstants.VALIDATION_ERROR_CATEGORY_LOCATION, location.getName()));
+		}
 
 		List<Visit> visits = Context.getService(VisitService.class).getVisitsByPatient(patient);
 		if (visits != null && visits.size() > 0) {
@@ -101,7 +117,14 @@ public class TestOrderController extends BaseRestController {
 			for (String prcd : orderDetails.getProcedures()) {
 				Concept concept = conceptService.getConceptByUuid(prcd);
 				if (concept != null) {
-					BillableService billableService = billingService.getServiceByConcept(concept);
+					BillableService billableService = billingService.getServicesByServiceConceptAndPriceCategory(
+							concept, categoryLocation.getPriceCategoryConcept());
+					if (billableService == null) {
+						throw new ResourceNotFoundException(
+								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_BILLABLE_SERVICE_PROCEDURE,
+										concept.getName().getName(),
+										categoryLocation.getPriceCategoryConcept().getName().getName()));
+					}
 					OpdTestOrder opdTestOrder = new OpdTestOrder();
 					opdTestOrder.setPatient(patient);
 					opdTestOrder.setEncounter(encounter);
@@ -120,7 +143,14 @@ public class TestOrderController extends BaseRestController {
 			for (String inv : orderDetails.getInvestigations()) {
 				Concept concept = conceptService.getConceptByUuid(inv);
 				if (concept != null) {
-					BillableService billableService = billingService.getServiceByConcept(concept);
+					BillableService billableService = billingService.getServicesByServiceConceptAndPriceCategory(
+							concept, categoryLocation.getPriceCategoryConcept());
+					if (billableService == null) {
+						throw new ResourceNotFoundException(
+								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_BILLABLE_SERVICE_INVESTIGATION,
+										concept.getName().getName(),
+										categoryLocation.getPriceCategoryConcept().getName().getName()));
+					}
 					OpdTestOrder opdTestOrder = new OpdTestOrder();
 					opdTestOrder.setPatient(patient);
 					opdTestOrder.setEncounter(encounter);

@@ -23,6 +23,7 @@ import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appointmentscheduling.Appointment;
 import org.openmrs.module.appointmentscheduling.api.AppointmentService;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.visit.LastVisitDetails;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
@@ -48,19 +49,19 @@ public class LastVisitDetailsController {
 		Visit visit = Context.getService(VisitService.class).getVisitByUuid(visitUuid);
 		if (visit != null) {
 			Appointment appointment = Context.getService(AppointmentService.class).getAppointmentByVisit(visit);
-			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			if (appointment != null) {
 				lastVisitDetails.setRegistrationDate(formatter.format(appointment.getDateCreated()));
 				lastVisitDetails.setDepartmentName(appointment.getAppointmentType().getName());
 				lastVisitDetails
 						.setReportingPlace(appointment.getTimeSlot().getAppointmentBlock().getLocation().getName());
 				lastVisitDetails.setDoctorName(appointment.getTimeSlot().getAppointmentBlock().getProvider().getName());
-				if (appointment.getReason() != null && (appointment.getReason().equalsIgnoreCase("New Registration")
-						|| appointment.getReason().equalsIgnoreCase("Online Appointment"))) {
+				if (appointment.getReason() != null && (appointment.getReason().equalsIgnoreCase(OpenmrsCustomConstants.APPOINTMENT_REASON_NEW_REGISTRATION)
+						|| appointment.getReason().equalsIgnoreCase(OpenmrsCustomConstants.APPOINTMENT_REASON_ONLINE_APPOINTMENT))) {
 					List<Encounter> encounters = Context.getService(EncounterService.class).getEncountersByVisit(visit,
 							false);
 					for (Encounter encounter : encounters) {
-						if (encounter.getEncounterType().getName().equalsIgnoreCase("Check In")) {
+						if (encounter.getEncounterType().getName().equalsIgnoreCase(OpenmrsCustomConstants.ENCOUNTER_TYPE_CHECK_IN)) {
 							lastVisitDetails.setReportingTime(formatter.format(encounter.getDateCreated()));
 						}
 					}

@@ -57,6 +57,7 @@
 		BillingReceipt.hbm.xml
 		PatientServiceBill.hbm.xml
 		PatientServiceBillItem.hbm.xml
+		CategoryLocation.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
