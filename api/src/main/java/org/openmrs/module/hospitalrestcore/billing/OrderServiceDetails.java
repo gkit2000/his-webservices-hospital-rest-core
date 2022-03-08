@@ -13,6 +13,10 @@ public class OrderServiceDetails {
 	private Integer quantity;
 	private Boolean billed;
 
+	// these below property is for walking patient or random test addition in the
+	// test order
+	private String serviceConceptUUid;
+
 	/**
 	 * @return the opdOrderId
 	 */
@@ -53,6 +57,20 @@ public class OrderServiceDetails {
 	 */
 	public void setBilled(Boolean billed) {
 		this.billed = billed;
+	}
+
+	/**
+	 * @return the serviceConceptUUid
+	 */
+	public String getServiceConceptUUid() {
+		return serviceConceptUUid;
+	}
+
+	/**
+	 * @param serviceConceptUUid the serviceConceptUUid to set
+	 */
+	public void setServiceConceptUUid(String serviceConceptUUid) {
+		this.serviceConceptUUid = serviceConceptUUid;
 	}
 
 }
