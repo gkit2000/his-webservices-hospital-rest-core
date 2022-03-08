@@ -103,6 +103,11 @@ public class PriceCategoryAndLocationMappingController extends BaseRestControlle
 			Location location = locationService.getLocationByUuid(locationUuid);
 			CategoryLocation categoryLocation = billingService.getCategoryLocationByLocation(location);
 
+			if (categoryLocation == null) {
+				throw new ResourceNotFoundException(
+						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_LOCATION, locationUuid));
+			}
+
 			if (categoryLocation != null) {
 				if (categoryLocationDTO.getDeleted() == false) {
 					categoryLocation.setPriceCategoryConcept(priceCategoryConcept);

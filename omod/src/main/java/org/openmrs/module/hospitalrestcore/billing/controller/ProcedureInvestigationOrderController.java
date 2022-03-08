@@ -30,6 +30,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.Visit;
 import org.openmrs.VisitAttribute;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
@@ -37,6 +38,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.Money;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
+import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillableServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingOrderDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
@@ -84,7 +86,8 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		if (patientUuid != null && !patientUuid.isEmpty()) {
 			patient = ps.getPatientByUuid(patientUuid);
 			if (patient == null) {
-				throw new ResourceNotFoundException(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_UUID);
+				throw new ResourceNotFoundException(
+						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_PATIENT_UUID, patientUuid));
 			}
 		}
 		EncounterService es = Context.getEncounterService();
@@ -173,13 +176,17 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		HttpSession httpSession = request.getSession();
 
+		ConceptService conceptService = Context.getService(ConceptService.class);
 		BillingService billingService = Context.getService(BillingService.class);
+		PatientService ps = Context.getPatientService();
 
 		Patient patient = null;
 
 		PatientServiceBill bill = new PatientServiceBill();
 		bill.setCreatedDate(new Date());
 		bill.setCreator(Context.getAuthenticatedUser());
+
+		Concept priceCategoryConcept = null;
 
 		float waiverPercentage = billingOrderDetails.getWaiverPercentage();
 		BigDecimal totalAmountPayable = billingOrderDetails.getTotalAmountPayable();
@@ -196,42 +203,109 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 		for (OrderServiceDetails osd : billingOrderDetails.getOrderServiceDetails()) {
 
-			OpdTestOrder opdTestOrder = billingService.getOpdTestOrderById(osd.getOpdOrderId());
-			if (opdTestOrder != null) {
-				if (osd.getBilled()) {
-
-					patient = opdTestOrder.getPatient();
-					Concept service = opdTestOrder.getBillableService().getServiceConcept();
-					Integer quantity = osd.getQuantity();
-					BigDecimal unitPrice = opdTestOrder.getBillableService().getPrice();
-
-					mUnitPrice = new Money(unitPrice);
-					itemAmount = mUnitPrice.times(quantity);
-					totalAmount = totalAmount.plus(itemAmount);
-
-					item = new PatientServiceBillItem();
-					item.setCreatedDate(new Date());
-					item.setName(service.getName().getName());
-					item.setPatientServiceBill(bill);
-					item.setQuantity(quantity);
-					item.setBillableService(opdTestOrder.getBillableService());
-					item.setUnitPrice(unitPrice);
-					item.setAmount(itemAmount.getAmount());
-
-					rate = new BigDecimal(1);
-					item.setActualAmount(item.getAmount().multiply(rate));
-					totalActualAmount = totalActualAmount.add(item.getActualAmount());
-					bill.addBillItem(item);
-
-					opdTestOrder.setBillingStatus(true);
-					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
-
-				} else {
-					opdTestOrder.setCancelStatus(true);
-					billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+			if (osd.getOpdOrderId() != null) {
+				OpdTestOrder opdTestOrder = billingService.getOpdTestOrderById(osd.getOpdOrderId());
+				if (opdTestOrder == null) {
+					throw new ResourceNotFoundException(String.format(
+							OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID, osd.getOpdOrderId()));
+				}
+				patient = opdTestOrder.getPatient();
+				Integer quantity = osd.getQuantity();
+				if (quantity < 0) {
+					throw new ResourceNotFoundException(
+							String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_QUANTITY,
+									opdTestOrder.getBillableService().getName()));
 				}
 			} else {
-				throw new ResourceNotFoundException(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID);
+				Concept serviceConcept = conceptService.getConceptByUuid(osd.getServiceConceptUUid());
+				if (serviceConcept == null) {
+					throw new ResourceNotFoundException(
+							String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_SERVICE_CONCEPT_UUID,
+									osd.getServiceConceptUUid()));
+				}
+				if ("walkin".equals(billingOrderDetails.getBillType())) {
+					patient = ps.getPatientByUuid(billingOrderDetails.getPatientUuid());
+					if (patient == null) {
+						throw new ResourceNotFoundException(
+								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_PATIENT_UUID,
+										billingOrderDetails.getPatientUuid()));
+					}
+				}
+				Integer quantity = osd.getQuantity();
+				if (quantity < 0) {
+					throw new ResourceNotFoundException(
+							String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_QUANTITY,
+									serviceConcept.getName().getName()));
+				}
+			}
+		}
+
+		for (OrderServiceDetails osd : billingOrderDetails.getOrderServiceDetails()) {
+
+			if (osd.getOpdOrderId() != null) {
+				OpdTestOrder opdTestOrder = billingService.getOpdTestOrderById(osd.getOpdOrderId());
+				if (opdTestOrder != null) {
+					if (osd.getBilled()) {
+
+						Concept service = opdTestOrder.getBillableService().getServiceConcept();
+						Integer quantity = osd.getQuantity();
+						BigDecimal unitPrice = opdTestOrder.getBillableService().getPrice();
+						priceCategoryConcept = opdTestOrder.getBillableService().getPriceCategoryConcept();
+
+						mUnitPrice = new Money(unitPrice);
+						itemAmount = mUnitPrice.times(quantity);
+						totalAmount = totalAmount.plus(itemAmount);
+
+						item = new PatientServiceBillItem();
+						item.setCreatedDate(new Date());
+						item.setName(service.getName().getName());
+						item.setPatientServiceBill(bill);
+						item.setQuantity(quantity);
+						item.setBillableService(opdTestOrder.getBillableService());
+						item.setUnitPrice(unitPrice);
+						item.setAmount(itemAmount.getAmount());
+
+						rate = new BigDecimal(1);
+						item.setActualAmount(item.getAmount().multiply(rate));
+						totalActualAmount = totalActualAmount.add(item.getActualAmount());
+						bill.addBillItem(item);
+
+						opdTestOrder.setBillingStatus(true);
+						billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+
+					} else {
+						opdTestOrder.setCancelStatus(true);
+						billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+					}
+				}
+			} else {
+				Concept serviceConcept = conceptService.getConceptByUuid(osd.getServiceConceptUUid());
+				if ("walkin".equals(billingOrderDetails.getBillType())) {
+					priceCategoryConcept = conceptService.getConceptByUuid(OpenmrsCustomConstants.GENERAL_WARD_PRICES);
+				}
+				BillableService service = billingService.getServicesByServiceConceptAndPriceCategory(serviceConcept,
+						priceCategoryConcept);
+				Integer quantity = osd.getQuantity();
+				BigDecimal unitPrice = service.getPrice();
+
+				mUnitPrice = new Money(unitPrice);
+				itemAmount = mUnitPrice.times(quantity);
+				totalAmount = totalAmount.plus(itemAmount);
+
+				item = new PatientServiceBillItem();
+				item.setCreatedDate(new Date());
+				item.setName(serviceConcept.getName().getName());
+				item.setPatientServiceBill(bill);
+				item.setQuantity(quantity);
+				item.setBillableService(service);
+				item.setUnitPrice(unitPrice);
+				item.setAmount(itemAmount.getAmount());
+
+				rate = new BigDecimal(1);
+				item.setActualAmount(item.getAmount().multiply(rate));
+				totalActualAmount = totalActualAmount.add(item.getActualAmount());
+				bill.addBillItem(item);
+
 			}
 
 		}
@@ -251,7 +325,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		bill.setAmountGiven(amountGiven);
 		bill.setAmountReturned(amountReturned);
 		bill.setComment(billingOrderDetails.getComment());
-		bill.setBillType("out/paid");
+		bill.setBillType(billingOrderDetails.getBillType());
 		bill.setReceipt(receipt);
 		// bill.setPatientSubcategory(patientSubcategory);
 

@@ -9,20 +9,8 @@ package org.openmrs.module.hospitalrestcore.billing;
  */
 public class CategoryLocationDetails {
 
-	private String priceCategoryUuid;
 	private String locationUuid;
-	/**
-	 * @return the priceCategoryUuid
-	 */
-	public String getPriceCategoryUuid() {
-		return priceCategoryUuid;
-	}
-	/**
-	 * @param priceCategoryUuid the priceCategoryUuid to set
-	 */
-	public void setPriceCategoryUuid(String priceCategoryUuid) {
-		this.priceCategoryUuid = priceCategoryUuid;
-	}
+	
 	/**
 	 * @return the locationUuid
 	 */
