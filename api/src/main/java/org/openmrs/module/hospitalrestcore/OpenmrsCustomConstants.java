@@ -33,7 +33,7 @@ public final class OpenmrsCustomConstants {
 
 	public static final String VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID = "Opd Order Id %S is not valid";
 	
-	public static final String VALIDATION_ERROR_NOT_VALID_SERVICE_CONCEPT_UUID = "Service Concept uuid %s is not valid";
+	public static final String VALIDATION_ERROR_NOT_VALID_SERVICE_CONCEPT_UUID = "Service concept uuid %s is not valid";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_QUANTITY = "Not valid quantity for service %s.Please enter valid quantity";
 	
@@ -45,4 +45,8 @@ public final class OpenmrsCustomConstants {
 	public static final String APPOINTMENT_REASON_ONLINE_APPOINTMENT = "Online Appointment";
 	
 	public static final String ENCOUNTER_TYPE_CHECK_IN = "Check In";
+	
+	public static final String VALIDATION_ERROR_CONSENT_UUID = "Invalid consent uuid %s";
+	
+	public static final String VALIDATION_ERROR_NOT_VALID_CONSENT_TYPE_CONCEPT_UUID = "Consent type concept uuid %s is not valid";
 }

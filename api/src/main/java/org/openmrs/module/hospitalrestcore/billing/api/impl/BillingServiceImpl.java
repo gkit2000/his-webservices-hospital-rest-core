@@ -36,6 +36,8 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
+import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
+import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -53,8 +55,10 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 	private BillingReceiptDAO billingReceiptDAO;
 
 	private PatientServiceBillDAO patientServiceBillDAO;
-	
+
 	private CategoryLocationDAO categoryLocationDAO;
+
+	private ConsentTemplateDAO consentTemplateDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -126,6 +130,20 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 		this.categoryLocationDAO = categoryLocationDAO;
 	}
 
+	/**
+	 * @return the consentTemplateDAO
+	 */
+	public ConsentTemplateDAO getConsentTemplateDAO() {
+		return consentTemplateDAO;
+	}
+
+	/**
+	 * @param consentTemplateDAO the consentTemplateDAO to set
+	 */
+	public void setConsentTemplateDAO(ConsentTemplateDAO consentTemplateDAO) {
+		this.consentTemplateDAO = consentTemplateDAO;
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<BillableService> getAllServices() throws APIException {
@@ -194,35 +212,60 @@ public class BillingServiceImpl extends BaseOpenmrsService implements BillingSer
 			throws APIException {
 		return (PatientServiceBill) getPatientServiceBillDAO().saveOrUpdate(patientServiceBill);
 	}
-	
+
 	@Override
 	@Transactional
 	public List<CategoryLocation> getAllCategoryLocation() throws APIException {
 		return getCategoryLocationDAO().getAllCategoryLocation();
 	}
-	
+
 	@Override
 	@Transactional
 	public List<CategoryLocation> getCategoryLocationByPriceCategory(Concept priceCategoryConcept) throws APIException {
 		return getCategoryLocationDAO().getCategoryLocationByPriceCategory(priceCategoryConcept);
 	}
-	
+
 	@Override
 	@Transactional
 	public CategoryLocation getCategoryLocationByLocation(Location location) throws APIException {
 		return getCategoryLocationDAO().getCategoryLocationByLocation(location);
 	}
-	
+
 	@Override
 	@Transactional
-	public CategoryLocation getCategoryLocationByPriceCategoryAndLocation(Concept priceCategoryConcept,Location location) throws APIException {
-		return getCategoryLocationDAO().getCategoryLocationByPriceCategoryAndLocation(priceCategoryConcept,location);
+	public CategoryLocation getCategoryLocationByPriceCategoryAndLocation(Concept priceCategoryConcept,
+			Location location) throws APIException {
+		return getCategoryLocationDAO().getCategoryLocationByPriceCategoryAndLocation(priceCategoryConcept, location);
 	}
-	
+
 	@Override
 	@Transactional
 	public CategoryLocation saveOrUpdateCategoryLocation(CategoryLocation categoryLocation) throws APIException {
 		return (CategoryLocation) getCategoryLocationDAO().saveOrUpdate(categoryLocation);
+	}
+
+	@Override
+	@Transactional
+	public List<ConsentTemplate> getAllConsentTemplate() throws APIException {
+		return getConsentTemplateDAO().getAllConsentTemplate();
+	}
+
+	@Override
+	@Transactional
+	public ConsentTemplate getConsentTemplateByUuid(String uuid) throws APIException {
+		return getConsentTemplateDAO().getConsentTemplateByUuid(uuid);
+	}
+
+	@Override
+	@Transactional
+	public List<ConsentTemplate> getConsentTemplateByType(Concept type) throws APIException {
+		return getConsentTemplateDAO().getConsentTemplateByType(type);
+	}
+
+	@Override
+	@Transactional
+	public ConsentTemplate saveOrUpdateConsentTemplate(ConsentTemplate consentTemplate) throws APIException {
+		return (ConsentTemplate) getConsentTemplateDAO().saveOrUpdate(consentTemplate);
 	}
 
 }
