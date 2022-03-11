@@ -11,5 +11,6 @@
 		<mapping resource="PatientServiceBill.hbm.xml" />
 		<mapping resource="PatientServiceBillItem.hbm.xml" />
 		<mapping resource="CategoryLocation.hbm.xml" />
+		<mapping resource="ConsentTemplate.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

@@ -72,6 +72,13 @@
                         </property>
                     </bean>
                 </property>
+                 <property name="consentTemplateDAO">
+                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.consent.api.db.hibernate.HibernateConsentTemplateDAO">
+                        <property name="sessionFactory">
+                            <ref bean="dbSessionFactory" />
+                        </property>
+                    </bean>
+                </property>
             </bean>
         </property>
         <property name="preInterceptors">

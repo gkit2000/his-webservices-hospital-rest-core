@@ -10,5 +10,6 @@
 		<mapping resource="BillingReceipt.hbm.xml" />
 		<mapping resource="PatientServiceBill.hbm.xml" />
 		<mapping resource="PatientServiceBillItem.hbm.xml" />
+		<mapping resource="ConsentTemplate.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

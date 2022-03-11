@@ -28,6 +28,7 @@ import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
+import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -64,15 +65,24 @@ public interface BillingService extends OpenmrsService {
 	PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill) throws APIException;
 
 	BillingReceipt createReceipt(BillingReceipt receipt) throws APIException;
-	
+
 	List<CategoryLocation> getAllCategoryLocation() throws APIException;
-	
+
 	List<CategoryLocation> getCategoryLocationByPriceCategory(Concept priceCategoryConcept) throws APIException;
-	
+
 	CategoryLocation getCategoryLocationByLocation(Location location) throws APIException;
-	
-	CategoryLocation getCategoryLocationByPriceCategoryAndLocation(Concept priceCategoryConcept,Location location) throws APIException;
-	
+
+	CategoryLocation getCategoryLocationByPriceCategoryAndLocation(Concept priceCategoryConcept, Location location)
+			throws APIException;
+
 	CategoryLocation saveOrUpdateCategoryLocation(CategoryLocation categoryLocation) throws APIException;
+
+	List<ConsentTemplate> getAllConsentTemplate() throws APIException;
+
+	ConsentTemplate getConsentTemplateByUuid(String uuid) throws APIException;
+
+	List<ConsentTemplate> getConsentTemplateByType(Concept type) throws APIException;
+
+	ConsentTemplate saveOrUpdateConsentTemplate(ConsentTemplate consentTemplate) throws APIException;
 
 }

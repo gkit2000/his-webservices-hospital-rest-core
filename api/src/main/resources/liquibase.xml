@@ -300,5 +300,54 @@
 			baseColumnNames="changed_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 	</changeSet>
+	
+	<changeSet id="consent_template-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="consent_template" />
+			</not>
+		</preConditions>
+		<comment>
+			Create consent_template table
+		</comment>
+		<createTable tableName="consent_template">
+			<column name="consent_template_id" type="int"
+				autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="mail_subject" type="varchar(255)" />
+			<column name="description" type="varchar(255)" />
+			<column name="type" type="int" />
+			<column name="template_content" type="CLOB">
+            <constraints nullable="false"/>
+        </column>
+			<column name="deleted" type="boolean" />
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="DATETIME" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="consent_template_type"
+			baseTableName="consent_template"
+			baseColumnNames="type"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="consent_template_creator_fk"
+			baseTableName="consent_template" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="consent_template_changed_by_fk"
+			baseTableName="consent_template"
+			baseColumnNames="changed_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
 
 </databaseChangeLog>

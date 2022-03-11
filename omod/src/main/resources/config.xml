@@ -58,6 +58,7 @@
 		PatientServiceBill.hbm.xml
 		PatientServiceBillItem.hbm.xml
 		CategoryLocation.hbm.xml
+		ConsentTemplate.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
