@@ -38,6 +38,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.Money;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
+import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillableServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingOrderDetails;
@@ -50,7 +51,6 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.billing.ProcessOrdersResponseDTO;
 import org.openmrs.module.hospitalrestcore.billing.ServiceDetailsForTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.TestOrderDetails;
-import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -91,12 +91,12 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			}
 		}
 		EncounterService es = Context.getEncounterService();
-		BillingService billingService = Context.getService(BillingService.class);
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 		Date creationDate = null;
 		if (date != null && !date.isEmpty()) {
 			creationDate = formatter.parse(date);
 		}
-		List<OpdTestOrder> opdTestOrders = billingService.getOpdTestOrder(patient, creationDate);
+		List<OpdTestOrder> opdTestOrders = hospitalRestCoreService.getOpdTestOrder(patient, creationDate);
 		Map<Integer, Location> encounterAndLocationMap = new LinkedHashMap<Integer, Location>();
 		for (OpdTestOrder opdTestOrder : opdTestOrders) {
 			encounterAndLocationMap.put(opdTestOrder.getEncounter().getId(), opdTestOrder.getLocation());
@@ -110,7 +110,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			Integer encounterId = entry.getKey();
 			Location location = entry.getValue();
 			Encounter encounter = es.getEncounter(entry.getKey());
-			List<OpdTestOrder> opdTestOrdersByEncounter = billingService.getOpdTestOrderByEncounter(encounter);
+			List<OpdTestOrder> opdTestOrdersByEncounter = hospitalRestCoreService.getOpdTestOrderByEncounter(encounter);
 			List<BillableServiceDetails> billableServiceDetails = new LinkedList<BillableServiceDetails>();
 			billableServiceDetails.clear();
 			for (OpdTestOrder opdTestOrderByEncounter : opdTestOrdersByEncounter) {
@@ -177,7 +177,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		HttpSession httpSession = request.getSession();
 
 		ConceptService conceptService = Context.getService(ConceptService.class);
-		BillingService billingService = Context.getService(BillingService.class);
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 		PatientService ps = Context.getPatientService();
 
 		Patient patient = null;
@@ -204,7 +204,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		for (OrderServiceDetails osd : billingOrderDetails.getOrderServiceDetails()) {
 
 			if (osd.getOpdOrderId() != null) {
-				OpdTestOrder opdTestOrder = billingService.getOpdTestOrderById(osd.getOpdOrderId());
+				OpdTestOrder opdTestOrder = hospitalRestCoreService.getOpdTestOrderById(osd.getOpdOrderId());
 				if (opdTestOrder == null) {
 					throw new ResourceNotFoundException(String.format(
 							OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_OPD_ORDER_ID, osd.getOpdOrderId()));
@@ -243,7 +243,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		for (OrderServiceDetails osd : billingOrderDetails.getOrderServiceDetails()) {
 
 			if (osd.getOpdOrderId() != null) {
-				OpdTestOrder opdTestOrder = billingService.getOpdTestOrderById(osd.getOpdOrderId());
+				OpdTestOrder opdTestOrder = hospitalRestCoreService.getOpdTestOrderById(osd.getOpdOrderId());
 				if (opdTestOrder != null) {
 					if (osd.getBilled()) {
 
@@ -271,11 +271,11 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 						bill.addBillItem(item);
 
 						opdTestOrder.setBillingStatus(true);
-						billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+						hospitalRestCoreService.saveOrUpdateOpdTestOrder(opdTestOrder);
 
 					} else {
 						opdTestOrder.setCancelStatus(true);
-						billingService.saveOrUpdateOpdTestOrder(opdTestOrder);
+						hospitalRestCoreService.saveOrUpdateOpdTestOrder(opdTestOrder);
 					}
 				}
 			} else {
@@ -283,8 +283,8 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 				if ("walkin".equals(billingOrderDetails.getBillType())) {
 					priceCategoryConcept = conceptService.getConceptByUuid(OpenmrsCustomConstants.GENERAL_WARD_PRICES);
 				}
-				BillableService service = billingService.getServicesByServiceConceptAndPriceCategory(serviceConcept,
-						priceCategoryConcept);
+				BillableService service = hospitalRestCoreService
+						.getServicesByServiceConceptAndPriceCategory(serviceConcept, priceCategoryConcept);
 				Integer quantity = osd.getQuantity();
 				BigDecimal unitPrice = service.getPrice();
 
@@ -312,7 +312,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 		BillingReceipt receipt = new BillingReceipt();
 		receipt.setPaidDate(new Date());
-		receipt = billingService.createReceipt(receipt);
+		receipt = hospitalRestCoreService.createReceipt(receipt);
 
 		bill.setPatient(patient);
 		bill.setAmount(totalAmount.getAmount());
@@ -329,7 +329,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		bill.setReceipt(receipt);
 		// bill.setPatientSubcategory(patientSubcategory);
 
-		bill = billingService.saveOrUpdatePatientServiceBill(bill);
+		bill = hospitalRestCoreService.saveOrUpdatePatientServiceBill(bill);
 
 		ProcessOrdersResponseDTO processOrdersResponseDTO = new ProcessOrdersResponseDTO();
 

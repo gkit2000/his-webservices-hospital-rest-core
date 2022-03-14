@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
   		    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   		    http://www.springframework.org/schema/context
@@ -19,74 +22,81 @@
 
 	<!-- Add here beans related to the API context -->
 
-	
+
 	<!-- Services accessible via Context.getService() -->
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>${project.parent.groupId}.${project.parent.artifactId}.billing.api.BillingService</value>
-                <ref bean="billingService"></ref>
+				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService</value>
+				<ref bean="hospitalRestCoreService"></ref>
 			</list>
 		</property>
 	</bean>
 
-    <bean id="billingService"
-          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager" />
-        </property>
-        <property name="target">
-            <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.impl.BillingServiceImpl">
-                <property name="billableServiceDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillableServiceDAO">
-                        <property name="sessionFactory">
-                            <ref bean="dbSessionFactory" />
-                        </property>
-                    </bean>
-                </property>
-                 <property name="opdTestOrderDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateOpdTestOrderDAO">
-                        <property name="sessionFactory">
-                            <ref bean="dbSessionFactory" />
-                        </property>
-                    </bean>
-                </property>
-                <property name="billingReceiptDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillingReceiptDAO">
-                        <property name="sessionFactory">
-                            <ref bean="dbSessionFactory" />
-                        </property>
-                    </bean>
-                </property>
-                <property name="patientServiceBillDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernatePatientServiceBillDAO">
-                        <property name="sessionFactory">
-                            <ref bean="dbSessionFactory" />
-                        </property>
-                    </bean>
-                </property>
-                <property name="categoryLocationDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateCategoryLocationDAO">
-                        <property name="sessionFactory">
-                            <ref bean="dbSessionFactory" />
-                        </property>
-                    </bean>
-                </property>
-                 <property name="consentTemplateDAO">
-                    <bean class="${project.parent.groupId}.${project.parent.artifactId}.consent.api.db.hibernate.HibernateConsentTemplateDAO">
-                        <property name="sessionFactory">
-                            <ref bean="dbSessionFactory" />
-                        </property>
-                    </bean>
-                </property>
-            </bean>
-        </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors" />
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource" />
-        </property>
-    </bean>
-	
+	<bean id="hospitalRestCoreService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean
+				class="${project.parent.groupId}.${project.parent.artifactId}.api.impl.HospitalRestCoreServiceImpl">
+				<property name="billableServiceDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillableServiceDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="opdTestOrderDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateOpdTestOrderDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="billingReceiptDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateBillingReceiptDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="patientServiceBillDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernatePatientServiceBillDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="categoryLocationDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateCategoryLocationDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="consentTemplateDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.consent.api.db.hibernate.HibernateConsentTemplateDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+
 </beans>

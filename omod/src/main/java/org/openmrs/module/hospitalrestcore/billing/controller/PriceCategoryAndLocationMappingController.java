@@ -28,10 +28,10 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
+import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocationDTO;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocationDetails;
-import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -56,8 +56,8 @@ public class PriceCategoryAndLocationMappingController extends BaseRestControlle
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		BillingService billingService = Context.getService(BillingService.class);
-		List<CategoryLocation> categoryLocations = billingService.getAllCategoryLocation();
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		List<CategoryLocation> categoryLocations = hospitalRestCoreService.getAllCategoryLocation();
 		Set<Concept> priceCategorySet = new HashSet<Concept>();
 		for (CategoryLocation categoryLocation : categoryLocations) {
 			priceCategorySet.add(categoryLocation.getPriceCategoryConcept());
@@ -66,7 +66,7 @@ public class PriceCategoryAndLocationMappingController extends BaseRestControlle
 		Map<String, List<CategoryLocationDetails>> priceCategoryAndLocationMap = new LinkedHashMap<String, List<CategoryLocationDetails>>();
 
 		for (Concept priceCategory : priceCategorySet) {
-			List<CategoryLocation> categoryLocationsByPriceCategory = billingService
+			List<CategoryLocation> categoryLocationsByPriceCategory = hospitalRestCoreService
 					.getCategoryLocationByPriceCategory(priceCategory);
 			List<CategoryLocationDetails> categoryLocationDetailsList = new LinkedList<CategoryLocationDetails>();
 			categoryLocationDetailsList.clear();
@@ -97,11 +97,11 @@ public class PriceCategoryAndLocationMappingController extends BaseRestControlle
 
 		LocationService locationService = Context.getLocationService();
 
-		BillingService billingService = Context.getService(BillingService.class);
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
 		for (String locationUuid : categoryLocationDTO.getLocationUuids()) {
 			Location location = locationService.getLocationByUuid(locationUuid);
-			CategoryLocation categoryLocation = billingService.getCategoryLocationByLocation(location);
+			CategoryLocation categoryLocation = hospitalRestCoreService.getCategoryLocationByLocation(location);
 
 			if (categoryLocation == null) {
 				throw new ResourceNotFoundException(
@@ -131,7 +131,7 @@ public class PriceCategoryAndLocationMappingController extends BaseRestControlle
 				categoryLocation.setCreator(Context.getAuthenticatedUser());
 			}
 
-			billingService.saveOrUpdateCategoryLocation(categoryLocation);
+			hospitalRestCoreService.saveOrUpdateCategoryLocation(categoryLocation);
 		}
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
