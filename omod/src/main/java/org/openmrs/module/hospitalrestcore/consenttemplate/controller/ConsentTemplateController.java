@@ -22,7 +22,7 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
-import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
+import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplateDTO;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplateDetails;
@@ -54,7 +54,7 @@ public class ConsentTemplateController extends BaseRestController {
 
 		ConceptService conceptService = Context.getService(ConceptService.class);
 
-		BillingService restCoreService = Context.getService(BillingService.class);
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
 		if (typeUuid != null) {
 			Concept type = conceptService.getConceptByUuid(typeUuid);
@@ -62,7 +62,7 @@ public class ConsentTemplateController extends BaseRestController {
 				throw new ResourceNotFoundException(String
 						.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_CONSENT_TYPE_CONCEPT_UUID, typeUuid));
 			}
-			List<ConsentTemplate> consentTemplates = restCoreService.getConsentTemplateByType(type);
+			List<ConsentTemplate> consentTemplates = hospitalRestCoreService.getConsentTemplateByType(type);
 			ConsentTemplate consentTemplate = consentTemplates.get(0);
 			ConsentTemplateDetails consentTemplateDetails = new ConsentTemplateDetails();
 			consentTemplateDetails.setName(consentTemplate.getName());
@@ -75,7 +75,7 @@ public class ConsentTemplateController extends BaseRestController {
 			consentTemplateDetails.setDeleted(consentTemplate.getDeleted());
 			new ObjectMapper().writeValue(out, consentTemplateDetails);
 		} else {
-			List<ConsentTemplate> consentTemplates = restCoreService.getAllConsentTemplate();
+			List<ConsentTemplate> consentTemplates = hospitalRestCoreService.getAllConsentTemplate();
 			List<ConsentTemplateDetails> consentTemplateDetailsList = new LinkedList<ConsentTemplateDetails>();
 			for (ConsentTemplate consentTemplate : consentTemplates) {
 				ConsentTemplateDetails consentTemplateDetails = new ConsentTemplateDetails();
@@ -101,12 +101,13 @@ public class ConsentTemplateController extends BaseRestController {
 
 		ConsentTemplate consentTemplate;
 
-		BillingService restCoreService = Context.getService(BillingService.class);
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
 		ConceptService conceptService = Context.getService(ConceptService.class);
 
 		if (consentTemplateDTO.getConsentTemplateUuid() != null) {
-			consentTemplate = restCoreService.getConsentTemplateByUuid(consentTemplateDTO.getConsentTemplateUuid());
+			consentTemplate = hospitalRestCoreService
+					.getConsentTemplateByUuid(consentTemplateDTO.getConsentTemplateUuid());
 			if (consentTemplate == null) {
 				throw new ResourceNotFoundException(String.format(OpenmrsCustomConstants.VALIDATION_ERROR_CONSENT_UUID,
 						consentTemplateDTO.getConsentTemplateUuid()));
@@ -142,7 +143,7 @@ public class ConsentTemplateController extends BaseRestController {
 			consentTemplate.setDateCreated(new Date());
 			consentTemplate.setCreator(Context.getAuthenticatedUser());
 		}
-		restCoreService.saveOrUpdateConsentTemplate(consentTemplate);
+		hospitalRestCoreService.saveOrUpdateConsentTemplate(consentTemplate);
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 }

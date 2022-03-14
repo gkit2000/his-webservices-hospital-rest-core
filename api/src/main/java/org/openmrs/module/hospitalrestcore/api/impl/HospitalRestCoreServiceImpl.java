@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.hospitalrestcore.billing.api.impl;
+package org.openmrs.module.hospitalrestcore.api.impl;
 
 import java.util.Collection;
 import java.util.Date;
@@ -25,12 +25,12 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
-import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
@@ -41,10 +41,10 @@ import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * It is a default implementation of {@link BillingService}.
+ * It is a default implementation of {@link HospitalRestCoreService}.
  */
 
-public class BillingServiceImpl extends BaseOpenmrsService implements BillingService {
+public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements HospitalRestCoreService {
 
 	protected final Log log = LogFactory.getLog(this.getClass());
 

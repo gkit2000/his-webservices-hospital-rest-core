@@ -24,11 +24,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillableServiceConfigurationDetails;
 import org.openmrs.module.hospitalrestcore.billing.ServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.ServicesDetails;
-import org.openmrs.module.hospitalrestcore.billing.api.BillingService;
 import org.openmrs.module.hospitalrestcore.concept.ConceptNode;
 import org.openmrs.module.hospitalrestcore.concept.TestTree;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -56,8 +56,8 @@ public class ManageBillableServicesController extends BaseRestController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		BillingService billingService = Context.getService(BillingService.class);
-		List<BillableService> services = billingService.getAllServices();
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		List<BillableService> services = hospitalRestCoreService.getAllServices();
 		Set<Concept> priceCategorySet = new HashSet<Concept>();
 		for (BillableService ser : services) {
 			priceCategorySet.add(ser.getPriceCategoryConcept());
@@ -66,7 +66,8 @@ public class ManageBillableServicesController extends BaseRestController {
 		Map<String, Map<String, BillableServiceConfigurationDetails>> priceCategoryMap = new LinkedHashMap<String, Map<String, BillableServiceConfigurationDetails>>();
 
 		for (Concept priceCategory : priceCategorySet) {
-			List<BillableService> servicesByPriceCategory = billingService.getServicesByPriceCategory(priceCategory);
+			List<BillableService> servicesByPriceCategory = hospitalRestCoreService
+					.getServicesByPriceCategory(priceCategory);
 			Map<String, BillableServiceConfigurationDetails> servicesPriceMap = new LinkedHashMap<String, BillableServiceConfigurationDetails>();
 			for (BillableService ser : servicesByPriceCategory) {
 				BillableServiceConfigurationDetails bscd = new BillableServiceConfigurationDetails();
@@ -89,8 +90,8 @@ public class ManageBillableServicesController extends BaseRestController {
 		ConceptService conceptService = Context.getService(ConceptService.class);
 		Concept rootServiceconcept = conceptService.getConceptByName("SERVICES ORDERED");
 
-		BillingService billingService = Context.getService(BillingService.class);
-		List<BillableService> services = billingService.getAllServices();
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		List<BillableService> services = hospitalRestCoreService.getAllServices();
 
 		Map<Integer, BillableService> mapServices = new LinkedHashMap<Integer, BillableService>();
 
@@ -104,8 +105,8 @@ public class ManageBillableServicesController extends BaseRestController {
 		for (ServiceDetails serviceDetails : servicesList) {
 			Concept serviceConcept = conceptService.getConceptByUuid(serviceDetails.getServiceConUuid());
 			Concept priceCategoryConcept = conceptService.getConceptByUuid(serviceDetails.getPriceCategoryConUuid());
-			BillableService service = billingService.getServicesByServiceConceptAndPriceCategory(serviceConcept,
-					priceCategoryConcept);
+			BillableService service = hospitalRestCoreService
+					.getServicesByServiceConceptAndPriceCategory(serviceConcept, priceCategoryConcept);
 			if (service == null) {
 				if (serviceConcept != null) {
 					service = new BillableService();
@@ -130,7 +131,7 @@ public class ManageBillableServicesController extends BaseRestController {
 					}
 					service.setEnable(serviceDetails.getEnable());
 					mapServices.put(serviceConcept.getId(), service);
-					billingService.saveBillableService(service);
+					hospitalRestCoreService.saveBillableService(service);
 				}
 			} else {
 				service.setName(serviceConcept.getName().getName());
@@ -154,10 +155,10 @@ public class ManageBillableServicesController extends BaseRestController {
 				service.setEnable(serviceDetails.getEnable());
 				mapServices.remove(serviceConcept.getId());
 				mapServices.put(serviceConcept.getId(), service);
-				billingService.saveBillableService(service);
+				hospitalRestCoreService.saveBillableService(service);
 			}
 		}
-		// billingService.saveBillableService(mapServices.values());
+		// hospitalRestCoreService.saveBillableService(mapServices.values());
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 

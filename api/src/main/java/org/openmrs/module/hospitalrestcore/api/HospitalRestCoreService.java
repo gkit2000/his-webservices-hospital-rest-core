@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.hospitalrestcore.billing.api;
+package org.openmrs.module.hospitalrestcore.api;
 
 import java.util.Collection;
 import java.util.Date;
@@ -41,7 +41,7 @@ import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
  * 
  * @see org.openmrs.api.context.Context
  */
-public interface BillingService extends OpenmrsService {
+public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<BillableService> getAllServices() throws APIException;
 
