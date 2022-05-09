@@ -320,9 +320,9 @@
 			<column name="mail_subject" type="varchar(255)" />
 			<column name="description" type="varchar(255)" />
 			<column name="type" type="int" />
-			<column name="template_content" type="CLOB">
-            <constraints nullable="false"/>
-        </column>
+			<column name="template_content" type="text">
+                <constraints nullable="false"/>
+            </column>
 			<column name="deleted" type="boolean" />
 			<column defaultValueNumeric="0" name="creator" type="int">
 				<constraints nullable="false" />
