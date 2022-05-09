@@ -14,12 +14,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openmrs.GlobalProperty;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.abdm.AccessTokenPayload;
 import org.openmrs.module.hospitalrestcore.abdm.CreateHealthIdWithPreVerifiedFromAadhaarPayload;
 import org.openmrs.module.hospitalrestcore.abdm.GenerateAadhaarOtpPayload;
 import org.openmrs.module.hospitalrestcore.abdm.GenerateMobileOTPForAadhaarPayload;
+import org.openmrs.module.hospitalrestcore.abdm.HealthIdSearchPayload;
 import org.openmrs.module.hospitalrestcore.abdm.VerifyOtpPayload;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
@@ -38,8 +39,6 @@ import com.sun.jersey.api.client.WebResource;
 public class AbdmController extends BaseRestController {
 
 	Client client = Client.create();
-
-	AdministrationService administrationService = Context.getAdministrationService();
 
 	@RequestMapping(value = "/gateway/v0.5/sessions", method = RequestMethod.POST)
 	public void generateAccessToken(HttpServletResponse response, HttpServletRequest request,
@@ -62,11 +61,10 @@ public class AbdmController extends BaseRestController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		WebResource webResource = client
-				.resource("https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp");
+		WebResource webResource = client.resource(OpenmrsCustomConstants.GENERATE_OTP_URL);
 		String payload = new Gson().toJson(generateAadhaarOtpPayload);
-		GlobalProperty clientId = administrationService.getGlobalPropertyObject("clientId");
-		GlobalProperty clientSecret = administrationService.getGlobalPropertyObject("clientSecret");
+		GlobalProperty clientId = Context.getAdministrationService().getGlobalPropertyObject("clientId");
+		GlobalProperty clientSecret = Context.getAdministrationService().getGlobalPropertyObject("clientSecret");
 
 		AccessTokenPayload tokenPayload = new AccessTokenPayload();
 		tokenPayload.setClientId(clientId.getPropertyValue());
@@ -98,11 +96,10 @@ public class AbdmController extends BaseRestController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		WebResource webResource = client
-				.resource("https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/verifyOTP");
+		WebResource webResource = client.resource(OpenmrsCustomConstants.VERIFY_OTP);
 		String payload = new Gson().toJson(verifyOtpPayload);
-		GlobalProperty clientId = administrationService.getGlobalPropertyObject("clientId");
-		GlobalProperty clientSecret = administrationService.getGlobalPropertyObject("clientSecret");
+		GlobalProperty clientId = Context.getAdministrationService().getGlobalPropertyObject("clientId");
+		GlobalProperty clientSecret = Context.getAdministrationService().getGlobalPropertyObject("clientSecret");
 
 		AccessTokenPayload tokenPayload = new AccessTokenPayload();
 		tokenPayload.setClientId(clientId.getPropertyValue());
@@ -134,11 +131,10 @@ public class AbdmController extends BaseRestController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		WebResource webResource = client
-				.resource("https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/generateMobileOTP");
+		WebResource webResource = client.resource(OpenmrsCustomConstants.GENERATE_MOBILE_OTP);
 		String payload = new Gson().toJson(generateMobileOTPForAadhaarPayload);
-		GlobalProperty clientId = administrationService.getGlobalPropertyObject("clientId");
-		GlobalProperty clientSecret = administrationService.getGlobalPropertyObject("clientSecret");
+		GlobalProperty clientId = Context.getAdministrationService().getGlobalPropertyObject("clientId");
+		GlobalProperty clientSecret = Context.getAdministrationService().getGlobalPropertyObject("clientSecret");
 
 		AccessTokenPayload tokenPayload = new AccessTokenPayload();
 		tokenPayload.setClientId(clientId.getPropertyValue());
@@ -170,11 +166,10 @@ public class AbdmController extends BaseRestController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		WebResource webResource = client
-				.resource("https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/verifyMobileOTP");
+		WebResource webResource = client.resource(OpenmrsCustomConstants.VERIFY_MOBILE_OTP);
 		String payload = new Gson().toJson(verifyOtpPayload);
-		GlobalProperty clientId = administrationService.getGlobalPropertyObject("clientId");
-		GlobalProperty clientSecret = administrationService.getGlobalPropertyObject("clientSecret");
+		GlobalProperty clientId = Context.getAdministrationService().getGlobalPropertyObject("clientId");
+		GlobalProperty clientSecret = Context.getAdministrationService().getGlobalPropertyObject("clientSecret");
 
 		AccessTokenPayload tokenPayload = new AccessTokenPayload();
 		tokenPayload.setClientId(clientId.getPropertyValue());
@@ -206,11 +201,45 @@ public class AbdmController extends BaseRestController {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
-		WebResource webResource = client
-				.resource("https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/createHealthIdWithPreVerified");
+		WebResource webResource = client.resource(OpenmrsCustomConstants.CREATE_HEALTH_ID_WITH_PRE_VERIFIED);
 		String payload = new Gson().toJson(createHealthIdWithPreVerifiedFromAadhaarPayload);
-		GlobalProperty clientId = administrationService.getGlobalPropertyObject("clientId");
-		GlobalProperty clientSecret = administrationService.getGlobalPropertyObject("clientSecret");
+		GlobalProperty clientId = Context.getAdministrationService().getGlobalPropertyObject("clientId");
+		GlobalProperty clientSecret = Context.getAdministrationService().getGlobalPropertyObject("clientSecret");
+
+		AccessTokenPayload tokenPayload = new AccessTokenPayload();
+		tokenPayload.setClientId(clientId.getPropertyValue());
+		tokenPayload.setClientSecret(clientSecret.getPropertyValue());
+
+		JSONObject accessTokenJson = AbdmUtil.getAccessToken(tokenPayload);
+		String accessToken = (String) accessTokenJson.get("accessToken");
+
+		String clientResponse = webResource.type("application/json").header("Authorization", "Bearer " + accessToken)
+				.post(String.class, payload);
+
+		JSONParser parser = new JSONParser();
+		JSONObject clientResponseJson = null;
+
+		try {
+			clientResponseJson = (JSONObject) parser.parse(clientResponse);
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+
+		new ObjectMapper().writeValue(out, clientResponseJson);
+	}
+
+	@RequestMapping(value = "/search/searchByHealthId", method = RequestMethod.POST)
+	public void searchHealthId(HttpServletResponse response, HttpServletRequest request,
+			@Valid @RequestBody HealthIdSearchPayload healthIdSearchPayload)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		WebResource webResource = client.resource(OpenmrsCustomConstants.SEARCH_BY_HEALTH_ID);
+		String payload = new Gson().toJson(healthIdSearchPayload);
+		GlobalProperty clientId = Context.getAdministrationService().getGlobalPropertyObject("clientId");
+		GlobalProperty clientSecret = Context.getAdministrationService().getGlobalPropertyObject("clientSecret");
 
 		AccessTokenPayload tokenPayload = new AccessTokenPayload();
 		tokenPayload.setClientId(clientId.getPropertyValue());
