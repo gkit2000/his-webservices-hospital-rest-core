@@ -31,11 +31,13 @@ import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
+import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItemDAO;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private BillingReceiptDAO billingReceiptDAO;
 
 	private PatientServiceBillDAO patientServiceBillDAO;
+
+	private PatientServiceBillItemDAO patientServiceBillItemDAO;
 
 	private CategoryLocationDAO categoryLocationDAO;
 
@@ -114,6 +118,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setPatientServiceBillDAO(PatientServiceBillDAO patientServiceBillDAO) {
 		this.patientServiceBillDAO = patientServiceBillDAO;
+	}
+
+	/**
+	 * @return the patientServiceBillItemDAO
+	 */
+	public PatientServiceBillItemDAO getPatientServiceBillItemDAO() {
+		return patientServiceBillItemDAO;
+	}
+
+	/**
+	 * @param patientServiceBillItemDAO the patientServiceBillItemDAO to set
+	 */
+	public void setPatientServiceBillItemDAO(PatientServiceBillItemDAO patientServiceBillItemDAO) {
+		this.patientServiceBillItemDAO = patientServiceBillItemDAO;
 	}
 
 	/**
@@ -266,6 +284,19 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Transactional
 	public ConsentTemplate saveOrUpdateConsentTemplate(ConsentTemplate consentTemplate) throws APIException {
 		return (ConsentTemplate) getConsentTemplateDAO().saveOrUpdate(consentTemplate);
+	}
+
+	@Override
+	@Transactional
+	public List<PatientServiceBill> getPatientServiceBill(Patient patient) throws APIException {
+		return getPatientServiceBillDAO().getPatientServiceBill(patient);
+	}
+
+	@Override
+	@Transactional
+	public List<PatientServiceBillItem> getPatientServiceBillItem(PatientServiceBill patientServiceBill)
+			throws APIException {
+		return getPatientServiceBillItemDAO().getPatientServiceBillItem(patientServiceBill);
 	}
 
 }

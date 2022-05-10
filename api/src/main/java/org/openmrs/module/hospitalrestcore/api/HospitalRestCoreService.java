@@ -28,6 +28,7 @@ import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
+import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 
 /**
@@ -84,5 +85,9 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<ConsentTemplate> getConsentTemplateByType(Concept type) throws APIException;
 
 	ConsentTemplate saveOrUpdateConsentTemplate(ConsentTemplate consentTemplate) throws APIException;
+
+	List<PatientServiceBill> getPatientServiceBill(Patient patient) throws APIException;
+
+	List<PatientServiceBillItem> getPatientServiceBillItem(PatientServiceBill patientServiceBill) throws APIException;
 
 }
