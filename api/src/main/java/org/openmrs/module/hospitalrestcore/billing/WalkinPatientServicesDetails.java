@@ -9,7 +9,7 @@ import java.util.List;
  * @author Ghanshyam
  *
  */
-public class TestOrderDetails {
+public class WalkinPatientServicesDetails {
 
 	private String patientId;
 	private String patientUuid;
@@ -18,8 +18,10 @@ public class TestOrderDetails {
 	private Integer age;
 	private String birthDate;
 	private String patientCategory;
+	private String patientSubCategory1;
+	private String patientSubCategory2;
 	private String priceCategoryConceptUuid;
-	private List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder;
+	private List<BillableServiceDetails> billableServiceDetails;
 
 	/**
 	 * @return the patientId
@@ -120,6 +122,34 @@ public class TestOrderDetails {
 	}
 
 	/**
+	 * @return the patientSubCategory1
+	 */
+	public String getPatientSubCategory1() {
+		return patientSubCategory1;
+	}
+
+	/**
+	 * @param patientSubCategory1 the patientSubCategory1 to set
+	 */
+	public void setPatientSubCategory1(String patientSubCategory1) {
+		this.patientSubCategory1 = patientSubCategory1;
+	}
+
+	/**
+	 * @return the patientSubCategory2
+	 */
+	public String getPatientSubCategory2() {
+		return patientSubCategory2;
+	}
+
+	/**
+	 * @param patientSubCategory2 the patientSubCategory2 to set
+	 */
+	public void setPatientSubCategory2(String patientSubCategory2) {
+		this.patientSubCategory2 = patientSubCategory2;
+	}
+
+	/**
 	 * @return the priceCategoryConceptUuid
 	 */
 	public String getPriceCategoryConceptUuid() {
@@ -134,17 +164,17 @@ public class TestOrderDetails {
 	}
 
 	/**
-	 * @return the serviceDetailsForTestOrder
+	 * @return the billableServiceDetails
 	 */
-	public List<ServiceDetailsForTestOrder> getServiceDetailsForTestOrder() {
-		return serviceDetailsForTestOrder;
+	public List<BillableServiceDetails> getBillableServiceDetails() {
+		return billableServiceDetails;
 	}
 
 	/**
-	 * @param serviceDetailsForTestOrder the serviceDetailsForTestOrder to set
+	 * @param billableServiceDetails the billableServiceDetails to set
 	 */
-	public void setServiceDetailsForTestOrder(List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder) {
-		this.serviceDetailsForTestOrder = serviceDetailsForTestOrder;
+	public void setBillableServiceDetails(List<BillableServiceDetails> billableServiceDetails) {
+		this.billableServiceDetails = billableServiceDetails;
 	}
 
 }

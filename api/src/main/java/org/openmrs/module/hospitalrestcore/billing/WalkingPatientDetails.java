@@ -9,7 +9,7 @@ import java.util.List;
  * @author Ghanshyam
  *
  */
-public class TestOrderDetails {
+public class WalkingPatientDetails {
 
 	private String patientId;
 	private String patientUuid;
@@ -17,9 +17,11 @@ public class TestOrderDetails {
 	private String gender;
 	private Integer age;
 	private String birthDate;
+	private String revisitDate;
 	private String patientCategory;
-	private String priceCategoryConceptUuid;
-	private List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder;
+	private String patientSubCategory1;
+	private String patientSubCategory2;
+	private List<BillingInfoForPatient> billingInfoForPatient;
 
 	/**
 	 * @return the patientId
@@ -106,6 +108,20 @@ public class TestOrderDetails {
 	}
 
 	/**
+	 * @return the revisitDate
+	 */
+	public String getRevisitDate() {
+		return revisitDate;
+	}
+
+	/**
+	 * @param revisitDate the revisitDate to set
+	 */
+	public void setRevisitDate(String revisitDate) {
+		this.revisitDate = revisitDate;
+	}
+
+	/**
 	 * @return the patientCategory
 	 */
 	public String getPatientCategory() {
@@ -120,31 +136,45 @@ public class TestOrderDetails {
 	}
 
 	/**
-	 * @return the priceCategoryConceptUuid
+	 * @return the patientSubCategory1
 	 */
-	public String getPriceCategoryConceptUuid() {
-		return priceCategoryConceptUuid;
+	public String getPatientSubCategory1() {
+		return patientSubCategory1;
 	}
 
 	/**
-	 * @param priceCategoryConceptUuid the priceCategoryConceptUuid to set
+	 * @param patientSubCategory1 the patientSubCategory1 to set
 	 */
-	public void setPriceCategoryConceptUuid(String priceCategoryConceptUuid) {
-		this.priceCategoryConceptUuid = priceCategoryConceptUuid;
+	public void setPatientSubCategory1(String patientSubCategory1) {
+		this.patientSubCategory1 = patientSubCategory1;
 	}
 
 	/**
-	 * @return the serviceDetailsForTestOrder
+	 * @return the patientSubCategory2
 	 */
-	public List<ServiceDetailsForTestOrder> getServiceDetailsForTestOrder() {
-		return serviceDetailsForTestOrder;
+	public String getPatientSubCategory2() {
+		return patientSubCategory2;
 	}
 
 	/**
-	 * @param serviceDetailsForTestOrder the serviceDetailsForTestOrder to set
+	 * @param patientSubCategory2 the patientSubCategory2 to set
 	 */
-	public void setServiceDetailsForTestOrder(List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder) {
-		this.serviceDetailsForTestOrder = serviceDetailsForTestOrder;
+	public void setPatientSubCategory2(String patientSubCategory2) {
+		this.patientSubCategory2 = patientSubCategory2;
+	}
+
+	/**
+	 * @return the billingInfoForPatient
+	 */
+	public List<BillingInfoForPatient> getBillingInfoForPatient() {
+		return billingInfoForPatient;
+	}
+
+	/**
+	 * @param billingInfoForPatient the billingInfoForPatient to set
+	 */
+	public void setBillingInfoForPatient(List<BillingInfoForPatient> billingInfoForPatient) {
+		this.billingInfoForPatient = billingInfoForPatient;
 	}
 
 }

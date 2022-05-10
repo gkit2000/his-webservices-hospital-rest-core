@@ -56,12 +56,15 @@ public class LastVisitDetailsController {
 				lastVisitDetails
 						.setReportingPlace(appointment.getTimeSlot().getAppointmentBlock().getLocation().getName());
 				lastVisitDetails.setDoctorName(appointment.getTimeSlot().getAppointmentBlock().getProvider().getName());
-				if (appointment.getReason() != null && (appointment.getReason().equalsIgnoreCase(OpenmrsCustomConstants.APPOINTMENT_REASON_NEW_REGISTRATION)
-						|| appointment.getReason().equalsIgnoreCase(OpenmrsCustomConstants.APPOINTMENT_REASON_ONLINE_APPOINTMENT))) {
+				if (appointment.getReason() != null && (appointment.getReason()
+						.equalsIgnoreCase(OpenmrsCustomConstants.APPOINTMENT_REASON_NEW_REGISTRATION)
+						|| appointment.getReason()
+								.equalsIgnoreCase(OpenmrsCustomConstants.APPOINTMENT_REASON_ONLINE_APPOINTMENT))) {
 					List<Encounter> encounters = Context.getService(EncounterService.class).getEncountersByVisit(visit,
 							false);
 					for (Encounter encounter : encounters) {
-						if (encounter.getEncounterType().getName().equalsIgnoreCase(OpenmrsCustomConstants.ENCOUNTER_TYPE_CHECK_IN)) {
+						if (encounter.getEncounterType().getName()
+								.equalsIgnoreCase(OpenmrsCustomConstants.ENCOUNTER_TYPE_CHECK_IN)) {
 							lastVisitDetails.setReportingTime(formatter.format(encounter.getDateCreated()));
 						}
 					}
@@ -71,30 +74,19 @@ public class LastVisitDetailsController {
 			}
 
 			for (VisitAttribute va : visit.getActiveAttributes()) {
-				if (va.getAttributeType().getUuid().equals("80c68ebe-d696-4b8e-8aa0-53018f8e5d7b")) {
+				if (va.getAttributeType().getUuid().equals(OpenmrsCustomConstants.PATIENT_CATEGORY)) {
 					lastVisitDetails.setPatientCategory(va.getValueReference());
 				}
-				if (va.getAttributeType().getUuid().equals("f494e0a2-a6d0-471b-bec5-fae8cc082ef8")
-						|| va.getAttributeType().getUuid().equals("7ac406bc-f9bd-42ff-a12e-1b7d0b59096e")
-						|| va.getAttributeType().getUuid().equals("bec1304d-f522-47d8-b209-4572c5628f87")) {
+				if (OpenmrsCustomConstants.PATIENT_SUBCATEGORY1.contains(va.getAttributeType().getUuid())) {
 					lastVisitDetails.setPatientSubCategory1(va.getValueReference());
 				}
-				if (va.getAttributeType().getUuid().equals("81216581-8155-4abe-89c8-ab45afdcd77c")
-						|| va.getAttributeType().getUuid().equals("81216581-8155-4abe-89c8-ab45afdcd77c")
-						|| va.getAttributeType().getUuid().equals("2e88efe2-b4d4-46d4-810b-a0e6d0c0004e")
-						|| va.getAttributeType().getUuid().equals("63772745-4658-4db6-864c-d25dd6319ebd")
-						|| va.getAttributeType().getUuid().equals("9fcbe4f4-36bb-455e-80a9-979341b72a68")
-						|| va.getAttributeType().getUuid().equals("38caa20b-b767-4074-868f-5e858de0f38a")
-						|| va.getAttributeType().getUuid().equals("2a289585-5ec6-4113-86f9-b4e16df3abf1")
-						|| va.getAttributeType().getUuid().equals("8c753c94-dc67-4daf-acf5-887279e236f2")
-						|| va.getAttributeType().getUuid().equals("18b13ded-5f66-43be-ba62-26baf8208f77")
-						|| va.getAttributeType().getUuid().equals("f59437df-9878-4e7a-9fec-c1f77d337d17")) {
+				if (OpenmrsCustomConstants.PATIENT_SUBCATEGORY2.contains(va.getAttributeType().getUuid())) {
 					lastVisitDetails.setPatientSubCategory2(va.getValueReference());
 				}
-				if (va.getAttributeType().getUuid().equals("ecd9f478-40ac-4716-b63f-ff2dbb2bfa74")) {
+				if (va.getAttributeType().getUuid().equals(OpenmrsCustomConstants.MLC)) {
 					lastVisitDetails.setMlc(va.getValueReference());
 				}
-				if (va.getAttributeType().getUuid().equals("70f8d129-3136-4d2e-bdee-05f88cd33f13")) {
+				if (va.getAttributeType().getUuid().equals(OpenmrsCustomConstants.MLC_SUBCATEGORY)) {
 					lastVisitDetails.setMlcSubCategory(va.getValueReference());
 				}
 			}
