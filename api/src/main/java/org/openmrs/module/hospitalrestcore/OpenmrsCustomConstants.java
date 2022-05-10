@@ -26,6 +26,8 @@ public final class OpenmrsCustomConstants {
 	public static final String VALIDATION_ERROR_CATEGORY_LOCATION = "Price category is not mapped for location %s";
 
 	public static final String VALIDATION_ERROR_PRICE_CATEGORY = "Price category concept uuid %s is not valid";
+	
+	public static final String VALIDATION_ERROR_BILLABLE_SERVICE = "Billable service %s and price category %s is not configured.";
 
 	public static final String VALIDATION_ERROR_BILLABLE_SERVICE_PROCEDURE = "Billable service for procedure %s and price category %s is not configured.";
 
