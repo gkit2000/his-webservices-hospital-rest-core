@@ -133,6 +133,7 @@ public class WalkingPatientBillingServicesController extends BaseRestController 
 				bsd.setServiceConUuid(serviceConcept.getUuid());
 				bsd.setServiceConName(serviceConcept.getName().getName());
 				bsd.setPrice(billableService.getPrice());
+				bsd.setQuantity(1);
 				bsd.setOpdOrderId(null);
 				billableServiceDetails.add(bsd);
 			}
