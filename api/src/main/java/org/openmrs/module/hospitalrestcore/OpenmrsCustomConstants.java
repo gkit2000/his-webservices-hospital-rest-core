@@ -71,6 +71,10 @@ public final class OpenmrsCustomConstants {
 	public static final String MLC = "ecd9f478-40ac-4716-b63f-ff2dbb2bfa74";
 	
 	public static final String MLC_SUBCATEGORY = "70f8d129-3136-4d2e-bdee-05f88cd33f13";
+	
+	public static final String VALIDATION_ERROR_NOT_VALID_BILL_ITEM_ID = "Bill item id %s is not valid";
+	
+	public static final String VALIDATION_ERROR_NOT_VALID_BILL_ITEM_ID_AND_BILL_ID = "Bill item id %s not corresponds to bill id %s";
 
 	public static final String ACCESS_TOKEN_URL = "https://dev.abdm.gov.in/gateway/v0.5/sessions";
 

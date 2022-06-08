@@ -16,6 +16,11 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
  */
 public interface PatientServiceBillItemDAO extends SingleClassDAO {
 
+	PatientServiceBillItem getPatientServiceBillItemById(Integer patientServiceBillItemId) throws APIException;
+	
+	PatientServiceBillItem getPatientServiceBillItemByIdAndBill(Integer patientServiceBillItemId,
+			PatientServiceBill patientServiceBill) throws APIException;
+
 	List<PatientServiceBillItem> getPatientServiceBillItem(PatientServiceBill patientServiceBill) throws APIException;
 
 }

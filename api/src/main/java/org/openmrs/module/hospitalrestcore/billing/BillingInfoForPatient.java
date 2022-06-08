@@ -15,7 +15,7 @@ public class BillingInfoForPatient {
 	private Integer billId;
 	private String description;
 	private String billType;
-	private String billingdate;
+	private String billingDate;
 	private String voidedBy;
 	private String voidedDate;
 	private boolean billVoided;
@@ -28,6 +28,9 @@ public class BillingInfoForPatient {
 	private Integer amountGiven;
 	private Integer amountReturned;
 	private List<PatientServiceBillItemInfo> patientServiceBillItemInfo;
+	private boolean edited;
+	private String editedBy;
+	private String editedDate;
 
 	/**
 	 * @return the billId
@@ -72,17 +75,17 @@ public class BillingInfoForPatient {
 	}
 
 	/**
-	 * @return the billingdate
+	 * @return the billingDate
 	 */
-	public String getBillingdate() {
-		return billingdate;
+	public String getBillingDate() {
+		return billingDate;
 	}
 
 	/**
-	 * @param billingdate the billingdate to set
+	 * @param billingDate the billingDate to set
 	 */
-	public void setBillingdate(String billingdate) {
-		this.billingdate = billingdate;
+	public void setBillingDate(String billingDate) {
+		this.billingDate = billingDate;
 	}
 
 	/**
@@ -251,5 +254,47 @@ public class BillingInfoForPatient {
 	 */
 	public void setPatientServiceBillItemInfo(List<PatientServiceBillItemInfo> patientServiceBillItemInfo) {
 		this.patientServiceBillItemInfo = patientServiceBillItemInfo;
+	}
+
+	/**
+	 * @return the edited
+	 */
+	public boolean isEdited() {
+		return edited;
+	}
+
+	/**
+	 * @param edited the edited to set
+	 */
+	public void setEdited(boolean edited) {
+		this.edited = edited;
+	}
+
+	/**
+	 * @return the editedBy
+	 */
+	public String getEditedBy() {
+		return editedBy;
+	}
+
+	/**
+	 * @param editedBy the editedBy to set
+	 */
+	public void setEditedBy(String editedBy) {
+		this.editedBy = editedBy;
+	}
+
+	/**
+	 * @return the editedDate
+	 */
+	public String getEditedDate() {
+		return editedDate;
+	}
+
+	/**
+	 * @param editedDate the editedDate to set
+	 */
+	public void setEditedDate(String editedDate) {
+		this.editedDate = editedDate;
 	}
 }

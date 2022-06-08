@@ -19,15 +19,32 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 public class HibernatePatientServiceBillItemDAO extends HibernateSingleClassDAO implements PatientServiceBillItemDAO {
-	
+
 	public HibernatePatientServiceBillItemDAO() {
 		super(PatientServiceBillItem.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<PatientServiceBillItem> getPatientServiceBillItem(
-			PatientServiceBill patientServiceBill)
+	public PatientServiceBillItem getPatientServiceBillItemById(Integer patientServiceBillItemId) throws APIException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("patientServiceBillItemId", patientServiceBillItemId));
+		return (PatientServiceBillItem) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PatientServiceBillItem getPatientServiceBillItemByIdAndBill(Integer patientServiceBillItemId,
+			PatientServiceBill patientServiceBill) throws APIException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("patientServiceBillItemId", patientServiceBillItemId));
+		criteria.add(Restrictions.eq("patientServiceBill", patientServiceBill));
+		return (PatientServiceBillItem) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<PatientServiceBillItem> getPatientServiceBillItem(PatientServiceBill patientServiceBill)
 			throws APIException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.eq("patientServiceBill", patientServiceBill));

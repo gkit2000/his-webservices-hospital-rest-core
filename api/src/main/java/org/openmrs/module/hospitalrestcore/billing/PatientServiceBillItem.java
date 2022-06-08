@@ -18,7 +18,6 @@
  *
  **/
 
-
 package org.openmrs.module.hospitalrestcore.billing;
 
 import java.io.Serializable;
@@ -32,38 +31,44 @@ import org.openmrs.User;
  *
  */
 public class PatientServiceBillItem implements Serializable {
-	
+
 	/**
-     * 
-     */
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer patientServiceBillItemId;
-	
+
 	private BillableService billableService;
-	
+
 	private PatientServiceBill patientServiceBill;
-	
+
 	private BigDecimal unitPrice;
-	
+
 	private BigDecimal amount;
-	
+
 	private BigDecimal actualAmount;
-	
+
 	private Integer quantity;
-	
+
 	private String name;
-	
+
 	private Date createdDate;
-	
+
 	private Boolean voided = false;
-	
-	private Order order ;
-	
+
+	private Order order;
+
 	private Date voidedDate;
-	
-	private User voidedby;
-	
+
+	private User voidedBy;
+
+	private Boolean edited = false;
+
+	private User editedBy;
+
+	private Date editedDate;
+
 	public BillableService getBillableService() {
 		return billableService;
 	}
@@ -75,71 +80,71 @@ public class PatientServiceBillItem implements Serializable {
 	public PatientServiceBill getPatientServiceBill() {
 		return patientServiceBill;
 	}
-	
+
 	public void setPatientServiceBill(PatientServiceBill patientServiceBill) {
 		this.patientServiceBill = patientServiceBill;
 	}
-	
+
 	public BigDecimal getUnitPrice() {
 		return unitPrice;
 	}
-	
+
 	public void setUnitPrice(BigDecimal unitPrice) {
 		this.unitPrice = unitPrice;
 	}
-	
+
 	public BigDecimal getAmount() {
 		return amount;
 	}
-	
+
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	
+
 	public Integer getQuantity() {
 		return quantity;
 	}
-	
+
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Date getCreatedDate() {
 		return createdDate;
 	}
-	
+
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
 	public Boolean getVoided() {
 		return voided;
 	}
-	
+
 	public void setVoided(Boolean voided) {
 		this.voided = voided;
 	}
-	
+
 	public Date getVoidedDate() {
 		return voidedDate;
 	}
-	
+
 	public void setVoidedDate(Date voidedDate) {
 		this.voidedDate = voidedDate;
 	}
-	
+
 	public Integer getPatientServiceBillItemId() {
 		return patientServiceBillItemId;
 	}
-	
+
 	public void setPatientServiceBillItemId(Integer patientServiceBillItemId) {
 		this.patientServiceBillItemId = patientServiceBillItemId;
 	}
@@ -159,12 +164,61 @@ public class PatientServiceBillItem implements Serializable {
 	public void setActualAmount(BigDecimal actualAmount) {
 		this.actualAmount = actualAmount;
 	}
-	// New Requirement add 'voided_by' column in bills 
-	public User getvoidedby() {
-		return voidedby;
+
+	/**
+	 * @return the voidedBy
+	 */
+	public User getVoidedBy() {
+		return voidedBy;
 	}
-	
-	public void setvoidedby(User voidedby) {
-		this.voidedby = voidedby;
+
+	/**
+	 * @param voidedBy the voidedBy to set
+	 */
+	public void setVoidedBy(User voidedBy) {
+		this.voidedBy = voidedBy;
 	}
+
+	/**
+	 * @return the edited
+	 */
+	public Boolean getEdited() {
+		return edited;
+	}
+
+	/**
+	 * @param edited the edited to set
+	 */
+	public void setEdited(Boolean edited) {
+		this.edited = edited;
+	}
+
+	/**
+	 * @return the editedBy
+	 */
+	public User getEditedBy() {
+		return editedBy;
+	}
+
+	/**
+	 * @param editedBy the editedBy to set
+	 */
+	public void setEditedBy(User editedBy) {
+		this.editedBy = editedBy;
+	}
+
+	/**
+	 * @return the editedDate
+	 */
+	public Date getEditedDate() {
+		return editedDate;
+	}
+
+	/**
+	 * @param editedDate the editedDate to set
+	 */
+	public void setEditedDate(Date editedDate) {
+		this.editedDate = editedDate;
+	}
+
 }

@@ -52,6 +52,7 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.billing.ProcessOrdersResponseDTO;
 import org.openmrs.module.hospitalrestcore.billing.ServiceDetailsForTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.TestOrderDetails;
+import org.openmrs.module.hospitalrestcore.controller.PulseUtil;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -186,7 +187,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			Encounter enc = entry.getValue();
 			orders.setPatientId(pat.getPatientIdentifier(pit).getIdentifier());
 			orders.setPatientUuid(pat.getUuid());
-			orders.setPatientName(getName(pat));
+			orders.setPatientName(PulseUtil.getName(pat));
 			orders.setGender(pat.getGender());
 			orders.setAge(pat.getAge());
 			if (pat.getBirthdate() != null) {
@@ -373,20 +374,6 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		processOrdersResponseDTO.setBillId(bill.getPatientServiceBillId());
 
 		return new ResponseEntity<ProcessOrdersResponseDTO>(processOrdersResponseDTO, HttpStatus.CREATED);
-	}
-
-	public String getName(Patient patient) {
-		String name = "";
-		if (patient.getGivenName() != null) {
-			name = patient.getGivenName();
-		}
-		if (patient.getMiddleName() != null) {
-			name = name + " " + patient.getMiddleName();
-		}
-		if (patient.getFamilyName() != null) {
-			name = name + " " + patient.getFamilyName();
-		}
-		return name;
 	}
 
 }

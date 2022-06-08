@@ -26,6 +26,23 @@ public class HibernatePatientServiceBillDAO extends HibernateSingleClassDAO impl
 
 	@Override
 	@Transactional(readOnly = true)
+	public PatientServiceBill getPatientServiceBillById(Integer billId) throws APIException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("patientServiceBillId", billId));
+		return (PatientServiceBill) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PatientServiceBill getPatientServiceBillByIdAndPatient(Integer billId, Patient patient) throws APIException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("patientServiceBillId", billId));
+		criteria.add(Restrictions.eq("patient", patient));
+		return (PatientServiceBill) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public List<PatientServiceBill> getPatientServiceBill(Patient patient) throws APIException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.eq("patient", patient));

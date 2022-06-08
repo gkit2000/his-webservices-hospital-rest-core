@@ -349,5 +349,37 @@
 			baseColumnNames="changed_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 	</changeSet>
+	
+	<changeSet id="billing_patient_service_bill-table-edit1" author="ghanshyam">
+        <comment>
+			update billing_patient_service_bill table
+		</comment>
+        <addColumn tableName="billing_patient_service_bill">
+            <column name="edited" type="boolean" defaultValue="0"/>
+            <column name="edited_by" type="int" />
+			<column name="edited_date" type="datetime" />
+        </addColumn>
+        <addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_edited_by"
+			baseTableName="billing_patient_service_bill"
+			baseColumnNames="edited_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+    </changeSet>
+    
+    <changeSet id="billing_patient_service_bill_item-table-edit1" author="ghanshyam">
+        <comment>
+			update billing_patient_service_bill_item table
+		</comment>
+        <addColumn tableName="billing_patient_service_bill_item">
+            <column name="edited" type="boolean" defaultValue="0"/>
+            <column name="edited_by" type="int" />
+			<column name="edited_date" type="datetime" />
+        </addColumn>
+        <addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_item_edited_by"
+			baseTableName="billing_patient_service_bill_item"
+			baseColumnNames="edited_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+    </changeSet>
 
 </databaseChangeLog>

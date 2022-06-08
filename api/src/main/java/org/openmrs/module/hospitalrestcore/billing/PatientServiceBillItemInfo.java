@@ -18,6 +18,13 @@ public class PatientServiceBillItemInfo {
 	private Integer quantity;
 	private String name;
 	private String createdDate;
+	private boolean voided = false;
+	private String voidedBy;
+	private String voidedDate;
+	private boolean edited = false;
+	private String editedBy;
+	private String editedDate;
+	private String parentServicesName;
 
 	/**
 	 * @return the patientServiceBillItemId
@@ -115,5 +122,103 @@ public class PatientServiceBillItemInfo {
 	 */
 	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	/**
+	 * @return the voided
+	 */
+	public boolean isVoided() {
+		return voided;
+	}
+
+	/**
+	 * @param voided the voided to set
+	 */
+	public void setVoided(boolean voided) {
+		this.voided = voided;
+	}
+
+	/**
+	 * @return the voidedDate
+	 */
+	public String getVoidedDate() {
+		return voidedDate;
+	}
+
+	/**
+	 * @param voidedDate the voidedDate to set
+	 */
+	public void setVoidedDate(String voidedDate) {
+		this.voidedDate = voidedDate;
+	}
+
+	/**
+	 * @return the voidedBy
+	 */
+	public String getVoidedBy() {
+		return voidedBy;
+	}
+
+	/**
+	 * @param voidedBy the voidedBy to set
+	 */
+	public void setVoidedBy(String voidedBy) {
+		this.voidedBy = voidedBy;
+	}
+
+	/**
+	 * @return the edited
+	 */
+	public boolean isEdited() {
+		return edited;
+	}
+
+	/**
+	 * @param edited the edited to set
+	 */
+	public void setEdited(boolean edited) {
+		this.edited = edited;
+	}
+
+	/**
+	 * @return the editedDate
+	 */
+	public String getEditedDate() {
+		return editedDate;
+	}
+
+	/**
+	 * @param editedDate the editedDate to set
+	 */
+	public void setEditedDate(String editedDate) {
+		this.editedDate = editedDate;
+	}
+
+	/**
+	 * @return the editedBy
+	 */
+	public String getEditedBy() {
+		return editedBy;
+	}
+
+	/**
+	 * @param editedBy the editedBy to set
+	 */
+	public void setEditedBy(String editedBy) {
+		this.editedBy = editedBy;
+	}
+
+	/**
+	 * @return the parentServicesName
+	 */
+	public String getParentServicesName() {
+		return parentServicesName;
+	}
+
+	/**
+	 * @param parentServicesName the parentServicesName to set
+	 */
+	public void setParentServicesName(String parentServicesName) {
+		this.parentServicesName = parentServicesName;
 	}
 }
