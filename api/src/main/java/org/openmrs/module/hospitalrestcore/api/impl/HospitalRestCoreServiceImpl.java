@@ -30,6 +30,7 @@ import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
+import org.openmrs.module.hospitalrestcore.billing.Driver;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
@@ -37,6 +38,7 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.ConceptAnswerDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.DriverDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItemDAO;
@@ -67,6 +69,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private ConsentTemplateDAO consentTemplateDAO;
 
 	private ConceptAnswerDAO conceptAnswerDAO;
+
+	private DriverDAO driverDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -178,6 +182,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setConceptAnswerDAO(ConceptAnswerDAO conceptAnswerDAO) {
 		this.conceptAnswerDAO = conceptAnswerDAO;
+	}
+
+	/**
+	 * @return the driverDAO
+	 */
+	public DriverDAO getDriverDAO() {
+		return driverDAO;
+	}
+
+	/**
+	 * @param driverDAO the driverDAO to set
+	 */
+	public void setDriverDAO(DriverDAO driverDAO) {
+		this.driverDAO = driverDAO;
 	}
 
 	@Override
@@ -354,6 +372,30 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Transactional
 	public List<ConceptAnswer> getConceptAnswerByAnswerConcept(Concept answerConcept) throws APIException {
 		return getConceptAnswerDAO().getConceptAnswerByAnswerConcept(answerConcept);
+	}
+
+	@Override
+	@Transactional
+	public List<Driver> searchDriver(String searchText) throws APIException {
+		return getDriverDAO().searchDriver(searchText);
+	}
+
+	@Override
+	@Transactional
+	public List<Driver> getAllActiveDriver() throws APIException {
+		return getDriverDAO().getAllActiveDriver();
+	}
+
+	@Override
+	@Transactional
+	public Driver getDriverByUuid(String uuid) throws APIException {
+		return getDriverDAO().getDriverByUuid(uuid);
+	}
+
+	@Override
+	@Transactional
+	public Driver saveOrUpdateDriver(Driver driver) throws APIException {
+		return (Driver) driverDAO.saveOrUpdate(driver);
 	}
 
 }

@@ -27,7 +27,8 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService</value>
+				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService
+				</value>
 				<ref bean="hospitalRestCoreService"></ref>
 			</list>
 		</property>
@@ -100,6 +101,14 @@
 				<property name="conceptAnswerDAO">
 					<bean
 						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateConceptAnswerDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="driverDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateDriverDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>

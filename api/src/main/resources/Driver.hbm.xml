@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.hospitalrestcore.billing">
+
+	<class name="Driver" table="billing_driver" batch-size="500">
+
+		<id name="driverId" type="int" column="driver_id"
+			unsaved-value="0">
+				<generator class="native" />
+		</id>
+		<property name="name" column="name" length="255"/>
+		<property name="address" column="address"  length="255"/>
+		<property name="description" column="description" length="255" />
+		<property name="phone" column="phone"  length="20"/>
+		<property name="createdDate" column="created_date"  />
+	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="driver_created_by__fk"/>
+		<property name="lastModifiedDate" column="lastmodified_date"  />
+	    <many-to-one name="lastModifiedBy" column="lastmodified_by"  class="org.openmrs.User" foreign-key="driver_lastmodified_by__fk"/>
+		<property name="retired" column="retired"  />
+		<property name="retiredDate" column="retired_date"  />
+		<many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="driver_retired_by__fk"/>
+		<property name="uuid" type="java.lang.String" column="uuid"
+			length="38" unique="true" />
+	</class>
+</hibernate-mapping>

@@ -59,6 +59,7 @@
 		PatientServiceBillItem.hbm.xml
 		CategoryLocation.hbm.xml
 		ConsentTemplate.hbm.xml
+		Driver.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
