@@ -27,6 +27,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
+import org.openmrs.module.hospitalrestcore.billing.Ambulance;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
@@ -34,6 +35,7 @@ import org.openmrs.module.hospitalrestcore.billing.Driver;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
+import org.openmrs.module.hospitalrestcore.billing.api.db.AmbulanceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
@@ -71,6 +73,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private ConceptAnswerDAO conceptAnswerDAO;
 
 	private DriverDAO driverDAO;
+	
+	private AmbulanceDAO ambulanceDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -196,6 +200,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setDriverDAO(DriverDAO driverDAO) {
 		this.driverDAO = driverDAO;
+	}
+
+	/**
+	 * @return the ambulanceDAO
+	 */
+	public AmbulanceDAO getAmbulanceDAO() {
+		return ambulanceDAO;
+	}
+
+	/**
+	 * @param ambulanceDAO the ambulanceDAO to set
+	 */
+	public void setAmbulanceDAO(AmbulanceDAO ambulanceDAO) {
+		this.ambulanceDAO = ambulanceDAO;
 	}
 
 	@Override
@@ -382,8 +400,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
-	public List<Driver> getAllActiveDriver() throws APIException {
-		return getDriverDAO().getAllActiveDriver();
+	public List<Driver> getAllDriver() throws APIException {
+		return getDriverDAO().getAllDriver();
 	}
 
 	@Override
@@ -395,7 +413,31 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Override
 	@Transactional
 	public Driver saveOrUpdateDriver(Driver driver) throws APIException {
-		return (Driver) driverDAO.saveOrUpdate(driver);
+		return (Driver) getDriverDAO().saveOrUpdate(driver);
+	}
+	
+	@Override
+	@Transactional
+	public List<Ambulance> searchAmbulance(String searchText) throws APIException {
+		return getAmbulanceDAO().searchAmbulance(searchText);
+	}
+
+	@Override
+	@Transactional
+	public List<Ambulance> getAllAmbulance() throws APIException {
+		return getAmbulanceDAO().getAllAmbulance();
+	}
+
+	@Override
+	@Transactional
+	public Ambulance getAmbulanceByUuid(String uuid) throws APIException {
+		return getAmbulanceDAO().getAmbulanceByUuid(uuid);
+	}
+
+	@Override
+	@Transactional
+	public Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException {
+		return (Ambulance) getAmbulanceDAO().saveOrUpdate(ambulance);
 	}
 
 }

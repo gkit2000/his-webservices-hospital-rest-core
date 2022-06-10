@@ -53,6 +53,12 @@ public class HibernateDriverDAO extends HibernateSingleClassDAO implements Drive
 
 	@Override
 	@Transactional(readOnly = true)
+	public List<Driver> getAllDriver() {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.addOrder(Order.asc("name"));
+		return criteria.list();
+	}
+	
 	public List<Driver> getAllActiveDriver() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.addOrder(Order.asc("name")).add(Restrictions.eq("retired", false));

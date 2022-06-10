@@ -24,6 +24,7 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.hospitalrestcore.billing.Ambulance;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
@@ -108,10 +109,18 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<Driver> searchDriver(String searchText) throws APIException;
 
-	List<Driver> getAllActiveDriver() throws APIException;
+	List<Driver> getAllDriver() throws APIException;
 
 	Driver getDriverByUuid(String uuid) throws APIException;
-	
+
 	Driver saveOrUpdateDriver(Driver driver) throws APIException;
+
+	List<Ambulance> searchAmbulance(String searchText) throws APIException;
+
+	List<Ambulance> getAllAmbulance() throws APIException;
+
+	Ambulance getAmbulanceByUuid(String uuid) throws APIException;
+
+	Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException;
 
 }

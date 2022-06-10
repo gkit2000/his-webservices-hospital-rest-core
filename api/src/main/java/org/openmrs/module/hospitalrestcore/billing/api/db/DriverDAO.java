@@ -17,7 +17,7 @@ public interface DriverDAO extends SingleClassDAO {
 
 	public List<Driver> searchDriver(String searchText) throws DAOException;
 
-	public List<Driver> getAllActiveDriver() throws DAOException;
+	public List<Driver> getAllDriver() throws DAOException;
 	
 	public Driver getDriverByUuid(String uuid) throws DAOException;
 

@@ -390,7 +390,7 @@
 			</not>
 		</preConditions>
 		<comment>
-			Create consent_template table
+			Create billing_driver table
 		</comment>
 		<createTable tableName="billing_driver">
 			<column name="driver_id" type="int"
@@ -422,6 +422,48 @@
 		<addForeignKeyConstraint
 			constraintName="driver_retired_by__fk"
 			baseTableName="billing_driver"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="ambulance-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_ambulance" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_ambulance table
+		</comment>
+		<createTable tableName="billing_ambulance">
+			<column name="ambulance_id" type="int"
+				autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(255)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="lastmodified_date" type="DATETIME" />
+			<column name="lastmodified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="ambulance_created_by__fk"
+			baseTableName="billing_ambulance" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+			<addForeignKeyConstraint
+			constraintName="ambulance_lastmodified_by__fk"
+			baseTableName="billing_ambulance"
+			baseColumnNames="lastmodified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="ambulance_retired_by__fk"
+			baseTableName="billing_ambulance"
 			baseColumnNames="retired_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 	</changeSet>

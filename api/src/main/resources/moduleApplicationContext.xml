@@ -114,6 +114,14 @@
 						</property>
 					</bean>
 				</property>
+				<property name="ambulanceDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateAmbulanceDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

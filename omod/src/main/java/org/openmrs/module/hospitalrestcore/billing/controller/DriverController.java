@@ -63,7 +63,7 @@ public class DriverController extends BaseRestController {
 	}
 
 	@RequestMapping(value = "/allDrivers", method = RequestMethod.GET)
-	public void getServicesPrice(HttpServletResponse response, HttpServletRequest request)
+	public void getAllDrivers(HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		response.setContentType("application/json");
@@ -71,7 +71,7 @@ public class DriverController extends BaseRestController {
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
-		List<Driver> drivers = hospitalRestCoreService.getAllActiveDriver();
+		List<Driver> drivers = hospitalRestCoreService.getAllDriver();
 		List<DriverDetailsResponse> ddrs = drivers.stream().map(driv -> getDriverDetails(driv))
 				.collect(Collectors.toList());
 

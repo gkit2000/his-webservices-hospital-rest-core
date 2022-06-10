@@ -77,6 +77,8 @@ public final class OpenmrsCustomConstants {
 	public static final String VALIDATION_ERROR_NOT_VALID_BILL_ITEM_ID_AND_BILL_ID = "Bill item id %s not corresponds to bill id %s";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_DRIVER_UUID = "Driver uuid %s is not valid";
+	
+	public static final String VALIDATION_ERROR_NOT_VALID_AMBULANCE_UUID = "Ambulance uuid %s is not valid";
 
 	public static final String ACCESS_TOKEN_URL = "https://dev.abdm.gov.in/gateway/v0.5/sessions";
 

@@ -13,5 +13,6 @@
 		<mapping resource="CategoryLocation.hbm.xml" />
 		<mapping resource="ConsentTemplate.hbm.xml" />
 		<mapping resource="Driver.hbm.xml" />
+		<mapping resource="Ambulance.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

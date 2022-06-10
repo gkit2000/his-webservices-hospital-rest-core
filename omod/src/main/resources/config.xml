@@ -60,6 +60,7 @@
 		CategoryLocation.hbm.xml
 		ConsentTemplate.hbm.xml
 		Driver.hbm.xml
+		Ambulance.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
