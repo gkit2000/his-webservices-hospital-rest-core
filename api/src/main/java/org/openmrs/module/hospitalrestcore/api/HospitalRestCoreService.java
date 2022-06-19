@@ -67,9 +67,8 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<OpdTestOrder> getOpdTestOrderByEncounter(Encounter encounter) throws APIException;
 
 	PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill) throws APIException;
-
-	PatientServiceBillItem saveOrUpdatePatientServiceBillItem(PatientServiceBillItem patientServiceBillItem)
-			throws APIException;
+	
+	PatientServiceBillItem saveOrUpdatePatientServiceBillItem(PatientServiceBillItem patientServiceBillItem) throws APIException;
 
 	BillingReceipt createReceipt(BillingReceipt receipt) throws APIException;
 
@@ -91,22 +90,21 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<ConsentTemplate> getConsentTemplateByType(Concept type) throws APIException;
 
 	ConsentTemplate saveOrUpdateConsentTemplate(ConsentTemplate consentTemplate) throws APIException;
-
+	
 	PatientServiceBill getPatientServiceBillById(Integer billId) throws APIException;
-
-	PatientServiceBill getPatientServiceBillByIdAndPatient(Integer billId, Patient patient) throws APIException;
+	
+	PatientServiceBill getPatientServiceBillByIdAndPatient(Integer billId,Patient patient) throws APIException;
 
 	List<PatientServiceBill> getPatientServiceBill(Patient patient) throws APIException;
-
+	
 	PatientServiceBillItem getPatientServiceBillItemById(Integer patientServiceBillItemId) throws APIException;
-
-	PatientServiceBillItem getPatientServiceBillItemByIdAndBill(Integer patientServiceBillItemId,
-			PatientServiceBill patientServiceBill) throws APIException;
+	
+	PatientServiceBillItem getPatientServiceBillItemByIdAndBill(Integer patientServiceBillItemId,PatientServiceBill patientServiceBill) throws APIException;
 
 	List<PatientServiceBillItem> getPatientServiceBillItem(PatientServiceBill patientServiceBill) throws APIException;
-
+	
 	List<ConceptAnswer> getConceptAnswerByAnswerConcept(Concept answerConcept) throws APIException;
-
+	
 	List<Driver> searchDriver(String searchText) throws APIException;
 
 	List<Driver> getAllDriver() throws APIException;

@@ -19,6 +19,10 @@ public class DriverPayload {
 
 	private String phone;
 
+	private String idCardTypeUuid;
+
+	private String idCardValue;
+
 	private boolean retired;
 
 	/**
@@ -89,6 +93,34 @@ public class DriverPayload {
 	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	/**
+	 * @return the idCardTypeUuid
+	 */
+	public String getIdCardTypeUuid() {
+		return idCardTypeUuid;
+	}
+
+	/**
+	 * @param idCardTypeUuid the idCardTypeUuid to set
+	 */
+	public void setIdCardTypeUuid(String idCardTypeUuid) {
+		this.idCardTypeUuid = idCardTypeUuid;
+	}
+
+	/**
+	 * @return the idCardValue
+	 */
+	public String getIdCardValue() {
+		return idCardValue;
+	}
+
+	/**
+	 * @param idCardValue the idCardValue to set
+	 */
+	public void setIdCardValue(String idCardValue) {
+		this.idCardValue = idCardValue;
 	}
 
 	/**

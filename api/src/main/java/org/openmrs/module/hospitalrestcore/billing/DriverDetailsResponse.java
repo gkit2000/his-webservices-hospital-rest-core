@@ -18,10 +18,20 @@ public class DriverDetailsResponse {
 	private String description;
 
 	private String phone;
+	
+	private String idCardTypeUuid;
+
+	private String idCardValue;
 
 	private String createdDate;
 
 	private String createdBy;
+
+	private Boolean deleted;
+
+	private String deletedDate;
+
+	private String deletedBy;
 
 	private String lastModifiedDate;
 
@@ -32,7 +42,7 @@ public class DriverDetailsResponse {
 	private String retiredDate;
 
 	private String retiredBy;
-	
+
 	private String uuid;
 
 	/**
@@ -106,6 +116,34 @@ public class DriverDetailsResponse {
 	}
 
 	/**
+	 * @return the idCardTypeUuid
+	 */
+	public String getIdCardTypeUuid() {
+		return idCardTypeUuid;
+	}
+
+	/**
+	 * @param idCardTypeUuid the idCardTypeUuid to set
+	 */
+	public void setIdCardTypeUuid(String idCardTypeUuid) {
+		this.idCardTypeUuid = idCardTypeUuid;
+	}
+
+	/**
+	 * @return the idCardValue
+	 */
+	public String getIdCardValue() {
+		return idCardValue;
+	}
+
+	/**
+	 * @param idCardValue the idCardValue to set
+	 */
+	public void setIdCardValue(String idCardValue) {
+		this.idCardValue = idCardValue;
+	}
+
+	/**
 	 * @return the createdDate
 	 */
 	public String getCreatedDate() {
@@ -131,6 +169,48 @@ public class DriverDetailsResponse {
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @return the deletedDate
+	 */
+	public String getDeletedDate() {
+		return deletedDate;
+	}
+
+	/**
+	 * @param deletedDate the deletedDate to set
+	 */
+	public void setDeletedDate(String deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	/**
+	 * @return the deletedBy
+	 */
+	public String getDeletedBy() {
+		return deletedBy;
+	}
+
+	/**
+	 * @param deletedBy the deletedBy to set
+	 */
+	public void setDeletedBy(String deletedBy) {
+		this.deletedBy = deletedBy;
 	}
 
 	/**

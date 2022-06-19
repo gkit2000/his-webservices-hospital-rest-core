@@ -15,8 +15,11 @@
 		<property name="description" column="description" length="255" />
 		<property name="createdDate" column="created_date"  />
 	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="ambulance_created_by__fk"/>
-		<property name="lastModifiedDate" column="lastmodified_date"  />
-	    <many-to-one name="lastModifiedBy" column="lastmodified_by"  class="org.openmrs.User" foreign-key="ambulance_lastmodified_by__fk"/>
+	    <property name="deleted" column="deleted" />
+	    <property name="deletedDate" column="deleted_date"  />
+	    <many-to-one name="deletedBy" column="deleted_by"  class="org.openmrs.User" foreign-key="ambulance_deleted_by__fk"/>
+		<property name="lastModifiedDate" column="last_modified_date"  />
+	    <many-to-one name="lastModifiedBy" column="last_modified_by"  class="org.openmrs.User" foreign-key="ambulance_lastmodified_by__fk"/>
 		<property name="retired" column="retired"  />
 		<property name="retiredDate" column="retired_date"  />
 		<many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="ambulance_retired_by__fk"/>

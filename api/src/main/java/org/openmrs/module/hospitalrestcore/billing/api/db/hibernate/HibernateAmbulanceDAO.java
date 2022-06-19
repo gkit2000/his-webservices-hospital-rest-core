@@ -32,6 +32,7 @@ public class HibernateAmbulanceDAO extends HibernateSingleClassDAO implements Am
 	public List<Ambulance> searchAmbulance(String searchText) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.like("name", searchText + "%")).add(Restrictions.eq("retired", false));
+		criteria.addOrder(Order.desc("createdDate"));
 		return criteria.list();
 	}
 
@@ -39,7 +40,8 @@ public class HibernateAmbulanceDAO extends HibernateSingleClassDAO implements Am
 	@Transactional(readOnly = true)
 	public List<Ambulance> getAllAmbulance() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-		criteria.addOrder(Order.asc("name"));
+		//criteria.addOrder(Order.asc("name"));
+		criteria.addOrder(Order.desc("createdDate"));
 		return criteria.list();
 	}
 	

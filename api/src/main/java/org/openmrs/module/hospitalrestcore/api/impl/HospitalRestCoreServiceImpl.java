@@ -71,8 +71,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private ConsentTemplateDAO consentTemplateDAO;
 
 	private ConceptAnswerDAO conceptAnswerDAO;
-
-	private DriverDAO driverDAO;
+	
+    private DriverDAO driverDAO;
 	
 	private AmbulanceDAO ambulanceDAO;
 
@@ -391,7 +391,7 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public List<ConceptAnswer> getConceptAnswerByAnswerConcept(Concept answerConcept) throws APIException {
 		return getConceptAnswerDAO().getConceptAnswerByAnswerConcept(answerConcept);
 	}
-
+	
 	@Override
 	@Transactional
 	public List<Driver> searchDriver(String searchText) throws APIException {

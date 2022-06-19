@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/ambulance")
 public class AmbulanceController extends BaseRestController {
 
-	@RequestMapping(value = "/searchAmbulance ", method = RequestMethod.POST)
+	@RequestMapping(value = "/search-ambulance ", method = RequestMethod.POST)
 	public void searchAmbulance(@Valid @RequestBody AmbulanceSearchPayload ambulanceSearchPayload,
 			HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -62,7 +62,7 @@ public class AmbulanceController extends BaseRestController {
 		new ObjectMapper().writeValue(out, adrs);
 	}
 
-	@RequestMapping(value = "/allDrivers", method = RequestMethod.GET)
+	@RequestMapping(value = "/all-ambulances", method = RequestMethod.GET)
 	public void getAllAmbulances(HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -78,7 +78,7 @@ public class AmbulanceController extends BaseRestController {
 		new ObjectMapper().writeValue(out, adrs);
 	}
 
-	@RequestMapping(value = "/addAmbulance", method = RequestMethod.POST)
+	@RequestMapping(value = "/add-ambulance", method = RequestMethod.POST)
 	public ResponseEntity<Void> addAmbulance(@Valid @RequestBody AmbulancePayload ambulancePayload,
 			HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -99,7 +99,7 @@ public class AmbulanceController extends BaseRestController {
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/editAmbulance", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit-ambulance", method = RequestMethod.PUT)
 	public ResponseEntity<Void> editDriver(@Valid @RequestBody AmbulancePayload ambulancePayload,
 			HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -133,6 +133,33 @@ public class AmbulanceController extends BaseRestController {
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/delete-ambulances", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteAmbulances(@RequestBody List<String> ambulanceUuids, HttpServletResponse response,
+			HttpServletRequest request)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+
+		for (String ambulanceUuid : ambulanceUuids) {
+			Ambulance ambulance = hospitalRestCoreService.getAmbulanceByUuid(ambulanceUuid);
+			if (ambulance == null) {
+				throw new ResourceNotFoundException(
+						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_AMBULANCE_UUID, ambulanceUuid));
+			}
+
+			ambulance.setDeleted(true);
+			ambulance.setDeletedDate(new Date());
+			ambulance.setDeletedBy(Context.getAuthenticatedUser());
+
+			hospitalRestCoreService.saveOrUpdateAmbulance(ambulance);
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
 	public AmbulanceDetailsResponse getAmbulanceDetails(Ambulance ambulance) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		AmbulanceDetailsResponse adr = new AmbulanceDetailsResponse();
@@ -141,11 +168,20 @@ public class AmbulanceController extends BaseRestController {
 		adr.setDescription(ambulance.getDescription());
 		adr.setCreatedDate(formatter.format(ambulance.getCreatedDate()));
 		adr.setCreatedBy(PulseUtil.getName(ambulance.getCreatedBy().getPerson()));
-		adr.setLastModifiedDate(formatter.format(ambulance.getLastModifiedDate()));
-		adr.setLastModifiedBy(PulseUtil.getName(ambulance.getLastModifiedBy().getPerson()));
-		adr.setRetired(ambulance.getRetired());
-		adr.setRetiredDate(formatter.format(ambulance.getRetiredDate()));
-		adr.setRetiredBy(PulseUtil.getName(ambulance.getRetiredBy().getPerson()));
+		if (ambulance.getDeletedDate() != null) {
+			adr.setDeleted(ambulance.getDeleted());
+			adr.setDeletedDate(formatter.format(ambulance.getDeletedDate()));
+			adr.setDeletedBy(PulseUtil.getName(ambulance.getDeletedBy().getPerson()));
+		}
+		if (ambulance.getLastModifiedDate() != null) {
+			adr.setLastModifiedDate(formatter.format(ambulance.getLastModifiedDate()));
+			adr.setLastModifiedBy(PulseUtil.getName(ambulance.getLastModifiedBy().getPerson()));
+		}
+		if (ambulance.getRetiredDate() != null) {
+			adr.setRetired(ambulance.getRetired());
+			adr.setRetiredDate(formatter.format(ambulance.getRetiredDate()));
+			adr.setRetiredBy(PulseUtil.getName(ambulance.getRetiredBy().getPerson()));
+		}
 		adr.setUuid(ambulance.getUuid());
 		return adr;
 	}

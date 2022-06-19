@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.Concept;
 import org.openmrs.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +44,20 @@ public class Driver extends BaseOpenmrsObject implements Serializable {
 	private String description;
 
 	private String phone;
+	
+	private Concept idCardType;
+	
+	private String idCardValue;
 
 	private Date createdDate;
 
 	private User createdBy;
+	
+    private Boolean deleted = false;
+	
+	private Date deletedDate;
+
+	private User deletedBy;
 
 	private Date lastModifiedDate;
 
@@ -99,6 +110,34 @@ public class Driver extends BaseOpenmrsObject implements Serializable {
 	}
 
 	/**
+	 * @return the idCardType
+	 */
+	public Concept getIdCardType() {
+		return idCardType;
+	}
+
+	/**
+	 * @param idCardType the idCardType to set
+	 */
+	public void setIdCardType(Concept idCardType) {
+		this.idCardType = idCardType;
+	}
+
+	/**
+	 * @return the idCardValue
+	 */
+	public String getIdCardValue() {
+		return idCardValue;
+	}
+
+	/**
+	 * @param idCardValue the idCardValue to set
+	 */
+	public void setIdCardValue(String idCardValue) {
+		this.idCardValue = idCardValue;
+	}
+
+	/**
 	 * @return the createdDate
 	 */
 	public Date getCreatedDate() {
@@ -124,6 +163,48 @@ public class Driver extends BaseOpenmrsObject implements Serializable {
 	 */
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @return the deletedDate
+	 */
+	public Date getDeletedDate() {
+		return deletedDate;
+	}
+
+	/**
+	 * @param deletedDate the deletedDate to set
+	 */
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	/**
+	 * @return the deletedBy
+	 */
+	public User getDeletedBy() {
+		return deletedBy;
+	}
+
+	/**
+	 * @param deletedBy the deletedBy to set
+	 */
+	public void setDeletedBy(User deletedBy) {
+		this.deletedBy = deletedBy;
 	}
 
 	/**

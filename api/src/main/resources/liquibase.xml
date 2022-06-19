@@ -401,26 +401,41 @@
 			<column name="address" type="varchar(255)" />
 			<column name="description" type="varchar(255)" />
 			<column name="phone" type="varchar(20)" />
+			<column name="id_card_type" type="int" />
+			<column name="id_card_value" type="varchar(51)" />
 			<column name="created_date" type="DATETIME" />
 			<column name="created_by" type="int" />
-			<column name="lastmodified_date" type="DATETIME" />
-			<column name="lastmodified_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
 			<column name="retired" type="boolean" />
 			<column name="retired_date" type="DATETIME" />
 			<column name="retired_by" type="int" />
 			<column name="uuid" type="char(38)" />
 		</createTable>
 		<addForeignKeyConstraint
-			constraintName="driver_created_by__fk"
+			constraintName="driver_id_card_type_fk"
+			baseTableName="billing_driver"
+			baseColumnNames="id_card_type" referencedTableName="concept"
+			referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="driver_created_by_fk"
 			baseTableName="billing_driver" baseColumnNames="created_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 			<addForeignKeyConstraint
-			constraintName="driver_lastmodified_by__fk"
+			constraintName="driver_deleted_by_fk"
 			baseTableName="billing_driver"
-			baseColumnNames="lastmodified_by" referencedTableName="users"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+			<addForeignKeyConstraint
+			constraintName="driver_lastmodified_by_fk"
+			baseTableName="billing_driver"
+			baseColumnNames="last_modified_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 		<addForeignKeyConstraint
-			constraintName="driver_retired_by__fk"
+			constraintName="driver_retired_by_fk"
 			baseTableName="billing_driver"
 			baseColumnNames="retired_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
@@ -445,24 +460,32 @@
 			<column name="description" type="varchar(255)" />
 			<column name="created_date" type="DATETIME" />
 			<column name="created_by" type="int" />
-			<column name="lastmodified_date" type="DATETIME" />
-			<column name="lastmodified_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
 			<column name="retired" type="boolean" />
 			<column name="retired_date" type="DATETIME" />
 			<column name="retired_by" type="int" />
 			<column name="uuid" type="char(38)" />
 		</createTable>
 		<addForeignKeyConstraint
-			constraintName="ambulance_created_by__fk"
+			constraintName="ambulance_created_by_fk"
 			baseTableName="billing_ambulance" baseColumnNames="created_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 			<addForeignKeyConstraint
-			constraintName="ambulance_lastmodified_by__fk"
+			constraintName="ambulance_deleted_by_fk"
 			baseTableName="billing_ambulance"
-			baseColumnNames="lastmodified_by" referencedTableName="users"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+			<addForeignKeyConstraint
+			constraintName="ambulance_last_modified_by_fk"
+			baseTableName="billing_ambulance"
+			baseColumnNames="last_modified_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 		<addForeignKeyConstraint
-			constraintName="ambulance_retired_by__fk"
+			constraintName="ambulance_retired_by_fk"
 			baseTableName="billing_ambulance"
 			baseColumnNames="retired_by" referencedTableName="users"
 			referencedColumnNames="user_id" />

@@ -46,6 +46,12 @@ public class Ambulance extends BaseOpenmrsObject implements Serializable {
 	private Date createdDate;
 
 	private User createdBy;
+	
+	private Boolean deleted = false;
+	
+	private Date deletedDate;
+
+	private User deletedBy;
 
 	private Date lastModifiedDate;
 
@@ -107,6 +113,48 @@ public class Ambulance extends BaseOpenmrsObject implements Serializable {
 	 */
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @return the deletedDate
+	 */
+	public Date getDeletedDate() {
+		return deletedDate;
+	}
+
+	/**
+	 * @param deletedDate the deletedDate to set
+	 */
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	/**
+	 * @return the deletedBy
+	 */
+	public User getDeletedBy() {
+		return deletedBy;
+	}
+
+	/**
+	 * @param deletedBy the deletedBy to set
+	 */
+	public void setDeletedBy(User deletedBy) {
+		this.deletedBy = deletedBy;
 	}
 
 	/**

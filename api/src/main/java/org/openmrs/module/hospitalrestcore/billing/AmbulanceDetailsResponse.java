@@ -19,6 +19,12 @@ public class AmbulanceDetailsResponse {
 
 	private String createdBy;
 
+	private Boolean deleted;
+
+	private String deletedDate;
+
+	private String deletedBy;
+
 	private String lastModifiedDate;
 
 	private String lastModifiedBy;
@@ -99,6 +105,48 @@ public class AmbulanceDetailsResponse {
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @return the deletedDate
+	 */
+	public String getDeletedDate() {
+		return deletedDate;
+	}
+
+	/**
+	 * @param deletedDate the deletedDate to set
+	 */
+	public void setDeletedDate(String deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	/**
+	 * @return the deletedBy
+	 */
+	public String getDeletedBy() {
+		return deletedBy;
+	}
+
+	/**
+	 * @param deletedBy the deletedBy to set
+	 */
+	public void setDeletedBy(String deletedBy) {
+		this.deletedBy = deletedBy;
 	}
 
 	/**

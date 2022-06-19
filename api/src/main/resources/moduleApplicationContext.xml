@@ -27,8 +27,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService
-				</value>
+				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService</value>
 				<ref bean="hospitalRestCoreService"></ref>
 			</list>
 		</property>

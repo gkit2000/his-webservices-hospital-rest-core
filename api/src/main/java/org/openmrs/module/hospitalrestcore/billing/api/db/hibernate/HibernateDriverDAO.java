@@ -48,6 +48,7 @@ public class HibernateDriverDAO extends HibernateSingleClassDAO implements Drive
 	public List<Driver> searchDriver(String searchText) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.like("name", searchText + "%")).add(Restrictions.eq("retired", false));
+		criteria.addOrder(Order.desc("createdDate"));
 		return criteria.list();
 	}
 
@@ -55,7 +56,8 @@ public class HibernateDriverDAO extends HibernateSingleClassDAO implements Drive
 	@Transactional(readOnly = true)
 	public List<Driver> getAllDriver() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-		criteria.addOrder(Order.asc("name"));
+		//criteria.addOrder(Order.asc("name"));
+		criteria.addOrder(Order.desc("createdDate"));
 		return criteria.list();
 	}
 	

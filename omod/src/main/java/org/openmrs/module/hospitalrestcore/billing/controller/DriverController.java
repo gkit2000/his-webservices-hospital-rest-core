@@ -18,6 +18,8 @@ import javax.validation.Valid;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.Concept;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
@@ -45,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/driver")
 public class DriverController extends BaseRestController {
 
-	@RequestMapping(value = "/searchDriver ", method = RequestMethod.POST)
+	@RequestMapping(value = "/search-driver ", method = RequestMethod.POST)
 	public void searchDriver(@Valid @RequestBody DriverSearchPayload driverSearchPayload, HttpServletResponse response,
 			HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -62,7 +64,7 @@ public class DriverController extends BaseRestController {
 		new ObjectMapper().writeValue(out, ddrs);
 	}
 
-	@RequestMapping(value = "/allDrivers", method = RequestMethod.GET)
+	@RequestMapping(value = "/all-drivers", method = RequestMethod.GET)
 	public void getAllDrivers(HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -78,7 +80,7 @@ public class DriverController extends BaseRestController {
 		new ObjectMapper().writeValue(out, ddrs);
 	}
 
-	@RequestMapping(value = "/addDriver", method = RequestMethod.POST)
+	@RequestMapping(value = "/add-driver", method = RequestMethod.POST)
 	public ResponseEntity<Void> addDriver(@Valid @RequestBody DriverPayload driverPayload, HttpServletResponse response,
 			HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -88,11 +90,21 @@ public class DriverController extends BaseRestController {
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
+		ConceptService conceptService = Context.getService(ConceptService.class);
+		Concept idCardTypeConcept = conceptService.getConceptByUuid(driverPayload.getIdCardTypeUuid());
+		if (idCardTypeConcept == null) {
+			throw new ResourceNotFoundException(
+					String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_ID_CARD_TYPE_CONCEPT,
+							driverPayload.getIdCardTypeUuid()));
+		}
+
 		Driver driver = new Driver();
 		driver.setName(driverPayload.getName());
 		driver.setAddress(driverPayload.getAddress());
 		driver.setDescription(driverPayload.getDescription());
 		driver.setPhone(driverPayload.getPhone());
+		driver.setIdCardType(idCardTypeConcept);
+		driver.setIdCardValue(driverPayload.getIdCardValue());
 		driver.setCreatedDate(new Date());
 		driver.setCreatedBy(Context.getAuthenticatedUser());
 
@@ -101,7 +113,7 @@ public class DriverController extends BaseRestController {
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/editDriver", method = RequestMethod.PUT)
+	@RequestMapping(value = "/edit-driver", method = RequestMethod.PUT)
 	public ResponseEntity<Void> editDriver(@Valid @RequestBody DriverPayload driverPayload,
 			HttpServletResponse response, HttpServletRequest request)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
@@ -110,6 +122,14 @@ public class DriverController extends BaseRestController {
 		ServletOutputStream out = response.getOutputStream();
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+
+		ConceptService conceptService = Context.getService(ConceptService.class);
+		Concept idCardTypeConcept = conceptService.getConceptByUuid(driverPayload.getIdCardTypeUuid());
+		if (idCardTypeConcept == null) {
+			throw new ResourceNotFoundException(
+					String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_ID_CARD_TYPE_CONCEPT,
+							driverPayload.getIdCardTypeUuid()));
+		}
 
 		if (driverPayload.getUuid() != null) {
 			Driver driver = hospitalRestCoreService.getDriverByUuid(driverPayload.getUuid());
@@ -126,12 +146,41 @@ public class DriverController extends BaseRestController {
 				driver.setAddress(driverPayload.getAddress());
 				driver.setDescription(driverPayload.getDescription());
 				driver.setPhone(driverPayload.getPhone());
+				driver.setIdCardType(idCardTypeConcept);
+				driver.setIdCardValue(driverPayload.getIdCardValue());
 				driver.setLastModifiedDate(new Date());
 				driver.setLastModifiedBy(Context.getAuthenticatedUser());
 			}
 
 			hospitalRestCoreService.saveOrUpdateDriver(driver);
 
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/delete-drivers", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteDrivers(@RequestBody List<String> driverUuids, HttpServletResponse response,
+			HttpServletRequest request)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+
+		for (String driverUuid : driverUuids) {
+			Driver driver = hospitalRestCoreService.getDriverByUuid(driverUuid);
+			if (driver == null) {
+				throw new ResourceNotFoundException(
+						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRIVER_UUID, driverUuid));
+			}
+
+			driver.setDeleted(true);
+			driver.setDeletedDate(new Date());
+			driver.setDeletedBy(Context.getAuthenticatedUser());
+
+			hospitalRestCoreService.saveOrUpdateDriver(driver);
 		}
 
 		return new ResponseEntity<Void>(HttpStatus.OK);
@@ -144,13 +193,27 @@ public class DriverController extends BaseRestController {
 		ddr.setName(driver.getName());
 		ddr.setAddress(driver.getAddress());
 		ddr.setDescription(driver.getDescription());
+		ddr.setPhone(driver.getPhone());
+		if (driver.getIdCardType() != null) {
+			ddr.setIdCardTypeUuid(driver.getIdCardType().getUuid());
+		}
+		ddr.setIdCardValue(driver.getIdCardValue());
 		ddr.setCreatedDate(formatter.format(driver.getCreatedDate()));
 		ddr.setCreatedBy(PulseUtil.getName(driver.getCreatedBy().getPerson()));
-		ddr.setLastModifiedDate(formatter.format(driver.getLastModifiedDate()));
-		ddr.setLastModifiedBy(PulseUtil.getName(driver.getLastModifiedBy().getPerson()));
-		ddr.setRetired(driver.getRetired());
-		ddr.setRetiredDate(formatter.format(driver.getRetiredDate()));
-		ddr.setRetiredBy(PulseUtil.getName(driver.getRetiredBy().getPerson()));
+		if (driver.getDeletedDate() != null) {
+			ddr.setDeleted(driver.getDeleted());
+			ddr.setDeletedDate(formatter.format(driver.getDeletedDate()));
+			ddr.setDeletedBy(PulseUtil.getName(driver.getDeletedBy().getPerson()));
+		}
+		if (driver.getLastModifiedDate() != null) {
+			ddr.setLastModifiedDate(formatter.format(driver.getLastModifiedDate()));
+			ddr.setLastModifiedBy(PulseUtil.getName(driver.getLastModifiedBy().getPerson()));
+		}
+		if (driver.getRetiredDate() != null) {
+			ddr.setRetired(driver.getRetired());
+			ddr.setRetiredDate(formatter.format(driver.getRetiredDate()));
+			ddr.setRetiredBy(PulseUtil.getName(driver.getRetiredBy().getPerson()));
+		}
 		ddr.setUuid(driver.getUuid());
 		return ddr;
 	}
