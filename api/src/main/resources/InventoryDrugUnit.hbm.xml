@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.hospitalrestcore.inventory">
+
+	<class name="InventoryDrugUnit" table="inventory_drug_unit" batch-size="500">
+
+		<id name="id" type="int" column="id" unsaved-value="0">
+				<generator class="native" />
+		</id>
+		<property name="name" column="name" length="255"/>
+		<property name="description" column="description" length="500"/>
+		<property name="createdDate" column="created_date"  />
+	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="inventory_drug_unit_created_by_fk"/>
+	     <property name="deleted" column="deleted" />
+	     <property name="deletedDate" column="deleted_date"  />
+	    <many-to-one name="deletedBy" column="deleted_by"  class="org.openmrs.User" foreign-key="inventory_drug_unit_deleted_by_fk"/>
+		<property name="lastModifiedDate" column="last_modified_date"  />
+	    <many-to-one name="lastModifiedBy" column="last_modified_by"  class="org.openmrs.User" foreign-key="inventory_drug_unit_lastmodified_by_fk"/>
+		<property name="retired" column="retired"  />
+		<property name="retiredDate" column="retired_date"  />
+		<many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="inventory_drug_unit_retired_by_fk"/>
+		<property name="uuid" type="java.lang.String" column="uuid"
+			length="38" unique="true" />
+		
+	</class>
+</hibernate-mapping>

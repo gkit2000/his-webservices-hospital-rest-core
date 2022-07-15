@@ -22,6 +22,7 @@ import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
 import org.openmrs.Patient;
+import org.openmrs.Role;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hospitalrestcore.billing.Ambulance;
@@ -33,6 +34,9 @@ import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -67,8 +71,9 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<OpdTestOrder> getOpdTestOrderByEncounter(Encounter encounter) throws APIException;
 
 	PatientServiceBill saveOrUpdatePatientServiceBill(PatientServiceBill patientServiceBill) throws APIException;
-	
-	PatientServiceBillItem saveOrUpdatePatientServiceBillItem(PatientServiceBillItem patientServiceBillItem) throws APIException;
+
+	PatientServiceBillItem saveOrUpdatePatientServiceBillItem(PatientServiceBillItem patientServiceBillItem)
+			throws APIException;
 
 	BillingReceipt createReceipt(BillingReceipt receipt) throws APIException;
 
@@ -90,21 +95,22 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<ConsentTemplate> getConsentTemplateByType(Concept type) throws APIException;
 
 	ConsentTemplate saveOrUpdateConsentTemplate(ConsentTemplate consentTemplate) throws APIException;
-	
+
 	PatientServiceBill getPatientServiceBillById(Integer billId) throws APIException;
-	
-	PatientServiceBill getPatientServiceBillByIdAndPatient(Integer billId,Patient patient) throws APIException;
+
+	PatientServiceBill getPatientServiceBillByIdAndPatient(Integer billId, Patient patient) throws APIException;
 
 	List<PatientServiceBill> getPatientServiceBill(Patient patient) throws APIException;
-	
+
 	PatientServiceBillItem getPatientServiceBillItemById(Integer patientServiceBillItemId) throws APIException;
-	
-	PatientServiceBillItem getPatientServiceBillItemByIdAndBill(Integer patientServiceBillItemId,PatientServiceBill patientServiceBill) throws APIException;
+
+	PatientServiceBillItem getPatientServiceBillItemByIdAndBill(Integer patientServiceBillItemId,
+			PatientServiceBill patientServiceBill) throws APIException;
 
 	List<PatientServiceBillItem> getPatientServiceBillItem(PatientServiceBill patientServiceBill) throws APIException;
-	
+
 	List<ConceptAnswer> getConceptAnswerByAnswerConcept(Concept answerConcept) throws APIException;
-	
+
 	List<Driver> searchDriver(String searchText) throws APIException;
 
 	List<Driver> getAllDriver() throws APIException;
@@ -120,5 +126,15 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	Ambulance getAmbulanceByUuid(String uuid) throws APIException;
 
 	Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException;
+
+	InventoryStore getStoreByCollectionRole(List<Role> roles) throws APIException;
+
+	Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate, String toDate,
+			boolean isExpiry) throws APIException;
+
+	List<InventoryStoreDrugTransactionDetail> listViewStockBalance(Integer storeId, Integer categoryId, String drugName,
+			String fromDate, String toDate, boolean isExpiry, int min, int max) throws APIException;
+
+	List<InventoryDrugCategory> listDrugCategory(String name, int min, int max) throws APIException;
 
 }

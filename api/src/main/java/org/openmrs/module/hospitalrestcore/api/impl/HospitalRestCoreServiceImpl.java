@@ -24,6 +24,7 @@ import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
 import org.openmrs.Patient;
+import org.openmrs.Role;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
@@ -46,6 +47,10 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItemDAO;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -71,10 +76,12 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private ConsentTemplateDAO consentTemplateDAO;
 
 	private ConceptAnswerDAO conceptAnswerDAO;
-	
-    private DriverDAO driverDAO;
-	
+
+	private DriverDAO driverDAO;
+
 	private AmbulanceDAO ambulanceDAO;
+
+	private InventoryStoreDAO inventoryStoreDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -214,6 +221,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setAmbulanceDAO(AmbulanceDAO ambulanceDAO) {
 		this.ambulanceDAO = ambulanceDAO;
+	}
+
+	/**
+	 * @return the inventoryStoreDAO
+	 */
+	public InventoryStoreDAO getInventoryStoreDAO() {
+		return inventoryStoreDAO;
+	}
+
+	/**
+	 * @param inventoryStoreDAO the inventoryStoreDAO to set
+	 */
+	public void setInventoryStoreDAO(InventoryStoreDAO inventoryStoreDAO) {
+		this.inventoryStoreDAO = inventoryStoreDAO;
 	}
 
 	@Override
@@ -391,7 +412,7 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public List<ConceptAnswer> getConceptAnswerByAnswerConcept(Concept answerConcept) throws APIException {
 		return getConceptAnswerDAO().getConceptAnswerByAnswerConcept(answerConcept);
 	}
-	
+
 	@Override
 	@Transactional
 	public List<Driver> searchDriver(String searchText) throws APIException {
@@ -415,7 +436,7 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public Driver saveOrUpdateDriver(Driver driver) throws APIException {
 		return (Driver) getDriverDAO().saveOrUpdate(driver);
 	}
-	
+
 	@Override
 	@Transactional
 	public List<Ambulance> searchAmbulance(String searchText) throws APIException {
@@ -438,6 +459,33 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Transactional
 	public Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException {
 		return (Ambulance) getAmbulanceDAO().saveOrUpdate(ambulance);
+	}
+
+	@Override
+	@Transactional
+	public InventoryStore getStoreByCollectionRole(List<Role> roles) throws APIException {
+		return (InventoryStore) getInventoryStoreDAO().getStoreByCollectionRole(roles);
+	}
+
+	@Override
+	@Transactional
+	public Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate,
+			String toDate, boolean isExpiry) throws APIException {
+		return getInventoryStoreDAO().countViewStockBalance(storeId, categoryId, drugName, fromDate, toDate, isExpiry);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugTransactionDetail> listViewStockBalance(Integer storeId, Integer categoryId,
+			String drugName, String fromDate, String toDate, boolean isExpiry, int min, int max) throws APIException {
+		return getInventoryStoreDAO().listViewStockBalance(storeId, categoryId, drugName, fromDate, toDate, isExpiry,
+				min, max);
+	}
+	
+	@Override
+	@Transactional
+	public List<InventoryDrugCategory> listDrugCategory(String name, int min, int max) throws APIException {
+		return getInventoryStoreDAO().listDrugCategory(name, min, max);
 	}
 
 }

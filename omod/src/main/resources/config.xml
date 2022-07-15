@@ -18,8 +18,10 @@
 	<require_version>1.11.6, 2.3.0</require_version>
 
 	<require_modules>
-		<require_module version="${webservicesRestVersion}">org.openmrs.module.webservices.rest</require_module>
-		 <require_module version="${appointmentSchedulingVersion}">org.openmrs.module.appointmentscheduling</require_module>
+		<require_module version="${webservicesRestVersion}">org.openmrs.module.webservices.rest
+		</require_module>
+		<require_module
+			version="${appointmentSchedulingVersion}">org.openmrs.module.appointmentscheduling</require_module>
 	</require_modules>
 
 	<aware_of_modules>
@@ -29,7 +31,8 @@
 	<!-- / Module Properties -->
 
 	<!-- Module Activator -->
-	<activator>${project.parent.groupId}.${project.parent.artifactId}.HospitalRestCoreActivator</activator>
+	<activator>${project.parent.groupId}.${project.parent.artifactId}.HospitalRestCoreActivator
+	</activator>
 
 	<dwr>
 		<allow>
@@ -47,9 +50,10 @@
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
-		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
+		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList
+		</class>
 	</extension>
-	
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 		OpdTestOrder.hbm.xml
@@ -61,6 +65,14 @@
 		ConsentTemplate.hbm.xml
 		Driver.hbm.xml
 		Ambulance.hbm.xml
+		InventoryDrug.hbm.xml
+		InventoryDrugCategory.hbm.xml
+		InventoryDrugFormulation.hbm.xml
+		InventoryDrugUnit.hbm.xml
+		InventoryStore.hbm.xml
+		InventoryStoreDrugIndent.hbm.xml
+		InventoryStoreDrugTransaction.hbm.xml
+		InventoryStoreDrugTransactionDetail.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

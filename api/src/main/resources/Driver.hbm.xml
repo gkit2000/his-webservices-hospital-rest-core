@@ -18,15 +18,15 @@
 		<many-to-one name="idCardType" column="id_card_type" class="org.openmrs.Concept"/>
 		<property name="idCardValue" column="id_card_value" />
 		<property name="createdDate" column="created_date"  />
-	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="driver_created_by__fk"/>
+	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="driver_created_by_fk"/>
 	     <property name="deleted" column="deleted" />
 	     <property name="deletedDate" column="deleted_date"  />
-	    <many-to-one name="deletedBy" column="deleted_by"  class="org.openmrs.User" foreign-key="ambulance_deleted_by__fk"/>
+	    <many-to-one name="deletedBy" column="deleted_by"  class="org.openmrs.User" foreign-key="driver_deleted_by_fk"/>
 		<property name="lastModifiedDate" column="last_modified_date"  />
-	    <many-to-one name="lastModifiedBy" column="last_modified_by"  class="org.openmrs.User" foreign-key="driver_lastmodified_by__fk"/>
+	    <many-to-one name="lastModifiedBy" column="last_modified_by"  class="org.openmrs.User" foreign-key="driver_lastmodified_by_fk"/>
 		<property name="retired" column="retired"  />
 		<property name="retiredDate" column="retired_date"  />
-		<many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="driver_retired_by__fk"/>
+		<many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="driver_retired_by_fk"/>
 		<property name="uuid" type="java.lang.String" column="uuid"
 			length="38" unique="true" />
 	</class>

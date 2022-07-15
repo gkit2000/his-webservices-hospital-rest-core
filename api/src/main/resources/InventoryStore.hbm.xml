@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.hospitalrestcore.inventory">
+
+	<class name="InventoryStore" table="inventory_store" batch-size="500">
+
+		<id name="id" type="int" column="id" unsaved-value="0">
+				<generator class="native" />
+		</id>
+		<property name="name" column="name" />
+		<many-to-one name="role" column="role" class="org.openmrs.Role" foreign-key="fk_inventorystore_role"/>
+		<property name="code" column="code"  />
+		<property name="isDrug" column="is_drug"  />
+		<many-to-one name="parent" class="org.openmrs.module.hospitalcore.model.InventoryStore"
+	        column="parent_id"  lazy="false" />	 
+	    <set name="subStores"  table="inventory_store" cascade="save-update,merge,evict" >
+	      <key column="parent_id"/>
+	      <one-to-many class="org.openmrs.module.hospitalcore.model.InventoryStore"/>
+	    </set>
+	    <property name="createdDate" column="created_date"  />
+	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="inventory_store_created_by_fk"/>
+	     <property name="deleted" column="deleted" />
+	     <property name="deletedDate" column="deleted_date"  />
+	    <many-to-one name="deletedBy" column="deleted_by"  class="org.openmrs.User" foreign-key="inventory_store_deleted_by_fk"/>
+		<property name="lastModifiedDate" column="last_modified_date"  />
+	    <many-to-one name="lastModifiedBy" column="last_modified_by"  class="org.openmrs.User" foreign-key="inventory_store_lastmodified_by_fk"/>
+		<property name="retired" column="retired"  />
+		<property name="retiredDate" column="retired_date"  />
+		<many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="inventory_store_retired_by_fk"/>
+		<property name="uuid" type="java.lang.String" column="uuid"
+			length="38" unique="true" />    
+	</class>
+</hibernate-mapping>
