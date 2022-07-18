@@ -35,8 +35,10 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -136,5 +138,13 @@ public interface HospitalRestCoreService extends OpenmrsService {
 			String fromDate, String toDate, boolean isExpiry, int min, int max) throws APIException;
 
 	List<InventoryDrugCategory> listDrugCategory(String name, int min, int max) throws APIException;
+
+	Integer countStoreItemViewStockBalance(Integer storeId, Integer categoryId, String itemName, String fromDate,
+			String toDate) throws APIException;
+
+	List<InventoryStoreItemTransactionDetail> listStoreItemViewStockBalance(Integer storeId, Integer categoryId,
+			String itemName, String fromDate, String toDate, int min, int max) throws APIException;
+
+	List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws APIException;
 
 }

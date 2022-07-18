@@ -48,8 +48,10 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItem
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -481,11 +483,32 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 		return getInventoryStoreDAO().listViewStockBalance(storeId, categoryId, drugName, fromDate, toDate, isExpiry,
 				min, max);
 	}
-	
+
 	@Override
 	@Transactional
 	public List<InventoryDrugCategory> listDrugCategory(String name, int min, int max) throws APIException {
 		return getInventoryStoreDAO().listDrugCategory(name, min, max);
+	}
+
+	@Override
+	@Transactional
+	public Integer countStoreItemViewStockBalance(Integer storeId, Integer categoryId, String itemName, String fromDate,
+			String toDate) throws APIException {
+		return getInventoryStoreDAO().countStoreItemViewStockBalance(storeId, categoryId, itemName, fromDate, toDate);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreItemTransactionDetail> listStoreItemViewStockBalance(Integer storeId, Integer categoryId,
+			String itemName, String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryStoreDAO().listStoreItemViewStockBalance(storeId, categoryId, itemName, fromDate, toDate,
+				min, max);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws APIException {
+		return getInventoryStoreDAO().listItemSubCategory(name, min, max);
 	}
 
 }

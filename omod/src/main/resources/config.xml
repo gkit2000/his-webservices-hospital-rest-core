@@ -73,6 +73,14 @@
 		InventoryStoreDrugIndent.hbm.xml
 		InventoryStoreDrugTransaction.hbm.xml
 		InventoryStoreDrugTransactionDetail.hbm.xml
+		InventoryItem.hbm.xml
+		InventoryItemCategory.hbm.xml
+		InventoryItemSpecification.hbm.xml
+		InventoryItemSubCategory.hbm.xml
+		InventoryItemUnit.hbm.xml
+		InventoryStoreItemIndent.hbm.xml
+		InventoryStoreItemTransaction.hbm.xml
+		InventoryStoreItemTransactionDetail.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

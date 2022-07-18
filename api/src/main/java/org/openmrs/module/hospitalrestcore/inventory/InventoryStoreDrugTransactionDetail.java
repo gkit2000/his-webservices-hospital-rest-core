@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.openmrs.module.hospitalrestcore.CustomBaseOpenmrsObject;
 
 /**
  * <p>
@@ -51,7 +52,7 @@ import org.apache.commons.lang.time.DateUtils;
  * Update date: Jan 5, 2011 1:28:02 PM
  * </p>
  **/
-public class InventoryStoreDrugTransactionDetail
+public class InventoryStoreDrugTransactionDetail extends CustomBaseOpenmrsObject
 		implements Serializable, Comparable<InventoryStoreDrugTransactionDetail> {
 
 	private static final long serialVersionUID = 1L;

@@ -19,8 +19,10 @@ import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
 import org.openmrs.module.hospitalrestcore.util.PagingUtil;
 import org.openmrs.module.hospitalrestcore.util.RequestUtil;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -51,7 +53,6 @@ public class ViewStockBalanceController extends BaseRestController {
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 		InventoryStore store = hospitalRestCoreService
 				.getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-
 		int total = hospitalRestCoreService.countViewStockBalance(store.getId(), categoryId, drugName, fromDate, toDate,
 				false);
 		String temp = "";
@@ -93,6 +94,72 @@ public class ViewStockBalanceController extends BaseRestController {
 		model.put("drugName", drugName);
 		// model.put("fromDate", fromDate);
 		// model.put("toDate", toDate);
+		model.put("pagingUtil", pagingUtil);
+		model.put("stockBalances", stockBalances);
+		model.put("listCategory", listCategory);
+		new ObjectMapper().writeValue(out, stockBalances);
+
+	}
+
+	@RequestMapping(value = "/item ", method = RequestMethod.GET)
+	public void getItemList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "currentPage", required = false) Integer currentPage,
+			@RequestParam(value = "categoryId", required = false) Integer categoryId,
+			@RequestParam(value = "itemName", required = false) String itemName,
+			@RequestParam(value = "fromDate", required = false) String fromDate,
+			@RequestParam(value = "toDate", required = false) String toDate, Map<String, Object> model,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryStore store = hospitalRestCoreService
+				.getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+
+		int total = hospitalRestCoreService.countStoreItemViewStockBalance(store.getId(), categoryId, itemName,
+				fromDate, toDate);
+		String temp = "";
+		if (categoryId != null) {
+			temp = "?categoryId=" + categoryId;
+		}
+
+		if (itemName != null) {
+			if (StringUtils.isBlank(temp)) {
+				temp = "?itemName=" + itemName;
+			} else {
+				temp += "&itemName=" + itemName;
+			}
+		}
+		if (fromDate != null) {
+			if (StringUtils.isBlank(temp)) {
+				temp = "?fromDate=" + fromDate;
+			} else {
+				temp += "&fromDate=" + fromDate;
+			}
+		}
+		if (toDate != null) {
+			if (StringUtils.isBlank(temp)) {
+				temp = "?toDate=" + toDate;
+			} else {
+				temp += "&toDate=" + toDate;
+			}
+		}
+
+		PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request) + temp, pageSize, currentPage,
+				total);
+		List<InventoryStoreItemTransactionDetail> stockBalances = hospitalRestCoreService.listStoreItemViewStockBalance(
+				store.getId(), categoryId, itemName, fromDate, toDate, pagingUtil.getStartPos(),
+				pagingUtil.getPageSize());
+		List<InventoryItemSubCategory> listCategory = hospitalRestCoreService.listItemSubCategory("", 0, 0);
+		if (stockBalances != null)
+			Collections.sort(stockBalances);
+
+		model.put("categoryId", categoryId);
+		model.put("itemName", itemName);
+		model.put("fromDate", fromDate);
+		model.put("toDate", toDate);
 		model.put("pagingUtil", pagingUtil);
 		model.put("stockBalances", stockBalances);
 		model.put("listCategory", listCategory);

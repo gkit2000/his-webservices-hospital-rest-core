@@ -21,5 +21,13 @@
 		<mapping resource="InventoryStoreDrugTransaction.hbm.xml" />
 		<mapping resource="InventoryStoreDrugIndent.hbm.xml" />
 		<mapping resource="InventoryStoreDrugTransactionDetail.hbm.xml" />
+		<mapping resource="InventoryItem.hbm.xml" />
+		<mapping resource="InventoryItemCategory.hbm.xml" />
+		<mapping resource="InventoryItemSpecification.hbm.xml" />
+		<mapping resource="InventoryItemSubCategory.hbm.xml" />
+		<mapping resource="InventoryItemUnit.hbm.xml" />
+		<mapping resource="InventoryStoreItemIndent.hbm.xml" />
+		<mapping resource="InventoryStoreItemTransaction.hbm.xml" />
+		<mapping resource="InventoryStoreItemTransactionDetail.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

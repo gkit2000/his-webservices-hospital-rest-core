@@ -14,11 +14,11 @@
 		<many-to-one name="role" column="role" class="org.openmrs.Role" foreign-key="fk_inventorystore_role"/>
 		<property name="code" column="code"  />
 		<property name="isDrug" column="is_drug"  />
-		<many-to-one name="parent" class="org.openmrs.module.hospitalcore.model.InventoryStore"
+		<many-to-one name="parent" class="org.openmrs.module.hospitalrestcore.inventory.InventoryStore"
 	        column="parent_id"  lazy="false" />	 
 	    <set name="subStores"  table="inventory_store" cascade="save-update,merge,evict" >
 	      <key column="parent_id"/>
-	      <one-to-many class="org.openmrs.module.hospitalcore.model.InventoryStore"/>
+	      <one-to-many class="org.openmrs.module.hospitalrestcore.inventory.InventoryStore"/>
 	    </set>
 	    <property name="createdDate" column="created_date"  />
 	    <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="inventory_store_created_by_fk"/>

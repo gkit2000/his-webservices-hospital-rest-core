@@ -15,8 +15,6 @@
 		<property name="name" column="name" length="255" />
 		<property name="description" column="description"
 			length="500" />
-		<property name="createdOn" column="created_on" />
-		<property name="createdBy" column="created_by" length="255" />
 		<property name="createdDate" column="created_date" />
 		<many-to-one name="createdBy" column="created_by"
 			class="org.openmrs.User" foreign-key="inventory_drug_category_created_by_fk" />
