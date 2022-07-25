@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/viewStockBalance")
-public class ViewStockBalanceController extends BaseRestController {
+public class ViewMainStoreStockBalanceController extends BaseRestController {
 
 	@RequestMapping(value = "/drug ", method = RequestMethod.GET)
 	public void getDrugList(@RequestParam(value = "pageSize", required = false) Integer pageSize,

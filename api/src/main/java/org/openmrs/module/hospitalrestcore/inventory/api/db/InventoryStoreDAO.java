@@ -19,8 +19,16 @@ import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransacti
  *
  */
 public interface InventoryStoreDAO extends SingleClassDAO {
+	
+	public List<Role> getAllRoles() throws DAOException;
+	
+	public Role getRoleByUuid(String uuid) throws DAOException;
 
 	public InventoryStore getStoreByCollectionRole(List<Role> roles) throws DAOException;
+
+	public InventoryStore getInventoryStoreByUuid(String uuid) throws DAOException;
+
+	public List<InventoryStore> listAllInventoryStore() throws DAOException;
 
 	public Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate,
 			String toDate, boolean isExpiry) throws DAOException;

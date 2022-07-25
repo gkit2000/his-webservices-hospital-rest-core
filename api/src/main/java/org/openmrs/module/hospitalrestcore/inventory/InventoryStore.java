@@ -21,7 +21,6 @@
 package org.openmrs.module.hospitalrestcore.inventory;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import org.openmrs.Role;
 import org.openmrs.module.hospitalrestcore.CustomBaseOpenmrsObject;
@@ -33,9 +32,8 @@ public class InventoryStore extends CustomBaseOpenmrsObject implements Serializa
 	private String name;
 	private Role role;
 	private String code;
-	private int isDrug;
+	private Boolean isDrug;
 	private InventoryStore parent;
-	private Set<InventoryStore> subStores;
 
 	public Integer getId() {
 		return id;
@@ -69,24 +67,17 @@ public class InventoryStore extends CustomBaseOpenmrsObject implements Serializa
 		this.parent = parent;
 	}
 
-	public Set<InventoryStore> getSubStores() {
-		return subStores;
-	}
-
-	public void setSubStores(Set<InventoryStore> subStores) {
-		this.subStores = subStores;
-	}
-
-	public int getIsDrug() {
+	/**
+	 * @return the isDrug
+	 */
+	public Boolean getIsDrug() {
 		return isDrug;
 	}
 
-	public String getIsDrugName() {
-
-		return isDrug == 1 ? "Yes" : "No";
-	}
-
-	public void setIsDrug(int isDrug) {
+	/**
+	 * @param isDrug the isDrug to set
+	 */
+	public void setIsDrug(Boolean isDrug) {
 		this.isDrug = isDrug;
 	}
 

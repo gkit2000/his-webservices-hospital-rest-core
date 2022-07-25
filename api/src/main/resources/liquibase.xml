@@ -703,7 +703,7 @@
 			<column name="name" type="varchar(255)" />
 			<column name="role" type="varchar(255)" />
 			<column name="code" type="varchar(255)" />
-			<column name="is_drug" type="int" />
+			<column name="is_drug" type="boolean" />
 			<column name="parent_id" type="int" />
 			<column name="created_date" type="DATETIME" />
 			<column name="created_by" type="int" />

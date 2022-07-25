@@ -462,11 +462,37 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException {
 		return (Ambulance) getAmbulanceDAO().saveOrUpdate(ambulance);
 	}
+	
+	@Override
+	@Transactional
+	public List<Role> getAllRoles() throws APIException {
+		return getInventoryStoreDAO().getAllRoles();
+	}
+	
+	@Override
+	public Role getRoleByUuid(String uuid) throws APIException {
+		return getInventoryStoreDAO().getRoleByUuid(uuid);
+	}
 
 	@Override
 	@Transactional
 	public InventoryStore getStoreByCollectionRole(List<Role> roles) throws APIException {
 		return (InventoryStore) getInventoryStoreDAO().getStoreByCollectionRole(roles);
+	}
+
+	@Override
+	public InventoryStore saveOrUpdateInventoryStore(InventoryStore inventoryStore) throws APIException {
+		return (InventoryStore) getInventoryStoreDAO().saveOrUpdate(inventoryStore);
+	}
+
+	@Override
+	public InventoryStore getInventoryStoreByUuid(String uuid) throws APIException {
+		return getInventoryStoreDAO().getInventoryStoreByUuid(uuid);
+	}
+
+	@Override
+	public List<InventoryStore> listAllInventoryStore() throws APIException {
+		return getInventoryStoreDAO().listAllInventoryStore();
 	}
 
 	@Override
