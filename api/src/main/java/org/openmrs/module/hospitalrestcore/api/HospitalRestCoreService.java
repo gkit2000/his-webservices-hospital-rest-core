@@ -140,6 +140,12 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	InventoryStore getInventoryStoreByUuid(String uuid) throws APIException;
 
 	List<InventoryStore> listAllInventoryStore() throws APIException;
+	
+	InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory) throws APIException;
+
+	InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws APIException;
+	
+	List<InventoryDrugCategory> listAllInventoryDrugCategory() throws APIException;
 
 	Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate, String toDate,
 			boolean isExpiry) throws APIException;

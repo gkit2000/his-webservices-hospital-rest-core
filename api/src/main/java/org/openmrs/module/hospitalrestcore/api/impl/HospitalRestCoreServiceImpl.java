@@ -494,6 +494,23 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public List<InventoryStore> listAllInventoryStore() throws APIException {
 		return getInventoryStoreDAO().listAllInventoryStore();
 	}
+	
+	@Override
+	@Transactional
+	public InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory) throws APIException {
+		return (InventoryDrugCategory) getInventoryStoreDAO().saveOrUpdate(inventoryDrugCategory);
+	}
+	
+	@Override
+	@Transactional
+	public InventoryDrugCategory getInventoryDrugCategoryByUuidString (String uuid) throws APIException {
+		return getInventoryStoreDAO().getInventoryDrugCategoryByUuidString (uuid);
+	}
+	
+	@Override
+	public List<InventoryDrugCategory> listAllInventoryDrugCategory() throws APIException {
+		return getInventoryStoreDAO().listAllInventoryDrugCategory();
+	}
 
 	@Override
 	@Transactional

@@ -87,6 +87,8 @@ public final class OpenmrsCustomConstants {
 	public static final String VALIDATION_ERROR_NOT_VALID_PARENT_UUID = "Parent uuid %s is not valid";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_INVENTORY_STORE_UUID = "Inventory Store uuid %s is not valid";
+	
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY_UUID = "Drug category uuid %s is not valid";
 
 	public static final String ACCESS_TOKEN_URL = "https://dev.abdm.gov.in/gateway/v0.5/sessions";
 

@@ -42,14 +42,14 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 	public HibernateInventoryStoreDAO() {
 		super(InventoryStore.class);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<Role> getAllRoles() throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Role.class);
 		return criteria.list();
 	}
-	
+
 	@Override
 	public Role getRoleByUuid(String uuid) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Role.class);
@@ -66,7 +66,7 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 		List<InventoryStore> list = criteria.list();
 		return CollectionUtils.isEmpty(list) ? null : list.get(0);
 	}
-	
+
 	@Override
 	public InventoryStore getInventoryStoreByUuid(String uuid) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
@@ -78,6 +78,21 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 	@Override
 	public List<InventoryStore> listAllInventoryStore() throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("retired", false));
+		return criteria.list();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryDrugCategory.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (InventoryDrugCategory) criteria.uniqueResult();
+	}
+
+	@Override
+	public List<InventoryDrugCategory> listAllInventoryDrugCategory() throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryDrugCategory.class);
 		criteria.add(Restrictions.eq("retired", false));
 		return criteria.list();
 	}

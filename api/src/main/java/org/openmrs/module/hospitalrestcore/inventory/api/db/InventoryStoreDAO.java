@@ -46,4 +46,8 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 
 	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws DAOException;
 
+	public InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws DAOException;
+
+	public List<InventoryDrugCategory> listAllInventoryDrugCategory() throws DAOException;
+
 }
