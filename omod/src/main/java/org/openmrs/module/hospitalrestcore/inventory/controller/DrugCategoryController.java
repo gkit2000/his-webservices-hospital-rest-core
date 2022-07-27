@@ -25,9 +25,6 @@ import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategoryDetails;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategoryPayload;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDetails;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStorePayload;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -110,7 +107,7 @@ public class DrugCategoryController extends BaseRestController {
 
 	@RequestMapping(value = "/delete-drug-categories", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteStore(@RequestBody List<String> drugCategoryUuids, HttpServletRequest request,
-			HttpServletResponse response, @Valid @RequestBody InventoryStorePayload inventoryStorePayload)
+			HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();

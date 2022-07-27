@@ -48,10 +48,13 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItem
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugCategoryDAO;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugUnitDAO;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,6 +87,10 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private AmbulanceDAO ambulanceDAO;
 
 	private InventoryStoreDAO inventoryStoreDAO;
+
+	private InventoryDrugCategoryDAO inventoryDrugCategoryDAO;
+
+	private InventoryDrugUnitDAO inventoryDrugUnitDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -237,6 +244,34 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryStoreDAO(InventoryStoreDAO inventoryStoreDAO) {
 		this.inventoryStoreDAO = inventoryStoreDAO;
+	}
+
+	/**
+	 * @return the inventoryDrugCategoryDAO
+	 */
+	public InventoryDrugCategoryDAO getInventoryDrugCategoryDAO() {
+		return inventoryDrugCategoryDAO;
+	}
+
+	/**
+	 * @param inventoryDrugCategoryDAO the inventoryDrugCategoryDAO to set
+	 */
+	public void setInventoryDrugCategoryDAO(InventoryDrugCategoryDAO inventoryDrugCategoryDAO) {
+		this.inventoryDrugCategoryDAO = inventoryDrugCategoryDAO;
+	}
+
+	/**
+	 * @return the inventoryDrugUnitDAO
+	 */
+	public InventoryDrugUnitDAO getInventoryDrugUnitDAO() {
+		return inventoryDrugUnitDAO;
+	}
+
+	/**
+	 * @param inventoryDrugUnitDAO the inventoryDrugUnitDAO to set
+	 */
+	public void setInventoryDrugUnitDAO(InventoryDrugUnitDAO inventoryDrugUnitDAO) {
+		this.inventoryDrugUnitDAO = inventoryDrugUnitDAO;
 	}
 
 	@Override
@@ -462,13 +497,13 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException {
 		return (Ambulance) getAmbulanceDAO().saveOrUpdate(ambulance);
 	}
-	
+
 	@Override
 	@Transactional
 	public List<Role> getAllRoles() throws APIException {
 		return getInventoryStoreDAO().getAllRoles();
 	}
-	
+
 	@Override
 	public Role getRoleByUuid(String uuid) throws APIException {
 		return getInventoryStoreDAO().getRoleByUuid(uuid);
@@ -494,22 +529,40 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public List<InventoryStore> listAllInventoryStore() throws APIException {
 		return getInventoryStoreDAO().listAllInventoryStore();
 	}
-	
+
 	@Override
 	@Transactional
-	public InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory) throws APIException {
-		return (InventoryDrugCategory) getInventoryStoreDAO().saveOrUpdate(inventoryDrugCategory);
+	public InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory)
+			throws APIException {
+		return (InventoryDrugCategory) getInventoryDrugCategoryDAO().saveOrUpdate(inventoryDrugCategory);
 	}
-	
+
 	@Override
 	@Transactional
-	public InventoryDrugCategory getInventoryDrugCategoryByUuidString (String uuid) throws APIException {
-		return getInventoryStoreDAO().getInventoryDrugCategoryByUuidString (uuid);
+	public InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws APIException {
+		return getInventoryDrugCategoryDAO().getInventoryDrugCategoryByUuidString(uuid);
 	}
-	
+
 	@Override
 	public List<InventoryDrugCategory> listAllInventoryDrugCategory() throws APIException {
-		return getInventoryStoreDAO().listAllInventoryDrugCategory();
+		return getInventoryDrugCategoryDAO().listAllInventoryDrugCategory();
+	}
+
+	@Override
+	@Transactional
+	public InventoryDrugUnit saveOrUpdateInventoryDrugUnit(InventoryDrugUnit inventoryDrugUnit) throws APIException {
+		return (InventoryDrugUnit) getInventoryDrugUnitDAO().saveOrUpdate(inventoryDrugUnit);
+	}
+
+	@Override
+	@Transactional
+	public InventoryDrugUnit getInventoryDrugUnitByUuidString(String uuid) throws APIException {
+		return getInventoryDrugUnitDAO().getInventoryDrugUnitByUuidString(uuid);
+	}
+
+	@Override
+	public List<InventoryDrugUnit> listAllInventoryDrugUnit() throws APIException {
+		return getInventoryDrugUnitDAO().listAllInventoryDrugUnit();
 	}
 
 	@Override

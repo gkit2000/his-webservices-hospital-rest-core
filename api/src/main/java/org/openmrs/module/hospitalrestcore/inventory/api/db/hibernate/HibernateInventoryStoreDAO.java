@@ -84,21 +84,6 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 
 	@Override
 	@Transactional(readOnly = true)
-	public InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws DAOException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryDrugCategory.class);
-		criteria.add(Restrictions.eq("uuid", uuid));
-		return (InventoryDrugCategory) criteria.uniqueResult();
-	}
-
-	@Override
-	public List<InventoryDrugCategory> listAllInventoryDrugCategory() throws DAOException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryDrugCategory.class);
-		criteria.add(Restrictions.eq("retired", false));
-		return criteria.list();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
 	public Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate,
 			String toDate, boolean isExpiry) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession()

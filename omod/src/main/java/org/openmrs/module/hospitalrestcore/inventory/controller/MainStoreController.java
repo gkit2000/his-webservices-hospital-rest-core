@@ -181,7 +181,7 @@ public class MainStoreController extends BaseRestController {
 
 	@RequestMapping(value = "/delete-stores", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteStore(@RequestBody List<String> storeUuids, HttpServletRequest request,
-			HttpServletResponse response, @Valid @RequestBody InventoryStorePayload inventoryStorePayload)
+			HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();

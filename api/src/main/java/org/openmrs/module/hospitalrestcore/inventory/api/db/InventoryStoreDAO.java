@@ -9,6 +9,7 @@ import org.openmrs.Role;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalrestcore.api.db.SingleClassDAO;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
@@ -45,9 +46,5 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 			String itemName, String fromDate, String toDate, int min, int max) throws DAOException;
 
 	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws DAOException;
-
-	public InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws DAOException;
-
-	public List<InventoryDrugCategory> listAllInventoryDrugCategory() throws DAOException;
 
 }

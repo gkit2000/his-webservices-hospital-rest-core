@@ -35,6 +35,7 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
@@ -128,9 +129,9 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	Ambulance getAmbulanceByUuid(String uuid) throws APIException;
 
 	Ambulance saveOrUpdateAmbulance(Ambulance ambulance) throws APIException;
-	
+
 	List<Role> getAllRoles() throws APIException;
-	
+
 	Role getRoleByUuid(String uuid) throws APIException;
 
 	InventoryStore getStoreByCollectionRole(List<Role> roles) throws APIException;
@@ -140,12 +141,19 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	InventoryStore getInventoryStoreByUuid(String uuid) throws APIException;
 
 	List<InventoryStore> listAllInventoryStore() throws APIException;
-	
-	InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory) throws APIException;
+
+	InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory)
+			throws APIException;
 
 	InventoryDrugCategory getInventoryDrugCategoryByUuidString(String uuid) throws APIException;
-	
+
 	List<InventoryDrugCategory> listAllInventoryDrugCategory() throws APIException;
+
+	InventoryDrugUnit saveOrUpdateInventoryDrugUnit(InventoryDrugUnit inventoryDrugUnit) throws APIException;
+
+	InventoryDrugUnit getInventoryDrugUnitByUuidString(String uuid) throws APIException;
+
+	List<InventoryDrugUnit> listAllInventoryDrugUnit() throws APIException;
 
 	Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate, String toDate,
 			boolean isExpiry) throws APIException;
