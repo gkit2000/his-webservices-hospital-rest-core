@@ -48,12 +48,14 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItem
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugCategoryDAO;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugFormulationDAO;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugUnitDAO;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +93,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private InventoryDrugCategoryDAO inventoryDrugCategoryDAO;
 
 	private InventoryDrugUnitDAO inventoryDrugUnitDAO;
+
+	private InventoryDrugFormulationDAO inventoryDrugFormulationDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -272,6 +276,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryDrugUnitDAO(InventoryDrugUnitDAO inventoryDrugUnitDAO) {
 		this.inventoryDrugUnitDAO = inventoryDrugUnitDAO;
+	}
+
+	/**
+	 * @return the inventoryDrugFormulationDAO
+	 */
+	public InventoryDrugFormulationDAO getInventoryDrugFormulationDAO() {
+		return inventoryDrugFormulationDAO;
+	}
+
+	/**
+	 * @param inventoryDrugFormulationDAO the inventoryDrugFormulationDAO to set
+	 */
+	public void setInventoryDrugFormulationDAO(InventoryDrugFormulationDAO inventoryDrugFormulationDAO) {
+		this.inventoryDrugFormulationDAO = inventoryDrugFormulationDAO;
 	}
 
 	@Override
@@ -563,6 +581,23 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Override
 	public List<InventoryDrugUnit> listAllInventoryDrugUnit() throws APIException {
 		return getInventoryDrugUnitDAO().listAllInventoryDrugUnit();
+	}
+
+	@Override
+	@Transactional
+	public InventoryDrugFormulation saveOrUpdateInventoryDrugFormulation(
+			InventoryDrugFormulation inventoryDrugFormulation) throws APIException {
+		return (InventoryDrugFormulation) getInventoryDrugFormulationDAO().saveOrUpdate(inventoryDrugFormulation);
+	}
+
+	@Override
+	public InventoryDrugFormulation getInventoryDrugFormulationByUuidString(String uuid) throws APIException {
+		return getInventoryDrugFormulationDAO().getInventoryDrugFormulationByUuidString(uuid);
+	}
+
+	@Override
+	public List<InventoryDrugFormulation> listAllInventoryDrugFormulation() throws APIException {
+		return getInventoryDrugFormulationDAO().listAllInventoryDrugFormulation();
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import java.io.Serializable;
 import org.openmrs.module.hospitalrestcore.CustomBaseOpenmrsObject;
 
 public class InventoryDrugFormulation extends CustomBaseOpenmrsObject implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;

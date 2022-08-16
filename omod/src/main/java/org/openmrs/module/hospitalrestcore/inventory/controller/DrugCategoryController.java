@@ -66,6 +66,9 @@ public class DrugCategoryController extends BaseRestController {
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 		InventoryDrugCategory inventoryDrugCategory = new InventoryDrugCategory();
+		inventoryDrugCategory.setName(inventoryDrugCategoryPayload.getName());
+		inventoryDrugCategory.setDescription(inventoryDrugCategoryPayload.getDescription());
+		inventoryDrugCategory.setRetired(inventoryDrugCategoryPayload.getRetired());
 		inventoryDrugCategory.setCreatedDate(new Date());
 		inventoryDrugCategory.setCreatedBy(Context.getAuthenticatedUser());
 		hospitalRestCoreService.saveOrUpdateInventoryDrugCategory(inventoryDrugCategory);
@@ -139,6 +142,7 @@ public class DrugCategoryController extends BaseRestController {
 		idcd.setName(inventoryDrugCategory.getName());
 		idcd.setDescription(inventoryDrugCategory.getDescription());
 		idcd.setUuid(inventoryDrugCategory.getUuid());
+		idcd.setDeleted(inventoryDrugCategory.getDeleted());
 		idcd.setRetired(inventoryDrugCategory.getRetired());
 		return idcd;
 	}

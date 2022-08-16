@@ -13,6 +13,7 @@ public class InventoryDrugCategoryDetails {
 	private String name;
 	private String description;
 	private String uuid;
+	private Boolean deleted;
 	private Boolean retired;
 
 	/**
@@ -69,6 +70,20 @@ public class InventoryDrugCategoryDetails {
 	 */
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	/**

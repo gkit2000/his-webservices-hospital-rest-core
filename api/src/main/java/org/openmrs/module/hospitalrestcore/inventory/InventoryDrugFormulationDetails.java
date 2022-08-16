@@ -7,10 +7,11 @@ package org.openmrs.module.hospitalrestcore.inventory;
  * @author Ghanshyam
  *
  */
-public class InventoryDrugUnitDetails {
+public class InventoryDrugFormulationDetails {
 
 	private Integer id;
 	private String name;
+	private String dozage;
 	private String description;
 	private String uuid;
 	private Boolean deleted;
@@ -42,6 +43,20 @@ public class InventoryDrugUnitDetails {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the dozage
+	 */
+	public String getDozage() {
+		return dozage;
+	}
+
+	/**
+	 * @param dozage the dozage to set
+	 */
+	public void setDozage(String dozage) {
+		this.dozage = dozage;
 	}
 
 	/**
@@ -99,5 +114,4 @@ public class InventoryDrugUnitDetails {
 	public void setRetired(Boolean retired) {
 		this.retired = retired;
 	}
-
 }

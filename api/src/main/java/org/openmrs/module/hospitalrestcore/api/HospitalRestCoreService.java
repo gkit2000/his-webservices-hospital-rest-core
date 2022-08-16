@@ -35,6 +35,7 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
@@ -154,6 +155,13 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	InventoryDrugUnit getInventoryDrugUnitByUuidString(String uuid) throws APIException;
 
 	List<InventoryDrugUnit> listAllInventoryDrugUnit() throws APIException;
+
+	InventoryDrugFormulation saveOrUpdateInventoryDrugFormulation(InventoryDrugFormulation inventoryDrugFormulation)
+			throws APIException;
+
+	InventoryDrugFormulation getInventoryDrugFormulationByUuidString(String uuid) throws APIException;
+
+	List<InventoryDrugFormulation> listAllInventoryDrugFormulation() throws APIException;
 
 	Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate, String toDate,
 			boolean isExpiry) throws APIException;

@@ -27,7 +27,6 @@ import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDetails;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStorePayload;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreResponseDetails;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -46,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/manage-store")
 public class MainStoreController extends BaseRestController {
 
-	@RequestMapping(value = "/store-form-details ", method = RequestMethod.GET)
+	@RequestMapping(value = "/store-form-details", method = RequestMethod.GET)
 	public void getStore(HttpServletRequest request, HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -68,11 +67,7 @@ public class MainStoreController extends BaseRestController {
 		List<InventoryStoreDetails> isds = listParents.stream().map(isd -> getInventoryStoreDetails(isd))
 				.collect(Collectors.toList());
 
-		InventoryStoreResponseDetails inventoryStoreResponseDetails = new InventoryStoreResponseDetails();
-		inventoryStoreResponseDetails.setRoles(roles);
-		inventoryStoreResponseDetails.setInventoryStoreDetails(isds);
-
-		new ObjectMapper().writeValue(out, inventoryStoreResponseDetails);
+		new ObjectMapper().writeValue(out, isds);
 	}
 
 	@RequestMapping(value = "/all-store-details", method = RequestMethod.GET)
@@ -97,16 +92,16 @@ public class MainStoreController extends BaseRestController {
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-		InventoryStore store = new InventoryStore();
-		store.setName(inventoryStorePayload.getName());
+		InventoryStore inventoryStore = new InventoryStore();
+		inventoryStore.setName(inventoryStorePayload.getName());
 		Role role = hospitalRestCoreService.getRoleByUuid(inventoryStorePayload.getRoleUuid());
 		if (role == null) {
 			throw new ResourceNotFoundException(String.format(
 					OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_ROLE_UUID, inventoryStorePayload.getRoleUuid()));
 		}
-		store.setRole(role);
-		store.setCode(inventoryStorePayload.getCode());
-		store.setIsDrug(inventoryStorePayload.getIsDrug());
+		inventoryStore.setRole(role);
+		inventoryStore.setCode(inventoryStorePayload.getCode());
+		inventoryStore.setIsDrug(inventoryStorePayload.getIsDrug());
 		if (inventoryStorePayload.getParentUuid() != null) {
 			InventoryStore parentStore = hospitalRestCoreService
 					.getInventoryStoreByUuid(inventoryStorePayload.getParentUuid());
@@ -115,12 +110,13 @@ public class MainStoreController extends BaseRestController {
 						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_PARENT_UUID,
 								inventoryStorePayload.getParentUuid()));
 			}
+			inventoryStore.setParent(parentStore);
 		} else {
-			store.setParent(null);
+			inventoryStore.setParent(null);
 		}
-		store.setCreatedDate(new Date());
-		store.setCreatedBy(Context.getAuthenticatedUser());
-		hospitalRestCoreService.saveOrUpdateInventoryStore(store);
+		inventoryStore.setCreatedDate(new Date());
+		inventoryStore.setCreatedBy(Context.getAuthenticatedUser());
+		hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
 
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
@@ -165,6 +161,7 @@ public class MainStoreController extends BaseRestController {
 								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_PARENT_UUID,
 										inventoryStorePayload.getParentUuid()));
 					}
+					inventoryStore.setParent(parentStore);
 				} else {
 					inventoryStore.setParent(null);
 				}
@@ -210,9 +207,12 @@ public class MainStoreController extends BaseRestController {
 		InventoryStoreDetails isd = new InventoryStoreDetails();
 		isd.setId(inventoryStore.getId());
 		isd.setName(inventoryStore.getName());
-		isd.setRole(inventoryStore.getRole());
+		isd.setRoleName(inventoryStore.getRole().getName());
+		isd.setRoleUuid(inventoryStore.getRole().getUuid());
 		isd.setCode(inventoryStore.getCode());
-		isd.setUuid(inventoryStore.getUuid());
+		isd.setStoreUuid(inventoryStore.getUuid());
+		isd.setDeleted(inventoryStore.getDeleted());
+		isd.setRetired(inventoryStore.getRetired());
 		return isd;
 	}
 }

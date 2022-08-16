@@ -66,6 +66,9 @@ public class DrugUnitController extends BaseRestController {
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 		InventoryDrugUnit inventoryDrugUnit = new InventoryDrugUnit();
+		inventoryDrugUnit.setName(inventoryDrugUnitPayload.getName());
+		inventoryDrugUnit.setDescription(inventoryDrugUnitPayload.getDescription());
+		inventoryDrugUnit.setRetired(inventoryDrugUnitPayload.getRetired());
 		inventoryDrugUnit.setCreatedDate(new Date());
 		inventoryDrugUnit.setCreatedBy(Context.getAuthenticatedUser());
 		hospitalRestCoreService.saveOrUpdateInventoryDrugUnit(inventoryDrugUnit);
@@ -118,8 +121,8 @@ public class DrugUnitController extends BaseRestController {
 			InventoryDrugUnit inventoryDrugUnit = hospitalRestCoreService
 					.getInventoryDrugUnitByUuidString(drugUnitUuid);
 			if (inventoryDrugUnit == null) {
-				throw new ResourceNotFoundException(String.format(
-						OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY_UUID, drugUnitUuid));
+				throw new ResourceNotFoundException(String
+						.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY_UUID, drugUnitUuid));
 			}
 
 			inventoryDrugUnit.setDeleted(true);
@@ -139,6 +142,7 @@ public class DrugUnitController extends BaseRestController {
 		idud.setName(inventoryDrugUnit.getName());
 		idud.setDescription(inventoryDrugUnit.getDescription());
 		idud.setUuid(inventoryDrugUnit.getUuid());
+		idud.setDeleted(inventoryDrugUnit.getDeleted());
 		idud.setRetired(inventoryDrugUnit.getRetired());
 		return idud;
 	}

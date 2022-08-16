@@ -3,8 +3,6 @@
  */
 package org.openmrs.module.hospitalrestcore.inventory;
 
-import org.openmrs.Role;
-
 /**
  * @author Ghanshyam
  *
@@ -13,9 +11,12 @@ public class InventoryStoreDetails {
 
 	private Integer id;
 	private String name;
-	private Role role;
+	private String roleName;
+	private String roleUuid;
 	private String code;
-	private String uuid;
+	private String storeUuid;
+	private Boolean deleted;
+	private Boolean retired;
 
 	/**
 	 * @return the id
@@ -46,17 +47,31 @@ public class InventoryStoreDetails {
 	}
 
 	/**
-	 * @return the role
+	 * @return the roleName
 	 */
-	public Role getRole() {
-		return role;
+	public String getRoleName() {
+		return roleName;
 	}
 
 	/**
-	 * @param role the role to set
+	 * @param roleName the roleName to set
 	 */
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	/**
+	 * @return the roleUuid
+	 */
+	public String getRoleUuid() {
+		return roleUuid;
+	}
+
+	/**
+	 * @param roleUuid the roleUuid to set
+	 */
+	public void setRoleUuid(String roleUuid) {
+		this.roleUuid = roleUuid;
 	}
 
 	/**
@@ -74,16 +89,45 @@ public class InventoryStoreDetails {
 	}
 
 	/**
-	 * @return the uuid
+	 * @return the storeUuid
 	 */
-	public String getUuid() {
-		return uuid;
+	public String getStoreUuid() {
+		return storeUuid;
 	}
 
 	/**
-	 * @param uuid the uuid to set
+	 * @param storeUuid the storeUuid to set
 	 */
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setStoreUuid(String storeUuid) {
+		this.storeUuid = storeUuid;
 	}
+
+	/**
+	 * @return the deleted
+	 */
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * @param deleted the deleted to set
+	 */
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @return the retired
+	 */
+	public Boolean getRetired() {
+		return retired;
+	}
+
+	/**
+	 * @param retired the retired to set
+	 */
+	public void setRetired(Boolean retired) {
+		this.retired = retired;
+	}
+
 }
