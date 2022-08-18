@@ -17,15 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.Role;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalrestcore.api.db.hibernate.HibernateSingleClassDAO;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryItem;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSpecification;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.*;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -419,4 +411,133 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 
 		return l;
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
+											 String toDate) throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryStoreDrugTransaction.class);
+		if (storeId != null) {
+			criteria.add(Restrictions.eq("store.id", storeId));
+		}
+		if (!StringUtils.isBlank(description)) {
+			criteria.add(Restrictions.like("description", "%" + description + "%"));
+		}
+		if (transactionType != null) {
+			criteria.add(Restrictions.eq("typeTransaction", transactionType));
+		}
+		if (!StringUtils.isBlank(fromDate) && StringUtils.isBlank(toDate)) {
+			String startFromDate = fromDate + " 00:00:00";
+			String endFromDate = fromDate + " 23:59:59";
+			try {
+				criteria.add(Restrictions.and(Restrictions.ge("createdOn", formatter.parse(startFromDate)),
+						Restrictions.le("createdOn", formatter.parse(endFromDate))));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error convert date: " + e.toString());
+				e.printStackTrace();
+			}
+		} else if (StringUtils.isBlank(fromDate) && !StringUtils.isBlank(toDate)) {
+			String startToDate = toDate + " 00:00:00";
+			String endToDate = toDate + " 23:59:59";
+			try {
+				criteria.add(Restrictions.and(Restrictions.ge("createdOn", formatter.parse(startToDate)),
+						Restrictions.le("createdOn", formatter.parse(endToDate))));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error convert date: " + e.toString());
+				e.printStackTrace();
+			}
+		} else if (!StringUtils.isBlank(fromDate) && !StringUtils.isBlank(toDate)) {
+			String startToDate = fromDate + " 00:00:00";
+			String endToDate = toDate + " 23:59:59";
+			try {
+				criteria.add(Restrictions.and(Restrictions.ge("createdOn", formatter.parse(startToDate)),
+						Restrictions.le("createdOn", formatter.parse(endToDate))));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error convert date: " + e.toString());
+				e.printStackTrace();
+			}
+		}
+		Number rs = (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		return rs != null ? rs.intValue() : 0;
+
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<InventoryStoreDrugTransaction> listStoreDrugTransaction(Integer transactionType, Integer storeId,
+																		String description, String fromDate, String toDate, int min, int max) throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryStoreDrugTransaction.class);
+		if (storeId != null) {
+			criteria.add(Restrictions.eq("store.id", storeId));
+		}
+		if (!StringUtils.isBlank(description)) {
+			criteria.add(Restrictions.like("description", "%" + description + "%"));
+		}
+		if (transactionType != null) {
+			criteria.add(Restrictions.eq("typeTransaction", transactionType));
+		}
+		if (!StringUtils.isBlank(fromDate) && StringUtils.isBlank(toDate)) {
+			String startFromDate = fromDate + " 00:00:00";
+			String endFromDate = fromDate + " 23:59:59";
+			try {
+				criteria.add(Restrictions.and(Restrictions.ge("createdOn", formatter.parse(startFromDate)),
+						Restrictions.le("createdOn", formatter.parse(endFromDate))));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error convert date: " + e.toString());
+				e.printStackTrace();
+			}
+		} else if (StringUtils.isBlank(fromDate) && !StringUtils.isBlank(toDate)) {
+			String startToDate = toDate + " 00:00:00";
+			String endToDate = toDate + " 23:59:59";
+			try {
+				criteria.add(Restrictions.and(Restrictions.ge("createdOn", formatter.parse(startToDate)),
+						Restrictions.le("createdOn", formatter.parse(endToDate))));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error convert date: " + e.toString());
+				e.printStackTrace();
+			}
+		} else if (!StringUtils.isBlank(fromDate) && !StringUtils.isBlank(toDate)) {
+			String startToDate = fromDate + " 00:00:00";
+			String endToDate = toDate + " 23:59:59";
+			try {
+				criteria.add(Restrictions.and(Restrictions.ge("createdOn", formatter.parse(startToDate)),
+						Restrictions.le("createdOn", formatter.parse(endToDate))));
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("Error convert date: " + e.toString());
+				e.printStackTrace();
+			}
+		}
+		List<InventoryStoreDrugTransaction> l = criteria.list();
+
+		return l;
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryReceiptForm> listReceiptForm(String name, int min, int max) throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryReceiptForm.class,
+				"receiptForm");
+		if (!StringUtils.isBlank(name)) {
+			criteria.add(Restrictions.like("receiptForm.name", "%" + name));
+		}
+		if (max > 0) {
+			criteria.setFirstResult(min).setMaxResults(max);
+		}
+		List<InventoryReceiptForm> l = criteria.list();
+
+		return l;
+	}
+
 }

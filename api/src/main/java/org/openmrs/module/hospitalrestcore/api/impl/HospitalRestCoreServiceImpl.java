@@ -47,17 +47,8 @@ import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItemDAO;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
-import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugCategoryDAO;
-import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugFormulationDAO;
-import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugUnitDAO;
-import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
+import org.openmrs.module.hospitalrestcore.inventory.*;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.*;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -91,6 +82,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private InventoryStoreDAO inventoryStoreDAO;
 
 	private InventoryDrugCategoryDAO inventoryDrugCategoryDAO;
+
+	private InventoryReceiptFormDAO inventoryReceiptFormDAO;
 
 	private InventoryDrugUnitDAO inventoryDrugUnitDAO;
 
@@ -262,6 +255,13 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryDrugCategoryDAO(InventoryDrugCategoryDAO inventoryDrugCategoryDAO) {
 		this.inventoryDrugCategoryDAO = inventoryDrugCategoryDAO;
+	}
+
+	/**
+	 * @return the inventoryReceiptFormDAO
+	 */
+	public InventoryReceiptFormDAO getInventoryReceiptFormDAO() {
+		return inventoryReceiptFormDAO;
 	}
 
 	/**
@@ -640,6 +640,39 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Transactional
 	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws APIException {
 		return getInventoryStoreDAO().listItemSubCategory(name, min, max);
+	}
+
+	@Override
+	@Transactional
+	public InventoryReceiptForm saveOrUpdateInventoryReceiptForm(InventoryReceiptForm inventoryReceiptForm)
+			throws APIException {
+		return (InventoryReceiptForm) getInventoryReceiptFormDAO().saveOrUpdate(inventoryReceiptForm);
+	}
+
+	@Override
+	@Transactional
+	public InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException {
+		return getInventoryReceiptFormDAO().getInventoryReceiptFormByUuidString(uuid);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryReceiptForm> listAllInventoryReceiptForm() throws APIException {
+		return getInventoryReceiptFormDAO().listAllInventoryReceiptForm();
+	}
+
+	@Override
+	@Transactional
+	public Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
+											 String toDate) throws APIException {
+		return getInventoryStoreDAO().countStoreDrugTransaction(transactionType, storeId, description, fromDate, toDate);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugTransaction> listStoreDrugTransaction(Integer transactionType, Integer storeId,
+																		String description, String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryStoreDAO().listStoreDrugTransaction(transactionType, storeId, description, fromDate, toDate, min, max);
 	}
 
 }

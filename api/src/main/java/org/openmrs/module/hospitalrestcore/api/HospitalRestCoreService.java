@@ -34,13 +34,7 @@ import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.*;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -178,5 +172,19 @@ public interface HospitalRestCoreService extends OpenmrsService {
 			String itemName, String fromDate, String toDate, int min, int max) throws APIException;
 
 	List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws APIException;
+
+	Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
+									  String toDate) throws APIException;
+
+
+	List<InventoryStoreDrugTransaction> listStoreDrugTransaction(Integer transactionType, Integer storeId,
+																 String description, String fromDate, String toDate, int min, int max) throws APIException;
+
+	InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException;
+
+	InventoryReceiptForm saveOrUpdateInventoryReceiptForm(InventoryReceiptForm inventoryReceiptForm)
+			throws APIException;
+
+	List<InventoryReceiptForm> listAllInventoryReceiptForm() throws APIException;
 
 }

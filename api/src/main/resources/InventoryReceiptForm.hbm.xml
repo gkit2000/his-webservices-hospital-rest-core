@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.hospitalrestcore.inventory">
+
+    <class name="InventoryReceiptForm"
+           table="inventory_receipt_form" batch-size="500">
+
+        <id name="id" type="int" column="id" unsaved-value="0">
+            <generator class="native" />
+        </id>
+        <property name="drugName" column="drugName" length="255" />
+        <property name="sgst" column="sgst" />
+        <property name="cgst" column="cgst" />
+        <property name="mrPrice" column="mrPrice" />
+        <property name="batchNo" column="batchNo" />
+        <set name="formulations" table="inventory_drug_formulations" cascade="save-update,merge,evict" lazy="false">
+            <key column="drug_id" />
+            <many-to-many column="formulation_id"  class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation" />
+        </set>
+        <property name="rate" column="rate" />
+        <property name="quantity" column="quantity" />
+        <property name="VAT" column="VAT" />
+        <many-to-one name="category" class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory"
+                     column="category_id" cascade="none" lazy="false" />
+        <property name="companyName" column="companyName" />
+        <property name="dateManufacture" column="dateManufacture" />
+        <property name="dateExpiry" column="dateExpiry" />
+        <property name="receiptDate" column="receiptDate" />
+        <property name="waiverPercentage" column="discount" />
+
+    </class>
+</hibernate-mapping>
