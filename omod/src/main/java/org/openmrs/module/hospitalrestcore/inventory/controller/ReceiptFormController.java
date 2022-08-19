@@ -38,6 +38,20 @@ public class ReceiptFormController {
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
         InventoryReceiptForm inventoryReceiptForm = new InventoryReceiptForm();
+        inventoryReceiptForm.setDrug(inventoryReceiptFormPayload.getDrug());
+        inventoryReceiptForm.setFormulation(inventoryReceiptFormPayload.getFormulation());
+        inventoryReceiptForm.setRate(inventoryReceiptFormPayload.getRate());
+        inventoryReceiptForm.setQuantity(inventoryReceiptFormPayload.getQuantity());
+        inventoryReceiptForm.setVAT(inventoryReceiptFormPayload.getVAT());
+        inventoryReceiptForm.setSgst(inventoryReceiptFormPayload.getSgst());
+        inventoryReceiptForm.setCgst(inventoryReceiptFormPayload.getCgst());
+        inventoryReceiptForm.setMrPrice(inventoryReceiptFormPayload.getMrPrice());
+        inventoryReceiptForm.setBatchNo(inventoryReceiptFormPayload.getBatchNo());
+        inventoryReceiptForm.setCompanyName(inventoryReceiptFormPayload.getCompanyName());
+        inventoryReceiptForm.setDateManufacture(inventoryReceiptFormPayload.getDateManufacture());
+        inventoryReceiptForm.setDateExpiry(inventoryReceiptFormPayload.getDateExpiry());
+        inventoryReceiptForm.setReceiptDate(inventoryReceiptFormPayload.getReceiptDate());
+        inventoryReceiptForm.setWaiverPercentage(inventoryReceiptFormPayload.getWaiverPercentage());
         inventoryReceiptForm.setCreatedDate(new Date());
         inventoryReceiptForm.setCreatedBy(Context.getAuthenticatedUser());
         hospitalRestCoreService.saveOrUpdateInventoryReceiptForm(inventoryReceiptForm);

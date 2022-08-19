@@ -11,25 +11,36 @@
         <id name="id" type="int" column="id" unsaved-value="0">
             <generator class="native" />
         </id>
-        <property name="drugName" column="drugName" length="255" />
+        <many-to-one name="drug"
+                class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrug"
+                column="drug_id" cascade="none" lazy="false" />
         <property name="sgst" column="sgst" />
         <property name="cgst" column="cgst" />
-        <property name="mrPrice" column="mrPrice" />
-        <property name="batchNo" column="batchNo" />
-        <set name="formulations" table="inventory_drug_formulations" cascade="save-update,merge,evict" lazy="false">
-            <key column="drug_id" />
-            <many-to-many column="formulation_id"  class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation" />
-        </set>
+        <property name="mrPrice" column="mr_price" />
+        <property name="batchNo" column="batch_no" />
+        <many-to-one name="formulation"
+                class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation"
+                column="formulation_id" cascade="none" lazy="false" />
         <property name="rate" column="rate" />
         <property name="quantity" column="quantity" />
-        <property name="VAT" column="VAT" />
-        <many-to-one name="category" class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory"
-                     column="category_id" cascade="none" lazy="false" />
-        <property name="companyName" column="companyName" />
-        <property name="dateManufacture" column="dateManufacture" />
-        <property name="dateExpiry" column="dateExpiry" />
-        <property name="receiptDate" column="receiptDate" />
+        <property name="VAT" column="vat" />
+        <property name="companyName" column="company_name" />
+        <property name="dateManufacture" column="date_manufacture" />
+        <property name="dateExpiry" column="date_expiry" />
+        <property name="receiptDate" column="receipt_date" />
+        <property name="createdDate" column="created_date"  />
+        <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="inventory_receipt_form_created_by_fk"/>
+        <property name="deleted" column="deleted" />
+        <property name="deletedDate" column="deleted_date"  />
+        <many-to-one name="deletedBy" column="deleted_by"  class="org.openmrs.User" foreign-key="inventory_receipt_form_deleted_by_fk"/>
+        <property name="lastModifiedDate" column="last_modified_date"  />
+        <many-to-one name="lastModifiedBy" column="last_modified_by"  class="org.openmrs.User" foreign-key="inventory_receipt_form_lastmodified_by_fk"/>
+        <property name="retired" column="retired"  />
+        <property name="retiredDate" column="retired_date"  />
+        <many-to-one name="retiredBy" column="retired_by"  class="org.openmrs.User" foreign-key="inventory_receipt_form_retired_by_fk"/>
         <property name="waiverPercentage" column="discount" />
+        <property name="uuid" type="java.lang.String" column="uuid"
+                  length="38" unique="true" />
 
     </class>
 </hibernate-mapping>

@@ -27,6 +27,7 @@
 		<mapping resource="InventoryItemSpecification.hbm.xml" />
 		<mapping resource="InventoryItemSubCategory.hbm.xml" />
 		<mapping resource="InventoryItemUnit.hbm.xml" />
+		<mapping resource="InventoryReceiptForm.hbm.xml" />
 		<mapping resource="InventoryStoreItemIndent.hbm.xml" />
 		<mapping resource="InventoryStoreItemTransaction.hbm.xml" />
 		<mapping resource="InventoryStoreItemTransactionDetail.hbm.xml" />

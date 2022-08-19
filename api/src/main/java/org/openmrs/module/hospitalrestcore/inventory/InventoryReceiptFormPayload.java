@@ -1,6 +1,9 @@
 package org.openmrs.module.hospitalrestcore.inventory;
 
-import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author Mujuzi Moses
@@ -9,59 +12,25 @@ import java.util.Set;
 
 public class InventoryReceiptFormPayload {
 
-    private String uuid;
-    private String drugName;
-    private Set<InventoryDrugFormulation> formulations;
-    private InventoryDrugCategory category;
+    private InventoryDrug drug;
+    private InventoryDrugFormulation formulation;
 
     private Integer rate;
     private Integer quantity;
-    private Integer VAT;
-    private Integer sgst;
-    private Integer cgst;
-    private Integer mrPrice;
+    private BigDecimal VAT;
+    private BigDecimal sgst;
+    private BigDecimal cgst;
+    private BigDecimal mrPrice;;
 
     private String batchNo;
     private String companyName;
-    private String dateManufacture;
-    private String dateExpiry;
-    private String receiptDate;
+    private Date dateManufacture;
+    private Date dateExpiry;
+    private Date receiptDate;
 
     private float waiverPercentage;
 
     private Boolean retired = false;
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getDrugName() {
-        return drugName;
-    }
-
-    public void setDrugName(String drugName) {
-        this.drugName = drugName;
-    }
-
-    public Set<InventoryDrugFormulation> getFormulations() {
-        return formulations;
-    }
-
-    public void setFormulations(Set<InventoryDrugFormulation> formulations) {
-        this.formulations = formulations;
-    }
-
-    public InventoryDrugCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(InventoryDrugCategory category) {
-        this.category = category;
-    }
 
     public Integer getRate() {
         return rate;
@@ -79,38 +48,6 @@ public class InventoryReceiptFormPayload {
         this.quantity = quantity;
     }
 
-    public Integer getVAT() {
-        return VAT;
-    }
-
-    public void setVAT(Integer VAT) {
-        this.VAT = VAT;
-    }
-
-    public Integer getSgst() {
-        return sgst;
-    }
-
-    public void setSgst(Integer sgst) {
-        this.sgst = sgst;
-    }
-
-    public Integer getCgst() {
-        return cgst;
-    }
-
-    public void setCgst(Integer cgst) {
-        this.cgst = cgst;
-    }
-
-    public Integer getMrPrice() {
-        return mrPrice;
-    }
-
-    public void setMrPrice(Integer mrPrice) {
-        this.mrPrice = mrPrice;
-    }
-
     public String getBatchNo() {
         return batchNo;
     }
@@ -123,32 +60,13 @@ public class InventoryReceiptFormPayload {
         return companyName;
     }
 
+    public String getCompanyNameShort() {
+        return StringUtils.isNotBlank(companyName) && companyName.length() > 10 ? companyName.substring(0, 7) + "..."
+                : companyName;
+    }
+
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public String getDateManufacture() {
-        return dateManufacture;
-    }
-
-    public void setDateManufacture(String dateManufacture) {
-        this.dateManufacture = dateManufacture;
-    }
-
-    public String getDateExpiry() {
-        return dateExpiry;
-    }
-
-    public void setDateExpiry(String dateExpiry) {
-        this.dateExpiry = dateExpiry;
-    }
-
-    public String getReceiptDate() {
-        return receiptDate;
-    }
-
-    public void setReceiptDate(String receiptDate) {
-        this.receiptDate = receiptDate;
     }
 
     public float getWaiverPercentage() {
@@ -165,5 +83,77 @@ public class InventoryReceiptFormPayload {
 
     public void setRetired(Boolean retired) {
         this.retired = retired;
+    }
+
+    public InventoryDrug getDrug() {
+        return drug;
+    }
+
+    public void setDrug(InventoryDrug drug) {
+        this.drug = drug;
+    }
+
+    public InventoryDrugFormulation getFormulation() {
+        return formulation;
+    }
+
+    public void setFormulation(InventoryDrugFormulation formulation) {
+        this.formulation = formulation;
+    }
+
+    public BigDecimal getVAT() {
+        return VAT;
+    }
+
+    public void setVAT(BigDecimal VAT) {
+        this.VAT = VAT;
+    }
+
+    public BigDecimal getSgst() {
+        return sgst;
+    }
+
+    public void setSgst(BigDecimal sgst) {
+        this.sgst = sgst;
+    }
+
+    public BigDecimal getCgst() {
+        return cgst;
+    }
+
+    public void setCgst(BigDecimal cgst) {
+        this.cgst = cgst;
+    }
+
+    public BigDecimal getMrPrice() {
+        return mrPrice;
+    }
+
+    public void setMrPrice(BigDecimal mrPrice) {
+        this.mrPrice = mrPrice;
+    }
+
+    public Date getDateManufacture() {
+        return dateManufacture;
+    }
+
+    public void setDateManufacture(Date dateManufacture) {
+        this.dateManufacture = dateManufacture;
+    }
+
+    public Date getDateExpiry() {
+        return dateExpiry;
+    }
+
+    public void setDateExpiry(Date dateExpiry) {
+        this.dateExpiry = dateExpiry;
+    }
+
+    public Date getReceiptDate() {
+        return receiptDate;
+    }
+
+    public void setReceiptDate(Date receiptDate) {
+        this.receiptDate = receiptDate;
     }
 }
