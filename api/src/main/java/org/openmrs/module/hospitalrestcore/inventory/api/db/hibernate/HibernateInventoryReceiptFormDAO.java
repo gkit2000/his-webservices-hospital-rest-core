@@ -23,7 +23,7 @@ public class HibernateInventoryReceiptFormDAO extends HibernateSingleClassDAO im
     SimpleDateFormat formattterExt = new SimpleDateFormat("dd/MM/yyyy");
 
     public HibernateInventoryReceiptFormDAO() {
-        super(InventoryReceiptFormDAO.class);
+        super(InventoryReceiptForm.class);
     }
 
 

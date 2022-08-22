@@ -42,7 +42,7 @@ public class ReceiptFormController {
         inventoryReceiptForm.setFormulation(inventoryReceiptFormPayload.getFormulation());
         inventoryReceiptForm.setRate(inventoryReceiptFormPayload.getRate());
         inventoryReceiptForm.setQuantity(inventoryReceiptFormPayload.getQuantity());
-        inventoryReceiptForm.setVAT(inventoryReceiptFormPayload.getVAT());
+        inventoryReceiptForm.setVat(inventoryReceiptFormPayload.getVat());
         inventoryReceiptForm.setSgst(inventoryReceiptFormPayload.getSgst());
         inventoryReceiptForm.setCgst(inventoryReceiptFormPayload.getCgst());
         inventoryReceiptForm.setMrPrice(inventoryReceiptFormPayload.getMrPrice());

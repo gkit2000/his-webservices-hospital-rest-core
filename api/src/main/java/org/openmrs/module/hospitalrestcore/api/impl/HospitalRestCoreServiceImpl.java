@@ -265,6 +265,13 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	}
 
 	/**
+	 * @param inventoryReceiptFormDAO the inventoryReceiptFormDAO to set
+	 */
+	public void setInventoryReceiptFormDAO(InventoryReceiptFormDAO inventoryReceiptFormDAO) {
+		this.inventoryReceiptFormDAO = inventoryReceiptFormDAO;
+	}
+
+	/**
 	 * @return the inventoryDrugUnitDAO
 	 */
 	public InventoryDrugUnitDAO getInventoryDrugUnitDAO() {
@@ -644,8 +651,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
-	public InventoryReceiptForm saveOrUpdateInventoryReceiptForm(InventoryReceiptForm inventoryReceiptForm)
-			throws APIException {
+	public InventoryReceiptForm saveOrUpdateInventoryReceiptForm(
+			InventoryReceiptForm inventoryReceiptForm) throws APIException {
 		return (InventoryReceiptForm) getInventoryReceiptFormDAO().saveOrUpdate(inventoryReceiptForm);
 	}
 

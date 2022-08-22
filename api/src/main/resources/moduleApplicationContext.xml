@@ -153,6 +153,14 @@
 						</property>
 					</bean>
 				</property>
+				<property name="inventoryReceiptFormDAO">
+					<bean
+							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryReceiptFormDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

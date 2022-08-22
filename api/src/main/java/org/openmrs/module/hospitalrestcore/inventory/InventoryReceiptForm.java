@@ -16,12 +16,12 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
 
     private static final long serialVersionUID = 1L;
     private Integer id;
-    private InventoryDrug drug;
+    private InventoryDrugCategory drug;
     private InventoryDrugFormulation formulation;
 
     private Integer rate;
     private Integer quantity;
-    private BigDecimal VAT;
+    private BigDecimal vat;
     private BigDecimal sgst;
     private BigDecimal cgst;
     private BigDecimal mrPrice;
@@ -88,11 +88,11 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
         this.waiverPercentage = waiverPercentage;
     }
 
-    public InventoryDrug getDrug() {
+    public InventoryDrugCategory getDrug() {
         return drug;
     }
 
-    public void setDrug(InventoryDrug drug) {
+    public void setDrug(InventoryDrugCategory drug) {
         this.drug = drug;
     }
 
@@ -104,12 +104,12 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
         this.formulation = formulation;
     }
 
-    public BigDecimal getVAT() {
-        return VAT;
+    public BigDecimal getVat() {
+        return vat;
     }
 
-    public void setVAT(BigDecimal VAT) {
-        this.VAT = VAT;
+    public void setVat(BigDecimal vat) {
+        this.vat = vat;
     }
 
     public BigDecimal getSgst() {
