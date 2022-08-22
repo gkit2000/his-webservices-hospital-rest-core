@@ -2,7 +2,6 @@ package org.openmrs.module.hospitalrestcore.inventory;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,9 +38,6 @@ public class InventoryReceiptFormPayload {
     private float waiverPercentage;
 
     private Boolean retired = false;
-
-    @Autowired
-    protected DbSessionFactory sessionFactory;
 
     @Autowired
     InventoryDrugFormulation drugFormulation = new InventoryDrugFormulation();
@@ -142,13 +138,15 @@ public class InventoryReceiptFormPayload {
         List<InventoryDrugFormulation> formulationList = hospitalRestCoreService.listAllInventoryDrugFormulation();
 
         for (InventoryDrugFormulation drugFormulation : formulationList) {
-            if (Objects.equals("" + drugFormulation.getName() + "-" + drugFormulation.getDozage() + " mg", formulation)) {
+            if (Objects.equals(drugFormulation.getName(), formulation)) {
                 drugFormulation1 = drugFormulation;
             }
         }
 
         if (drugFormulation1.getName() == null) {
+            String[] formDosage = formulation.split("-");
             drugFormulation.setName(formulation);
+            drugFormulation.setDozage(formDosage[1]);
             drugFormulation.setCreatedDate(new Date());
             drugFormulation.setCreatedBy(Context.getAuthenticatedUser());
             hospitalRestCoreService.saveOrUpdateInventoryDrugFormulation(drugFormulation);
