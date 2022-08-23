@@ -31,6 +31,7 @@ public class InventoryReceiptFormPayload {
 
     private String batchNo;
     private String companyName;
+    private String uuid;
     private Date dateManufacture;
     private Date dateExpiry;
     private Date receiptDate;
@@ -84,6 +85,14 @@ public class InventoryReceiptFormPayload {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public float getWaiverPercentage() {
