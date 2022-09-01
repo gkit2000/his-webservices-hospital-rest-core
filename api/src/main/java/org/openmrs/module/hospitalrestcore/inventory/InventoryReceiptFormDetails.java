@@ -1,14 +1,14 @@
 package org.openmrs.module.hospitalrestcore.inventory;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author Mujuzi Moses
  *
  */
 
-public class InventoryReceiptFormDetails {
+public class InventoryReceiptFormDetails implements Serializable, Comparable<InventoryReceiptFormDetails> {
 
     private Integer id;
     private String drugName;
@@ -22,12 +22,15 @@ public class InventoryReceiptFormDetails {
     private BigDecimal sgst;
     private BigDecimal cgst;
     private BigDecimal mrPrice;
+    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     private String batchNo;
     private String companyName;
     private String dateManufacture;
     private String dateExpiry;
     private String receiptDate;
+    private String receiptNumber;
 
     private float waiverPercentage;
 
@@ -193,5 +196,34 @@ public class InventoryReceiptFormDetails {
 
     public void setRetired(Boolean retired) {
         this.retired = retired;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(BigDecimal billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
+    }
+
+    @Override
+    public int compareTo(InventoryReceiptFormDetails o) {
+        return (this.companyName).compareTo(o.companyName);
     }
 }

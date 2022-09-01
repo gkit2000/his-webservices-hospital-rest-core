@@ -161,6 +161,14 @@
 						</property>
 					</bean>
 				</property>
+				<property name="inventoryStoreDrugDAO">
+					<bean
+							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

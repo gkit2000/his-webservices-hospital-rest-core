@@ -17,4 +17,10 @@ public interface InventoryReceiptFormDAO extends SingleClassDAO {
 
  public List<InventoryReceiptForm> listAllInventoryReceiptForm() throws DAOException;
 
+ public Integer countReceiptsToGeneralStore(String companyName, String fromDate, String toDate)
+         throws DAOException;
+
+ public List<InventoryReceiptForm> listReceiptsToGeneralStore(String companyName,
+                                                              String fromDate, String toDate, int min, int max) throws DAOException;
+
 }

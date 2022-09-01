@@ -25,12 +25,15 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
     private BigDecimal sgst;
     private BigDecimal cgst;
     private BigDecimal mrPrice;
+    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     private String batchNo;
     private String companyName;
     private Date dateManufacture;
     private Date dateExpiry;
     private Date receiptDate;
+    private String receiptNumber;
 
     private float waiverPercentage;
 
@@ -158,5 +161,29 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
 
     public void setReceiptDate(Date receiptDate) {
         this.receiptDate = receiptDate;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(BigDecimal billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
     }
 }

@@ -85,6 +85,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	private InventoryReceiptFormDAO inventoryReceiptFormDAO;
 
+	private InventoryStoreDrugDAO inventoryStoreDrugDAO;
+
 	private InventoryDrugUnitDAO inventoryDrugUnitDAO;
 
 	private InventoryDrugFormulationDAO inventoryDrugFormulationDAO;
@@ -270,6 +272,21 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public void setInventoryReceiptFormDAO(InventoryReceiptFormDAO inventoryReceiptFormDAO) {
 		this.inventoryReceiptFormDAO = inventoryReceiptFormDAO;
 	}
+
+	/**
+	 * @return the inventoryStoreDrugIndentDAO
+	 */
+	public InventoryStoreDrugDAO getInventoryStoreDrugDAO() {
+		return inventoryStoreDrugDAO;
+	}
+
+	/**
+	 * @param inventoryStoreDrugDAO the inventoryStoreDrugIndent to set
+	 */
+	public void setInventoryStoreDrugDAO(InventoryStoreDrugDAO inventoryStoreDrugDAO) {
+		this.inventoryStoreDrugDAO = inventoryStoreDrugDAO;
+	}
+
 
 	/**
 	 * @return the inventoryDrugUnitDAO
@@ -681,5 +698,39 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 																		String description, String fromDate, String toDate, int min, int max) throws APIException {
 		return getInventoryStoreDAO().listStoreDrugTransaction(transactionType, storeId, description, fromDate, toDate, min, max);
 	}
+
+	@Override
+	@Transactional
+	public Integer countReceiptsToGeneralStore(String companyName, String fromDate, String toDate) throws APIException {
+		return getInventoryReceiptFormDAO().countReceiptsToGeneralStore(companyName, fromDate, toDate);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryReceiptForm> listReceiptsToGeneralStore(String companyName,
+																 String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryReceiptFormDAO().listReceiptsToGeneralStore(companyName, fromDate, toDate, min, max);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugIndent> listAllInventoryStoreDrug() throws APIException {
+		return getInventoryStoreDrugDAO().listAllInventoryStoreDrug();
+	}
+
+	@Override
+	@Transactional
+	public Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
+												  String toDate) throws APIException {
+		return getInventoryStoreDrugDAO().countStoreDrugFromGeneralStore(storeName, indentStatus, indentName, fromDate, toDate);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus,
+																		String indentName, String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryStoreDrugDAO().listStoreDrugFromGeneralStore(storeName, indentStatus, indentName, fromDate, toDate, min, max);
+	}
+
 
 }

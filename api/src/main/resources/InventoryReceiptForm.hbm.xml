@@ -17,6 +17,8 @@
         <property name="sgst" column="sgst" />
         <property name="cgst" column="cgst" />
         <property name="mrPrice" column="mr_price" />
+        <property name="totalAmount" column="total_amount" />
+        <property name="billAmount" column="bill_amount" />
         <property name="batchNo" column="batch_no" />
         <many-to-one name="formulation"
                 class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation"
@@ -28,6 +30,7 @@
         <property name="dateManufacture" column="date_manufacture" />
         <property name="dateExpiry" column="date_expiry" />
         <property name="receiptDate" column="receipt_date" />
+        <property name="receiptNumber" column="receipt_number" />
         <property name="createdDate" column="created_date"  />
         <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="inventory_receipt_form_created_by_fk"/>
         <property name="deleted" column="deleted" />

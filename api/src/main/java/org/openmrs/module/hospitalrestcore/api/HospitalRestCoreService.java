@@ -187,4 +187,17 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryReceiptForm> listAllInventoryReceiptForm() throws APIException;
 
+	Integer countReceiptsToGeneralStore(String companyName, String fromDate, String toDate) throws APIException;
+
+	List<InventoryReceiptForm> listReceiptsToGeneralStore(String companyName,
+														  String fromDate, String toDate, int min, int max) throws APIException;
+
+	List<InventoryStoreDrugIndent> listAllInventoryStoreDrug() throws APIException;
+
+	Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
+										   String toDate) throws APIException;
+
+	List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName,
+																 String fromDate, String toDate, int min, int max) throws APIException;
+
 }

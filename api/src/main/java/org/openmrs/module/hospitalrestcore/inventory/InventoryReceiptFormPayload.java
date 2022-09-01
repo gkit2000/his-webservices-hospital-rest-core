@@ -2,15 +2,19 @@ package org.openmrs.module.hospitalrestcore.inventory;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
+import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author Mujuzi Moses
@@ -27,7 +31,9 @@ public class InventoryReceiptFormPayload {
     private BigDecimal vat;
     private BigDecimal sgst;
     private BigDecimal cgst;
-    private BigDecimal mrPrice;;
+    private BigDecimal mrPrice;
+    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     private String batchNo;
     private String companyName;
@@ -35,6 +41,7 @@ public class InventoryReceiptFormPayload {
     private Date dateManufacture;
     private Date dateExpiry;
     private Date receiptDate;
+    private String receiptNumber;
 
     private float waiverPercentage;
 
@@ -49,6 +56,10 @@ public class InventoryReceiptFormPayload {
     HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
     SimpleDateFormat formatterExt = new SimpleDateFormat("dd/MM/yyyy");
+
+    private final String LETTERS = "abcdefghijklmnopqrstuvwxyz";
+
+    private final char[] ALPHANUMERIC = (LETTERS + LETTERS.toUpperCase() + "0123456789").toCharArray();
 
     public Integer getRate() {
         return rate;
@@ -127,11 +138,8 @@ public class InventoryReceiptFormPayload {
         }
 
         if (drugCategory1.getName() == null) {
-            drugCategory.setName(drug);
-            drugCategory.setCreatedDate(new Date());
-            drugCategory.setCreatedBy(Context.getAuthenticatedUser());
-            hospitalRestCoreService.saveOrUpdateInventoryDrugCategory(drugCategory);
-            this.drug = drugCategory;
+            throw new ResourceNotFoundException(String.format(
+                    OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY, drug));
         } else {
             this.drug = drugCategory1;
         }
@@ -153,13 +161,8 @@ public class InventoryReceiptFormPayload {
         }
 
         if (drugFormulation1.getName() == null) {
-            String[] formDosage = formulation.split("-");
-            drugFormulation.setName(formulation);
-            drugFormulation.setDozage(formDosage[1]);
-            drugFormulation.setCreatedDate(new Date());
-            drugFormulation.setCreatedBy(Context.getAuthenticatedUser());
-            hospitalRestCoreService.saveOrUpdateInventoryDrugFormulation(drugFormulation);
-            this.formulation = drugFormulation;
+            throw new ResourceNotFoundException(String.format(
+                    OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_FORMULATION, formulation));
         } else {
             this.formulation = drugFormulation1;
         }
@@ -219,5 +222,76 @@ public class InventoryReceiptFormPayload {
 
     public void setReceiptDate(String receiptDate) throws ParseException {
         this.receiptDate = formatterExt.parse(receiptDate);
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount() {
+        int rate = getRate();
+        int quantity = getQuantity();
+        BigDecimal cgst = getCgst();
+        BigDecimal sgst = getSgst();
+
+        BigDecimal r1 = BigDecimal.valueOf((long) rate * quantity);
+        BigDecimal r2 = (r1.multiply(cgst)).divide(BigDecimal.valueOf(100),2, RoundingMode.CEILING);
+        BigDecimal r3 = (r1.multiply(sgst)).divide(BigDecimal.valueOf(100), 2, RoundingMode.CEILING);
+
+        this.totalAmount = r1.add(r2).add(r3);
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber() {
+
+        String receiptNumber = "";
+        receiptNumber = generateRandomAlphanumeric(4) + "-" +
+                generateRandomAlphanumeric(3) + "-" + generateRandomAlphanumeric(4);
+        List<InventoryReceiptForm> forms = hospitalRestCoreService.listAllInventoryReceiptForm();
+
+        if (forms != null && forms.size() > 0) {
+            for (InventoryReceiptForm form : forms) {
+                if (Objects.equals(formatterExt.format(form.getReceiptDate()), formatterExt.format(receiptDate))) {
+                    if (Objects.equals(form.getCompanyName(), companyName)) {
+                        receiptNumber = form.getReceiptNumber();
+                    }
+                }
+            }
+        }
+        this.receiptNumber = receiptNumber;
+    }
+
+    public BigDecimal getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount() {
+        Object tot = getTotalAmount();
+        BigDecimal billAmount = (BigDecimal) tot;
+        List<InventoryReceiptForm> forms = hospitalRestCoreService.listAllInventoryReceiptForm();
+
+        if (forms != null && forms.size() > 0) {
+            for (InventoryReceiptForm form : forms) {
+                if (Objects.equals(form.getReceiptNumber(), getReceiptNumber())) {
+                    Object tot1 = form.getTotalAmount();
+                    billAmount = billAmount.add((BigDecimal) tot1);
+                }
+            }
+
+        }
+
+        this.billAmount = billAmount;
+    }
+
+    public String generateRandomAlphanumeric(int length) {
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            builder.append(ALPHANUMERIC[new Random().nextInt(ALPHANUMERIC.length)]);
+        }
+        return builder.toString();
     }
 }
