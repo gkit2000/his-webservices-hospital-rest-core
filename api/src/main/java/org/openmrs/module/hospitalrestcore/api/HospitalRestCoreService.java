@@ -176,9 +176,19 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
 									  String toDate) throws APIException;
 
+	InventoryStoreDrugTransaction saveOrUpdateStoreDrugTransaction(InventoryStoreDrugTransaction inventoryStoreDrugTransaction) throws APIException;
 
 	List<InventoryStoreDrugTransaction> listStoreDrugTransaction(Integer transactionType, Integer storeId,
 																 String description, String fromDate, String toDate, int min, int max) throws APIException;
+
+	InventoryStoreDrugTransaction getInventoryStoreDrugTransactionByUuidString(String uuid) throws APIException;
+
+	InventoryStoreDrugTransactionDetail saveOrUpdateDrugTransactionDetail(
+			InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail) throws APIException;
+
+	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
+
+	InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException;
 
 	InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException;
 
@@ -193,6 +203,10 @@ public interface HospitalRestCoreService extends OpenmrsService {
 														  String fromDate, String toDate, int min, int max) throws APIException;
 
 	List<InventoryStoreDrugIndent> listAllInventoryStoreDrug() throws APIException;
+
+	InventoryStoreDrugIndent saveOrUpdateInventoryDrugIndent(InventoryStoreDrugIndent inventoryStoreDrugIndent) throws APIException;
+
+	InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws APIException;
 
 	Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
 										   String toDate) throws APIException;

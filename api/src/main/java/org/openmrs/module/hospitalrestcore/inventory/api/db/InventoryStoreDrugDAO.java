@@ -20,4 +20,6 @@ public interface InventoryStoreDrugDAO extends SingleClassDAO {
 
  public List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus,
                                                                      String indentName, String fromDate, String toDate, int min, int max) throws DAOException;
+
+ public InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws DAOException;
 }

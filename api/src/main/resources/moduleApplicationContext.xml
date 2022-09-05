@@ -169,6 +169,22 @@
 						</property>
 					</bean>
 				</property>
+				<property name="inventoryStoreDrugTransactionDAO">
+					<bean
+							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugTransactionDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryStoreDrugTransactionDetailDAO">
+					<bean
+							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugTransactionDetailDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

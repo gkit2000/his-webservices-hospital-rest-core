@@ -50,4 +50,5 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 	public List<InventoryStoreDrugTransaction> listStoreDrugTransaction(Integer transactionType, Integer storeId, String description,
 																		String fromDate, String toDate, int min, int max) throws DAOException;
 
+    InventoryStoreDrugTransaction getInventoryStoreDrugTransactionByUuidString(String uuid) throws DAOException;
 }

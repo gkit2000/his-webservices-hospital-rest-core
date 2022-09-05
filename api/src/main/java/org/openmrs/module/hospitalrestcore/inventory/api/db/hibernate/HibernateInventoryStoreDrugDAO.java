@@ -44,6 +44,14 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
 
     @Override
     @Transactional(readOnly = true)
+    public InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+        criteria.add(Restrictions.eq("uuid", uuid));
+        return (InventoryStoreDrugIndent) criteria.uniqueResult();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
                                                   String toDate) throws DAOException {
 

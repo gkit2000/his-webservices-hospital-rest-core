@@ -526,6 +526,14 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 
 	@Override
 	@Transactional
+	public InventoryStoreDrugTransaction getInventoryStoreDrugTransactionByUuidString(String uuid) throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryStoreDrugTransaction.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (InventoryStoreDrugTransaction) criteria.uniqueResult();
+	}
+
+	@Override
+	@Transactional
 	public List<InventoryReceiptForm> listReceiptForm(String name, int min, int max) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryReceiptForm.class,
 				"receiptForm");
