@@ -16,4 +16,9 @@ public interface InventoryStoreDrugTransactionDetailDAO extends SingleClassDAO {
     public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws DAOException;
 
     public InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws DAOException;
+
+    public List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
+            String fromDate, String toDate, int min, int max) throws DAOException;
+
+    public Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws DAOException;
 }

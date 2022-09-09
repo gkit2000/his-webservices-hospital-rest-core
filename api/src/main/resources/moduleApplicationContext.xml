@@ -129,6 +129,14 @@
 						</property>
 					</bean>
 				</property>
+				<property name="inventoryDrugDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryDrugDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 				<property name="inventoryDrugCategoryDAO">
 					<bean
 						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryDrugCategoryDAO">

@@ -37,7 +37,7 @@ import static org.openmrs.module.hospitalrestcore.inventory.ActionValue.INDENT_M
  */
 
 @Controller
-@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/transferDrugFromGeneralStore/")
+@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/transferDrugFromGeneralStore")
 public class TransferDrugFromMainStoreController extends BaseRestController {
 
     @RequestMapping(value = "/indents", method = RequestMethod.GET)
@@ -58,9 +58,8 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
 
         int total = hospitalRestCoreService.countStoreDrugFromGeneralStore(storeName, indentStatus, indentName, fromDate, toDate);
         String temp = "";
-        if (storeName != null) {
+        if (storeName != null)
             temp = "?storeName=" + storeName;
-        }
         if (indentName != null) {
             if (StringUtils.isBlank(temp)) {
                 temp = "?indentName=" + indentName;
@@ -189,8 +188,8 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
                         d.setQuantity(transfer);
                         d.setLastModifiedDate(new Date());
                         d.setLastModifiedBy(Context.getAuthenticatedUser());
-                        indent.setMainStoreStatus(3); // DONE
-                        indent.setSubStoreStatus(5); // DONE
+                        indent.setMainStoreStatus(ActionValue.INDENT_MAINSTORE[2]); // DONE
+                        indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[4]); // DONE
                         indent.setLastModifiedDate(new Date());
                         indent.setLastModifiedBy(Context.getAuthenticatedUser());
                         inventoryStoreDrugTransaction.setStatus(1); //DONE
@@ -234,8 +233,8 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
                     String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION,
                             inventoryStoreDrugTransactionPayload.getTransactionUuid()));
 
-        indent.setMainStoreStatus(2);
-        indent.setSubStoreStatus(6);
+        indent.setMainStoreStatus(ActionValue.INDENT_MAINSTORE[1]);
+        indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[5]);
         indent.setLastModifiedDate(new Date());
         indent.setLastModifiedBy(Context.getAuthenticatedUser());
         inventoryStoreDrugTransaction.setStatus(1); //DONE

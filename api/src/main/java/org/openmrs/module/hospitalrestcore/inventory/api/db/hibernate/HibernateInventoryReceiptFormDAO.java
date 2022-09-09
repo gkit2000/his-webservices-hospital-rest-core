@@ -37,7 +37,8 @@ public class HibernateInventoryReceiptFormDAO extends HibernateSingleClassDAO im
     @Transactional(readOnly = true)
     public InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-        criteria.add(Restrictions.eq("uuid", uuid));
+        criteria.add(Restrictions.eq("uuid", uuid))
+                .add(Restrictions.eq("retired", false));
         return (InventoryReceiptForm) criteria.uniqueResult();
     }
 
@@ -60,6 +61,7 @@ public class HibernateInventoryReceiptFormDAO extends HibernateSingleClassDAO im
                 .add(Projections.groupProperty("receiptNumber"))
                 .add(Projections.groupProperty("receiptDate"));
 
+        criteria.add(Restrictions.eq("retired", false));
         if (companyName != null) {
             criteria.add(Restrictions.like("companyName", companyName));
         }
@@ -123,6 +125,8 @@ public class HibernateInventoryReceiptFormDAO extends HibernateSingleClassDAO im
                 .add(Projections.max("billAmount"))
                 .add(Projections.groupProperty("receiptNumber"))
                 .add(Projections.groupProperty("receiptDate"));
+
+        criteria.add(Restrictions.eq("retired", false));
         if (companyName != null) {
             criteria.add(Restrictions.like("companyName", companyName));
         }

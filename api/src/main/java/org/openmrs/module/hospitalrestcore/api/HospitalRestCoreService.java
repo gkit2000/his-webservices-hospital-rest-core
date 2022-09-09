@@ -188,6 +188,9 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
 
+	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
+			String fromDate, String toDate, int min, int max) throws APIException;
+
 	InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException;
 
 	InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException;
@@ -213,5 +216,9 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName,
 																 String fromDate, String toDate, int min, int max) throws APIException;
+
+	Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws APIException;
+
+	List<InventoryDrug> listAllInventoryDrug() throws APIException;
 
 }

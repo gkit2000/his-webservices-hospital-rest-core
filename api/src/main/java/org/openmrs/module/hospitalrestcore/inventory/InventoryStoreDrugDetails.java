@@ -52,6 +52,6 @@ public class InventoryStoreDrugDetails implements Serializable, Comparable<Inven
 
     @Override
     public int compareTo(InventoryStoreDrugDetails o) {
-        return 0;
+        return (this.store).compareTo(o.store);
     }
 }

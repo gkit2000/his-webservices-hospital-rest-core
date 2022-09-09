@@ -79,6 +79,8 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	private AmbulanceDAO ambulanceDAO;
 
+	private InventoryDrugDAO inventoryDrugDAO;
+
 	private InventoryStoreDAO inventoryStoreDAO;
 
 	private InventoryDrugCategoryDAO inventoryDrugCategoryDAO;
@@ -247,6 +249,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryStoreDAO(InventoryStoreDAO inventoryStoreDAO) {
 		this.inventoryStoreDAO = inventoryStoreDAO;
+	}
+
+	/**
+	 * @return the inventoryDrugDAO
+	 */
+	public InventoryDrugDAO getInventoryDrugDAO() {
+		return inventoryDrugDAO;
+	}
+
+	/**
+	 * @param inventoryDrugDAO the inventoryDrugDAO to set
+	 */
+	public void setInventoryDrugDAO(InventoryDrugDAO inventoryDrugDAO) {
+		this.inventoryDrugDAO = inventoryDrugDAO;
 	}
 
 	/**
@@ -804,7 +820,27 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
+	public List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
+			String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryStoreDrugTransactionDetailDAO().listStoreDrugTransactionDetail(category, drugName, fromDate,
+				toDate, min, max);
+	}
+
+	@Override
+	@Transactional
 	public InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException {
 		return getInventoryStoreDrugTransactionDetailDAO().getDrugTransactionDetailByUuidString(uuid);
+	}
+
+	@Override
+	@Transactional
+	public Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws APIException {
+		return getInventoryStoreDrugTransactionDetailDAO().countViewStockBalanceExpiry(category, drugName, fromDate, toDate);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryDrug> listAllInventoryDrug() throws APIException {
+		return getInventoryDrugDAO().listAllInventoryDrug();
 	}
 }

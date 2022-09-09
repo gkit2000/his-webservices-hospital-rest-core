@@ -46,7 +46,8 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
     @Transactional(readOnly = true)
     public InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-        criteria.add(Restrictions.eq("uuid", uuid));
+        criteria.add(Restrictions.eq("uuid", uuid))
+                .add(Restrictions.eq("retired", false));
         return (InventoryStoreDrugIndent) criteria.uniqueResult();
     }
 
@@ -64,6 +65,7 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
                 .add(Projections.groupProperty("createdDate"))
                 .add(Projections.groupProperty("mainStoreStatus"));
 
+        criteria.add(Restrictions.eq("retired", false));
         if (storeName != null) {
             List<InventoryStore> inventoryStores = hospitalRestCoreService.listAllInventoryStore();
             InventoryStore inventoryStore = new InventoryStore();
@@ -71,11 +73,11 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
                 if (Objects.equals(store.getName(), storeName))
                     inventoryStore = store;
 
-            criteria.add(Restrictions.like("store", inventoryStore));//TODO:
+            criteria.add(Restrictions.like("store", inventoryStore));
         }
         if (indentStatus != null) {
             int index = Arrays.asList(INDENT_MAINSTORE_NAMES).indexOf(indentStatus);
-            criteria.add(Restrictions.like("mainStoreStatus", (index + 1))); //TODO:
+            criteria.add(Restrictions.like("mainStoreStatus", (index + 1)));
         }
 
         if (indentName != null)
@@ -144,6 +146,7 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
                 .add(Projections.groupProperty("createdDate"))
                 .add(Projections.groupProperty("mainStoreStatus"));
 
+        criteria.add(Restrictions.eq("retired", false));
         if (storeName != null) {
             List<InventoryStore> inventoryStores = hospitalRestCoreService.listAllInventoryStore();
             InventoryStore inventoryStore = new InventoryStore();
@@ -151,11 +154,11 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
                 if (Objects.equals(store.getName(), storeName))
                     inventoryStore = store;
 
-            criteria.add(Restrictions.like("store", inventoryStore));//TODO:
+            criteria.add(Restrictions.like("store", inventoryStore));
         }
         if (indentStatus != null) {
             int index = Arrays.asList(INDENT_MAINSTORE_NAMES).indexOf(indentStatus);
-            criteria.add(Restrictions.like("mainStoreStatus", (index + 1))); //TODO:
+            criteria.add(Restrictions.like("mainStoreStatus", (index + 1)));
         }
 
         if (indentName != null)

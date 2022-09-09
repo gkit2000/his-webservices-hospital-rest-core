@@ -100,6 +100,8 @@ public final class OpenmrsCustomConstants {
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION = "Drug transaction %s is not valid";
 
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL = "Drug transaction detail %s is not valid";
+
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_UNIT_UUID = "Drug unit uuid %s is not valid";
 
 	public static final String ACCESS_TOKEN_URL = "https://dev.abdm.gov.in/gateway/v0.5/sessions";
