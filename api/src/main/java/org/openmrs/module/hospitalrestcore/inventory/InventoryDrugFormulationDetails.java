@@ -3,11 +3,13 @@
  */
 package org.openmrs.module.hospitalrestcore.inventory;
 
+import org.openmrs.module.hospitalrestcore.BaseDetails;
+
 /**
  * @author Ghanshyam
  *
  */
-public class InventoryDrugFormulationDetails {
+public class InventoryDrugFormulationDetails extends BaseDetails {
 
 	private Integer id;
 	private String name;

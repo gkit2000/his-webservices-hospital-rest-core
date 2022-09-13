@@ -24,6 +24,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
+import org.openmrs.module.hospitalrestcore.controller.PulseUtil;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDetails;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStorePayload;
@@ -101,7 +102,7 @@ public class MainStoreController extends BaseRestController {
 		}
 		inventoryStore.setRole(role);
 		inventoryStore.setCode(inventoryStorePayload.getCode());
-		inventoryStore.setIsDrug(inventoryStorePayload.getIsDrug());
+		inventoryStore.setIsPharmacy(inventoryStorePayload.getIsPharmacy());
 		if (inventoryStorePayload.getParentUuid() != null) {
 			InventoryStore parentStore = hospitalRestCoreService
 					.getInventoryStoreByUuid(inventoryStorePayload.getParentUuid());
@@ -152,7 +153,7 @@ public class MainStoreController extends BaseRestController {
 				}
 				inventoryStore.setRole(role);
 				inventoryStore.setCode(inventoryStorePayload.getCode());
-				inventoryStore.setIsDrug(inventoryStorePayload.getIsDrug());
+				inventoryStore.setIsPharmacy(inventoryStorePayload.getIsPharmacy());
 				if (inventoryStorePayload.getParentUuid() != null) {
 					InventoryStore parentStore = hospitalRestCoreService
 							.getInventoryStoreByUuid(inventoryStorePayload.getParentUuid());
@@ -213,6 +214,8 @@ public class MainStoreController extends BaseRestController {
 		isd.setStoreUuid(inventoryStore.getUuid());
 		isd.setDeleted(inventoryStore.getDeleted());
 		isd.setRetired(inventoryStore.getRetired());
+		isd.setCreatedBy(PulseUtil.getName(inventoryStore.getCreatedBy().getPerson()));
+		isd.setCreatedDate(formatter.format(inventoryStore.getCreatedDate()));
 		return isd;
 	}
 }

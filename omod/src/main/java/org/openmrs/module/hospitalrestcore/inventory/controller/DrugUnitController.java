@@ -22,6 +22,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
+import org.openmrs.module.hospitalrestcore.controller.PulseUtil;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnitDetails;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnitPayload;
@@ -144,6 +145,8 @@ public class DrugUnitController extends BaseRestController {
 		idud.setUuid(inventoryDrugUnit.getUuid());
 		idud.setDeleted(inventoryDrugUnit.getDeleted());
 		idud.setRetired(inventoryDrugUnit.getRetired());
+		idud.setCreatedBy(PulseUtil.getName(inventoryDrugUnit.getCreatedBy().getPerson()));
+		idud.setCreatedDate(formatter.format(inventoryDrugUnit.getCreatedDate()));
 		return idud;
 	}
 }

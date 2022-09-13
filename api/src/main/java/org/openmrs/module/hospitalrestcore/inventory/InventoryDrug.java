@@ -21,7 +21,6 @@
 package org.openmrs.module.hospitalrestcore.inventory;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,8 +35,6 @@ public class InventoryDrug extends CustomBaseOpenmrsObject implements Serializab
 	private InventoryDrugUnit unit;
 	private InventoryDrugCategory category;
 	private Set<InventoryDrugFormulation> formulations;
-	private Date createdOn;
-	private String createdBy;
 	private Drug drugCore;
 	private int attribute;
 	private Integer reorderQty;
@@ -85,14 +82,6 @@ public class InventoryDrug extends CustomBaseOpenmrsObject implements Serializab
 
 	public void setFormulations(Set<InventoryDrugFormulation> formulations) {
 		this.formulations = formulations;
-	}
-
-	public Date getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
 	}
 
 	public int getAttribute() {
