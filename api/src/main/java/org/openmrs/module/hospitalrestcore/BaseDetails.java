@@ -16,9 +16,11 @@ public class BaseDetails {
 	private String deletedBy;
 	private String lastModifiedDate;
 	private String lastModifiedBy;
+	/*
 	private Boolean retired = false;
 	private String retiredDate;
 	private String retiredBy;
+	*/
 	private Boolean voided = false;
 	private String voidedDate;
 	private String voidedby;
@@ -120,48 +122,6 @@ public class BaseDetails {
 	 */
 	public void setLastModifiedBy(String lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	/**
-	 * @return the retired
-	 */
-	public Boolean getRetired() {
-		return retired;
-	}
-
-	/**
-	 * @param retired the retired to set
-	 */
-	public void setRetired(Boolean retired) {
-		this.retired = retired;
-	}
-
-	/**
-	 * @return the retiredDate
-	 */
-	public String getRetiredDate() {
-		return retiredDate;
-	}
-
-	/**
-	 * @param retiredDate the retiredDate to set
-	 */
-	public void setRetiredDate(String retiredDate) {
-		this.retiredDate = retiredDate;
-	}
-
-	/**
-	 * @return the retiredBy
-	 */
-	public String getRetiredBy() {
-		return retiredBy;
-	}
-
-	/**
-	 * @param retiredBy the retiredBy to set
-	 */
-	public void setRetiredBy(String retiredBy) {
-		this.retiredBy = retiredBy;
 	}
 
 	/**

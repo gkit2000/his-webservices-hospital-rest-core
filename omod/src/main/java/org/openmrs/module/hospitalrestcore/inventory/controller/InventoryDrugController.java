@@ -72,7 +72,7 @@ public class InventoryDrugController extends BaseRestController {
 	}
 
 	@RequestMapping(value = "/all-drug-details", method = RequestMethod.GET)
-	public void getAllStores(HttpServletRequest request, HttpServletResponse response,
+	public void getAllInventoryDrugs(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "searchName", required = false) String searchName,
 			@RequestParam(value = "categoryId", required = false) Integer categoryId,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -106,8 +106,23 @@ public class InventoryDrugController extends BaseRestController {
 		new ObjectMapper().writeValue(out, idds);
 	}
 
+	@RequestMapping(value = "/drug-details", method = RequestMethod.GET)
+	public void getInventoryDrug(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "inventoryDrugUuid") String inventoryDrugUuid)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+
+		InventoryDrug drug = hospitalRestCoreService.getInventoryDrugByUuidString(inventoryDrugUuid);
+
+		new ObjectMapper().writeValue(out, getInventoryDrugDetails(drug));
+	}
+
 	@RequestMapping(value = "/add-drug", method = RequestMethod.POST)
-	public ResponseEntity<Void> addDrug(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryDrugDetails> addDrug(HttpServletRequest request, HttpServletResponse response,
 			@Valid @RequestBody InventoryDrugPayload inventoryDrugPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -148,13 +163,13 @@ public class InventoryDrugController extends BaseRestController {
 		inventoryDrug.setRetired(false);
 		inventoryDrug.setCreatedDate(new Date());
 		inventoryDrug.setCreatedBy(Context.getAuthenticatedUser());
-		hospitalRestCoreService.saveOrUpdateInventoryDrug(inventoryDrug);
+		inventoryDrug = hospitalRestCoreService.saveOrUpdateInventoryDrug(inventoryDrug);
 
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		return new ResponseEntity<InventoryDrugDetails>(getInventoryDrugDetails(inventoryDrug), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/edit-drug", method = RequestMethod.PUT)
-	public ResponseEntity<Void> editDrug(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryDrugDetails> editDrug(HttpServletRequest request, HttpServletResponse response,
 			@Valid @RequestBody InventoryDrugPayload inventoryDrugPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
@@ -204,9 +219,9 @@ public class InventoryDrugController extends BaseRestController {
 			inventoryDrug.setLastModifiedBy(Context.getAuthenticatedUser());
 		}
 
-		hospitalRestCoreService.saveOrUpdateInventoryDrug(inventoryDrug);
+		inventoryDrug = hospitalRestCoreService.saveOrUpdateInventoryDrug(inventoryDrug);
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<InventoryDrugDetails>(getInventoryDrugDetails(inventoryDrug), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/delete-drug", method = RequestMethod.DELETE)
@@ -249,7 +264,7 @@ public class InventoryDrugController extends BaseRestController {
 
 		idd.setUuid(inventoryDrug.getUuid());
 		idd.setDeleted(inventoryDrug.getDeleted());
-		idd.setRetired(inventoryDrug.getRetired());
+		//idd.setRetired(inventoryDrug.getRetired());
 		idd.setCreatedBy(PulseUtil.getName(inventoryDrug.getCreatedBy().getPerson()));
 		idd.setCreatedDate(formatter.format(inventoryDrug.getCreatedDate()));
 		if (inventoryDrug.getLastModifiedDate() != null) {
@@ -267,7 +282,7 @@ public class InventoryDrugController extends BaseRestController {
 		idud.setDescription(inventoryDrugUnit.getDescription());
 		idud.setUuid(inventoryDrugUnit.getUuid());
 		idud.setDeleted(inventoryDrugUnit.getDeleted());
-		idud.setRetired(inventoryDrugUnit.getRetired());
+		//idud.setRetired(inventoryDrugUnit.getRetired());
 		idud.setCreatedBy(PulseUtil.getName(inventoryDrugUnit.getCreatedBy().getPerson()));
 		idud.setCreatedDate(formatter.format(inventoryDrugUnit.getCreatedDate()));
 		return idud;
@@ -281,7 +296,7 @@ public class InventoryDrugController extends BaseRestController {
 		idcd.setDescription(inventoryDrugCategory.getDescription());
 		idcd.setUuid(inventoryDrugCategory.getUuid());
 		idcd.setDeleted(inventoryDrugCategory.getDeleted());
-		idcd.setRetired(inventoryDrugCategory.getRetired());
+		//idcd.setRetired(inventoryDrugCategory.getRetired());
 		idcd.setCreatedBy(PulseUtil.getName(inventoryDrugCategory.getCreatedBy().getPerson()));
 		idcd.setCreatedDate(formatter.format(inventoryDrugCategory.getCreatedDate()));
 		return idcd;
@@ -297,7 +312,7 @@ public class InventoryDrugController extends BaseRestController {
 		idud.setDescription(inventoryDrugFormulation.getDescription());
 		idud.setUuid(inventoryDrugFormulation.getUuid());
 		idud.setDeleted(inventoryDrugFormulation.getDeleted());
-		idud.setRetired(inventoryDrugFormulation.getRetired());
+		//idud.setRetired(inventoryDrugFormulation.getRetired());
 		idud.setCreatedBy(PulseUtil.getName(inventoryDrugFormulation.getCreatedBy().getPerson()));
 		idud.setCreatedDate(formatter.format(inventoryDrugFormulation.getCreatedDate()));
 		return idud;

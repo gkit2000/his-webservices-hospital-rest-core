@@ -35,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Ghanshyam
@@ -43,8 +44,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/drug-formulation")
 public class DrugFormulationController extends BaseRestController {
+
 	@RequestMapping(value = "/all-formulation-details", method = RequestMethod.GET)
-	public void getAllStores(HttpServletRequest request, HttpServletResponse response)
+	public void getAllFormulations(HttpServletRequest request, HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		response.setContentType("application/json");
@@ -60,8 +62,24 @@ public class DrugFormulationController extends BaseRestController {
 		new ObjectMapper().writeValue(out, idfd);
 	}
 
+	@RequestMapping(value = "/formulation-details", method = RequestMethod.GET)
+	public void getFormulation(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "formulationUuid") String formulationUuid)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryDrugFormulation inventoryDrugFormulation = hospitalRestCoreService
+				.getInventoryDrugFormulationByUuidString(formulationUuid);
+
+		new ObjectMapper().writeValue(out, getInventoryDrugFormulationDetails(inventoryDrugFormulation));
+	}
+
 	@RequestMapping(value = "/add-drug-formulation", method = RequestMethod.POST)
-	public ResponseEntity<Void> addStore(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryDrugFormulationDetails> addStore(HttpServletRequest request,
+			HttpServletResponse response,
 			@Valid @RequestBody InventoryDrugFormulationPayload inventoryDrugFormulationPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -73,13 +91,16 @@ public class DrugFormulationController extends BaseRestController {
 		inventoryDrugFormulation.setRetired(inventoryDrugFormulationPayload.getRetired());
 		inventoryDrugFormulation.setCreatedDate(new Date());
 		inventoryDrugFormulation.setCreatedBy(Context.getAuthenticatedUser());
-		hospitalRestCoreService.saveOrUpdateInventoryDrugFormulation(inventoryDrugFormulation);
+		inventoryDrugFormulation = hospitalRestCoreService
+				.saveOrUpdateInventoryDrugFormulation(inventoryDrugFormulation);
 
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		return new ResponseEntity<InventoryDrugFormulationDetails>(
+				getInventoryDrugFormulationDetails(inventoryDrugFormulation), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/edit-drug-formulation", method = RequestMethod.PUT)
-	public ResponseEntity<Void> editStore(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryDrugFormulationDetails> editStore(HttpServletRequest request,
+			HttpServletResponse response,
 			@Valid @RequestBody InventoryDrugFormulationPayload inventoryDrugFormulationPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
@@ -106,9 +127,11 @@ public class DrugFormulationController extends BaseRestController {
 			inventoryDrugFormulation.setLastModifiedBy(Context.getAuthenticatedUser());
 		}
 
-		hospitalRestCoreService.saveOrUpdateInventoryDrugFormulation(inventoryDrugFormulation);
+		inventoryDrugFormulation = hospitalRestCoreService
+				.saveOrUpdateInventoryDrugFormulation(inventoryDrugFormulation);
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<InventoryDrugFormulationDetails>(
+				getInventoryDrugFormulationDetails(inventoryDrugFormulation), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/delete-drug-formulations", method = RequestMethod.DELETE)
@@ -148,7 +171,7 @@ public class DrugFormulationController extends BaseRestController {
 		idud.setDescription(inventoryDrugFormulation.getDescription());
 		idud.setUuid(inventoryDrugFormulation.getUuid());
 		idud.setDeleted(inventoryDrugFormulation.getDeleted());
-		idud.setRetired(inventoryDrugFormulation.getRetired());
+		// idud.setRetired(inventoryDrugFormulation.getRetired());
 		idud.setCreatedBy(PulseUtil.getName(inventoryDrugFormulation.getCreatedBy().getPerson()));
 		idud.setCreatedDate(formatter.format(inventoryDrugFormulation.getCreatedDate()));
 		return idud;

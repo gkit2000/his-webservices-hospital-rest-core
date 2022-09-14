@@ -35,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Ghanshyam
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class DrugUnitController extends BaseRestController {
 
 	@RequestMapping(value = "/all-unit-details", method = RequestMethod.GET)
-	public void getAllStores(HttpServletRequest request, HttpServletResponse response)
+	public void getAllUnits(HttpServletRequest request, HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		response.setContentType("application/json");
@@ -60,8 +61,22 @@ public class DrugUnitController extends BaseRestController {
 		new ObjectMapper().writeValue(out, idud);
 	}
 
+	@RequestMapping(value = "/unit-details", method = RequestMethod.GET)
+	public void getUnit(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "unitUuid") String unitUuid)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryDrugUnit inventoryDrugUnit = hospitalRestCoreService.getInventoryDrugUnitByUuidString(unitUuid);
+
+		new ObjectMapper().writeValue(out, getInventoryDrugUnitDetails(inventoryDrugUnit));
+	}
+
 	@RequestMapping(value = "/add-drug-unit", method = RequestMethod.POST)
-	public ResponseEntity<Void> addStore(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryDrugUnitDetails> addStore(HttpServletRequest request, HttpServletResponse response,
 			@Valid @RequestBody InventoryDrugUnitPayload inventoryDrugUnitPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -72,13 +87,14 @@ public class DrugUnitController extends BaseRestController {
 		inventoryDrugUnit.setRetired(inventoryDrugUnitPayload.getRetired());
 		inventoryDrugUnit.setCreatedDate(new Date());
 		inventoryDrugUnit.setCreatedBy(Context.getAuthenticatedUser());
-		hospitalRestCoreService.saveOrUpdateInventoryDrugUnit(inventoryDrugUnit);
+		inventoryDrugUnit = hospitalRestCoreService.saveOrUpdateInventoryDrugUnit(inventoryDrugUnit);
 
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		return new ResponseEntity<InventoryDrugUnitDetails>(getInventoryDrugUnitDetails(inventoryDrugUnit),
+				HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/edit-drug-unit", method = RequestMethod.PUT)
-	public ResponseEntity<Void> editStore(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryDrugUnitDetails> editStore(HttpServletRequest request, HttpServletResponse response,
 			@Valid @RequestBody InventoryDrugUnitPayload inventoryDrugUnitPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
@@ -104,9 +120,10 @@ public class DrugUnitController extends BaseRestController {
 			inventoryDrugUnit.setLastModifiedBy(Context.getAuthenticatedUser());
 		}
 
-		hospitalRestCoreService.saveOrUpdateInventoryDrugUnit(inventoryDrugUnit);
+		inventoryDrugUnit = hospitalRestCoreService.saveOrUpdateInventoryDrugUnit(inventoryDrugUnit);
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<InventoryDrugUnitDetails>(getInventoryDrugUnitDetails(inventoryDrugUnit),
+				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/delete-drug-units", method = RequestMethod.DELETE)
@@ -144,7 +161,7 @@ public class DrugUnitController extends BaseRestController {
 		idud.setDescription(inventoryDrugUnit.getDescription());
 		idud.setUuid(inventoryDrugUnit.getUuid());
 		idud.setDeleted(inventoryDrugUnit.getDeleted());
-		idud.setRetired(inventoryDrugUnit.getRetired());
+		// idud.setRetired(inventoryDrugUnit.getRetired());
 		idud.setCreatedBy(PulseUtil.getName(inventoryDrugUnit.getCreatedBy().getPerson()));
 		idud.setCreatedDate(formatter.format(inventoryDrugUnit.getCreatedDate()));
 		return idud;
