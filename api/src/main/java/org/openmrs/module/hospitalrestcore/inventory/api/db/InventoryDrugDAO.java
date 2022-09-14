@@ -13,7 +13,6 @@ import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
  * @author Ghanshyam
  *
  */
-
 public interface InventoryDrugDAO extends SingleClassDAO {
 
 	public List<InventoryDrug> listAllInventoryDrug() throws DAOException;

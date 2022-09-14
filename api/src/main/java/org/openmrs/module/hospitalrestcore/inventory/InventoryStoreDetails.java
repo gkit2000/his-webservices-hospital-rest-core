@@ -3,11 +3,13 @@
  */
 package org.openmrs.module.hospitalrestcore.inventory;
 
+import org.openmrs.module.hospitalrestcore.BaseDetails;
+
 /**
  * @author Ghanshyam
  *
  */
-public class InventoryStoreDetails {
+public class InventoryStoreDetails extends BaseDetails {
 
 	private Integer id;
 	private String name;
@@ -15,8 +17,6 @@ public class InventoryStoreDetails {
 	private String roleUuid;
 	private String code;
 	private String storeUuid;
-	private Boolean deleted;
-	private Boolean retired;
 
 	/**
 	 * @return the id
@@ -100,34 +100,6 @@ public class InventoryStoreDetails {
 	 */
 	public void setStoreUuid(String storeUuid) {
 		this.storeUuid = storeUuid;
-	}
-
-	/**
-	 * @return the deleted
-	 */
-	public Boolean getDeleted() {
-		return deleted;
-	}
-
-	/**
-	 * @param deleted the deleted to set
-	 */
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	/**
-	 * @return the retired
-	 */
-	public Boolean getRetired() {
-		return retired;
-	}
-
-	/**
-	 * @param retired the retired to set
-	 */
-	public void setRetired(Boolean retired) {
-		this.retired = retired;
 	}
 
 }

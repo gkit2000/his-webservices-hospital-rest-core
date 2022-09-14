@@ -13,7 +13,7 @@
 		<property name="name" column="name" />
 		<many-to-one name="role" column="role" class="org.openmrs.Role" foreign-key="fk_inventorystore_role"/>
 		<property name="code" column="code"  />
-		<property name="isDrug" column="is_drug"  />
+		<property name="isPharmacy" column="is_pharmacy"  />
 		<many-to-one name="parent" class="org.openmrs.module.hospitalrestcore.inventory.InventoryStore"
 	        column="parent_id"  lazy="false" />	 
 	    <property name="createdDate" column="created_date"  />

@@ -32,7 +32,7 @@ public class InventoryStore extends CustomBaseOpenmrsObject implements Serializa
 	private String name;
 	private Role role;
 	private String code;
-	private Boolean isDrug;
+	private Boolean isPharmacy;
 	private InventoryStore parent;
 
 	public Integer getId() {
@@ -68,17 +68,17 @@ public class InventoryStore extends CustomBaseOpenmrsObject implements Serializa
 	}
 
 	/**
-	 * @return the isDrug
+	 * @return the isPharmacy
 	 */
-	public Boolean getIsDrug() {
-		return isDrug;
+	public Boolean getIsPharmacy() {
+		return isPharmacy;
 	}
 
 	/**
-	 * @param isDrug the isDrug to set
+	 * @param isPharmacy the isPharmacy to set
 	 */
-	public void setIsDrug(Boolean isDrug) {
-		this.isDrug = isDrug;
+	public void setIsPharmacy(Boolean isPharmacy) {
+		this.isPharmacy = isPharmacy;
 	}
 
 	public Role getRole() {

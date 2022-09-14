@@ -14,7 +14,7 @@ public class InventoryStorePayload {
 	private String parentUuid;
 	private String storeUuid;
 	private String roleUuid;
-	private Boolean isDrug = false;;
+	private Boolean isPharmacy = false;;
 	private Boolean retired = false;
 
 	public String getName() {
@@ -57,12 +57,18 @@ public class InventoryStorePayload {
 		this.roleUuid = roleUuid;
 	}
 
-	public Boolean getIsDrug() {
-		return isDrug;
+	/**
+	 * @return the isPharmacy
+	 */
+	public Boolean getIsPharmacy() {
+		return isPharmacy;
 	}
 
-	public void setIsDrug(Boolean isDrug) {
-		this.isDrug = isDrug;
+	/**
+	 * @param isPharmacy the isPharmacy to set
+	 */
+	public void setIsPharmacy(Boolean isPharmacy) {
+		this.isPharmacy = isPharmacy;
 	}
 
 	public Boolean getRetired() {
