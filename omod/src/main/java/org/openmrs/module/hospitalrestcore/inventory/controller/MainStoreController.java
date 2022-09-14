@@ -1,0 +1,236 @@
+/**
+ * 
+ */
+package org.openmrs.module.hospitalrestcore.inventory.controller;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openmrs.Role;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
+import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
+import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
+import org.openmrs.module.hospitalrestcore.controller.PulseUtil;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDetails;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStorePayload;
+import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * @author Ghanshyam
+ *
+ */
+@Controller
+@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/manage-store")
+public class MainStoreController extends BaseRestController {
+
+	@RequestMapping(value = "/store-form-details", method = RequestMethod.GET)
+	public void getStoreFormDetails(HttpServletRequest request, HttpServletResponse response)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		List<Role> roles = hospitalRestCoreService.getAllRoles();
+		List<InventoryStore> stores = hospitalRestCoreService.listAllInventoryStore();
+		List<InventoryStore> listParents = new ArrayList<InventoryStore>();
+		listParents.addAll(stores);
+		for (InventoryStore is : stores) {
+			if (is.getParent() != null) {
+				listParents.remove(is);
+			}
+
+		}
+
+		List<InventoryStoreDetails> isds = listParents.stream().map(isd -> getInventoryStoreDetails(isd))
+				.collect(Collectors.toList());
+
+		new ObjectMapper().writeValue(out, isds);
+	}
+
+	@RequestMapping(value = "/all-store-details", method = RequestMethod.GET)
+	public void getAllStores(HttpServletRequest request, HttpServletResponse response)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		List<InventoryStore> stores = hospitalRestCoreService.listAllInventoryStore();
+
+		List<InventoryStoreDetails> isds = stores.stream().map(isd -> getInventoryStoreDetails(isd))
+				.collect(Collectors.toList());
+
+		new ObjectMapper().writeValue(out, isds);
+	}
+
+	@RequestMapping(value = "/store-details", method = RequestMethod.GET)
+	public void getStore(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "storeUuid") String storeUuid)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryStore store = hospitalRestCoreService.getInventoryStoreByUuid(storeUuid);
+
+		new ObjectMapper().writeValue(out, getInventoryStoreDetails(store));
+	}
+
+	@RequestMapping(value = "/add-store", method = RequestMethod.POST)
+	public ResponseEntity<InventoryStoreDetails> addStore(HttpServletRequest request, HttpServletResponse response,
+			@Valid @RequestBody InventoryStorePayload inventoryStorePayload)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryStore inventoryStore = new InventoryStore();
+		inventoryStore.setName(inventoryStorePayload.getName());
+		Role role = hospitalRestCoreService.getRoleByUuid(inventoryStorePayload.getRoleUuid());
+		if (role == null) {
+			throw new ResourceNotFoundException(String.format(
+					OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_ROLE_UUID, inventoryStorePayload.getRoleUuid()));
+		}
+		inventoryStore.setRole(role);
+		inventoryStore.setCode(inventoryStorePayload.getCode());
+		inventoryStore.setIsPharmacy(inventoryStorePayload.getIsPharmacy());
+		if (inventoryStorePayload.getParentUuid() != null) {
+			InventoryStore parentStore = hospitalRestCoreService
+					.getInventoryStoreByUuid(inventoryStorePayload.getParentUuid());
+			if (parentStore == null) {
+				throw new ResourceNotFoundException(
+						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_PARENT_UUID,
+								inventoryStorePayload.getParentUuid()));
+			}
+			inventoryStore.setParent(parentStore);
+		} else {
+			inventoryStore.setParent(null);
+		}
+		inventoryStore.setCreatedDate(new Date());
+		inventoryStore.setCreatedBy(Context.getAuthenticatedUser());
+		inventoryStore = hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
+
+		return new ResponseEntity<InventoryStoreDetails>(getInventoryStoreDetails(inventoryStore), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/edit-store", method = RequestMethod.PUT)
+	public ResponseEntity<InventoryStoreDetails> editStore(HttpServletRequest request, HttpServletResponse response,
+			@Valid @RequestBody InventoryStorePayload inventoryStorePayload)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryStore inventoryStore = null;
+
+		if (inventoryStorePayload.getStoreUuid() != null) {
+			inventoryStore = hospitalRestCoreService.getInventoryStoreByUuid(inventoryStorePayload.getStoreUuid());
+			if (inventoryStore == null) {
+				throw new ResourceNotFoundException(
+						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_INVENTORY_STORE_UUID,
+								inventoryStorePayload.getStoreUuid()));
+			}
+			if (inventoryStorePayload.getRetired()) {
+				inventoryStore.setRetired(true);
+				inventoryStore.setRetiredDate(new Date());
+				inventoryStore.setRetiredBy(Context.getAuthenticatedUser());
+			} else {
+				inventoryStore.setName(inventoryStorePayload.getName());
+				Role role = hospitalRestCoreService.getRoleByUuid(inventoryStorePayload.getRoleUuid());
+				if (role == null) {
+					throw new ResourceNotFoundException(
+							String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_ROLE_UUID,
+									inventoryStorePayload.getRoleUuid()));
+				}
+				inventoryStore.setRole(role);
+				inventoryStore.setCode(inventoryStorePayload.getCode());
+				inventoryStore.setIsPharmacy(inventoryStorePayload.getIsPharmacy());
+				if (inventoryStorePayload.getParentUuid() != null) {
+					InventoryStore parentStore = hospitalRestCoreService
+							.getInventoryStoreByUuid(inventoryStorePayload.getParentUuid());
+					if (parentStore == null) {
+						throw new ResourceNotFoundException(
+								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_PARENT_UUID,
+										inventoryStorePayload.getParentUuid()));
+					}
+					inventoryStore.setParent(parentStore);
+				} else {
+					inventoryStore.setParent(null);
+				}
+				inventoryStore.setLastModifiedDate(new Date());
+				inventoryStore.setLastModifiedBy(Context.getAuthenticatedUser());
+			}
+
+			inventoryStore = hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
+
+		}
+
+		return new ResponseEntity<InventoryStoreDetails>(getInventoryStoreDetails(inventoryStore), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/delete-stores", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteStore(@RequestBody List<String> storeUuids, HttpServletRequest request,
+			HttpServletResponse response)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+
+		for (String storeUuid : storeUuids) {
+			InventoryStore inventoryStore = hospitalRestCoreService.getInventoryStoreByUuid(storeUuid);
+			if (inventoryStore == null) {
+				throw new ResourceNotFoundException(String.format(
+						OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_INVENTORY_STORE_UUID, inventoryStore));
+			}
+
+			inventoryStore.setDeleted(true);
+			inventoryStore.setDeletedDate(new Date());
+			inventoryStore.setDeletedBy(Context.getAuthenticatedUser());
+
+			hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
+		}
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	public InventoryStoreDetails getInventoryStoreDetails(InventoryStore inventoryStore) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		InventoryStoreDetails isd = new InventoryStoreDetails();
+		isd.setId(inventoryStore.getId());
+		isd.setName(inventoryStore.getName());
+		isd.setRoleName(inventoryStore.getRole().getName());
+		isd.setRoleUuid(inventoryStore.getRole().getUuid());
+		isd.setCode(inventoryStore.getCode());
+		isd.setStoreUuid(inventoryStore.getUuid());
+		isd.setDeleted(inventoryStore.getDeleted());
+		//isd.setRetired(inventoryStore.getRetired());
+		isd.setCreatedBy(PulseUtil.getName(inventoryStore.getCreatedBy().getPerson()));
+		isd.setCreatedDate(formatter.format(inventoryStore.getCreatedDate()));
+		return isd;
+	}
+}

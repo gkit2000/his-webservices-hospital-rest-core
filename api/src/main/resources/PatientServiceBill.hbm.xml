@@ -12,7 +12,7 @@
 				<generator class="native" />
 		</id>
 		<property name="description" column="description" />
-		<many-to-one name="creator" column="creator"  class="org.openmrs.User" foreign-key="fk_patientservicebill_user"/>
+		<many-to-one name="creator" column="creator"  class="org.openmrs.User" foreign-key="billing_patient_service_bill_creator"/>
 		<property name="amount" column="amount" />
 		<property name="printed" column="printed"  />
 		<property name="createdDate" column="created_date"  />
@@ -20,20 +20,23 @@
 		<property name="voidedDate" column="voided_date"  />
 		<property name="billType" column="bill_type"  />
 		<property name="actualAmount" column="actual_amount"  />
-		<many-to-one name="voidedby" column="voided_by"  class="org.openmrs.User" foreign-key="fk_patientservicebill_voidedby"/>
+		<many-to-one name="voidedBy" column="voided_by"  class="org.openmrs.User" foreign-key="billing_patient_service_bill_voided_by"/>
 		<property name="patientCategory" column="patient_category" />
 		<property name="patientSubcategory" column="patient_subcategory" />
 		<property name="comment" column="comment" />
-		<many-to-one name="patient" column="patient_id" class="org.openmrs.Patient" lazy="false" foreign-key="fk_patientservicebill_patient"/>
+		<many-to-one name="patient" column="patient_id" class="org.openmrs.Patient" lazy="false" foreign-key="billing_patient_service_bill_patient_id"/>
 		<set name="billItems" table="billing_patient_serivce_bill_item" cascade="save-update,merge,evict" lazy="false">
 			<key column="patient_service_bill_id" />
 			<one-to-many class="org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem"  />
 		</set>
-		<many-to-one name="receipt" column="receipt_id" class="org.openmrs.module.hospitalrestcore.billing.BillingReceipt" lazy="false" foreign-key="fk_patientservicebill_receipt"/>
+		<many-to-one name="receipt" column="receipt_id" class="org.openmrs.module.hospitalrestcore.billing.BillingReceipt" lazy="false" foreign-key="billing_patient_service_bill_receipt_id"/>
 		<property name="waiverPercentage" column="waiver_percetage" />
 		<property name="waiverAmount" column="waiver_amount" />
 		<property name="amountPayable" column="amount_payable" />
 		<property name="amountGiven" column="amount_given" />
 		<property name="amountReturned" column="amount_returned" />
+		<property name="edited" column="edited"  />
+		<property name="editedDate" column="edited_date"  />
+		<many-to-one name="editedBy" column="edited_by"  class="org.openmrs.User" foreign-key="billing_patient_service_bill_edited_by"/>
 	</class>
 </hibernate-mapping>

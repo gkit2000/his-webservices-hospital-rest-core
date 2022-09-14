@@ -73,6 +73,14 @@
 						</property>
 					</bean>
 				</property>
+				<property name="patientServiceBillItemDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernatePatientServiceBillItemDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 				<property name="categoryLocationDAO">
 					<bean
 						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateCategoryLocationDAO">
@@ -84,6 +92,102 @@
 				<property name="consentTemplateDAO">
 					<bean
 						class="${project.parent.groupId}.${project.parent.artifactId}.consent.api.db.hibernate.HibernateConsentTemplateDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="conceptAnswerDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateConceptAnswerDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="driverDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateDriverDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="ambulanceDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateAmbulanceDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryStoreDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryDrugCategoryDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryDrugCategoryDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryDrugUnitDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryDrugUnitDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryDrugFormulationDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryDrugFormulationDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryDrugDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryDrugDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryReceiptFormDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryReceiptFormDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryStoreDrugDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryStoreDrugTransactionDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugTransactionDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryStoreDrugTransactionDetailDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugTransactionDetailDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>

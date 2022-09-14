@@ -43,6 +43,7 @@ import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillableServiceDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingOrderDetails;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
+import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.OrderDTO;
 import org.openmrs.module.hospitalrestcore.billing.OrderServiceDetails;
@@ -51,6 +52,7 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.billing.ProcessOrdersResponseDTO;
 import org.openmrs.module.hospitalrestcore.billing.ServiceDetailsForTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.TestOrderDetails;
+import org.openmrs.module.hospitalrestcore.controller.PulseUtil;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController;
@@ -72,8 +74,10 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 	@RequestMapping(value = "/patient", method = RequestMethod.GET)
 	public void getProcedureInvestigationOrders(HttpServletResponse response, HttpServletRequest request,
-			@RequestParam(value = "patient", required = false) String patientUuid,
-			@RequestParam(value = "date", required = false) String date)
+			@RequestParam(value = "patientUuid", required = false) String patientUuid,
+			@RequestParam(value = "date", required = false) String date,
+			@RequestParam(value = "priceCategoryConceptUuid", required = false) String priceCategoryConceptUuid,
+			@RequestParam(value = "serviceConceptUuids", required = false) List<String> serviceConceptUuids)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		response.setContentType("application/json");
@@ -91,7 +95,9 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			}
 		}
 		EncounterService es = Context.getEncounterService();
+		ConceptService conceptService = Context.getConceptService();
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		Location location = null;
 		Date creationDate = null;
 		if (date != null && !date.isEmpty()) {
 			creationDate = formatter.parse(date);
@@ -108,7 +114,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 		for (Map.Entry<Integer, Location> entry : encounterAndLocationMap.entrySet()) {
 			Integer encounterId = entry.getKey();
-			Location location = entry.getValue();
+			location = entry.getValue();
 			Encounter encounter = es.getEncounter(entry.getKey());
 			List<OpdTestOrder> opdTestOrdersByEncounter = hospitalRestCoreService.getOpdTestOrderByEncounter(encounter);
 			List<BillableServiceDetails> billableServiceDetails = new LinkedList<BillableServiceDetails>();
@@ -121,6 +127,36 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 				bsd.setPrice(opdTestOrderByEncounter.getBillableService().getPrice());
 				bsd.setOpdOrderId(opdTestOrderByEncounter.getOpdOrderId());
 				billableServiceDetails.add(bsd);
+			}
+
+			if (patientUuid != null && date != null && priceCategoryConceptUuid != null
+					&& serviceConceptUuids != null) {
+				Concept priceCategoryConcept = conceptService.getConceptByUuid(priceCategoryConceptUuid);
+				if (priceCategoryConcept == null) {
+					throw new ResourceNotFoundException(String
+							.format(OpenmrsCustomConstants.VALIDATION_ERROR_PRICE_CATEGORY, priceCategoryConceptUuid));
+				}
+				for (String serviceConceptUuid : serviceConceptUuids) {
+					Concept serviceConcept = conceptService.getConceptByUuid(serviceConceptUuid);
+					if (serviceConcept == null) {
+						throw new ResourceNotFoundException(
+								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_SERVICE_CONCEPT_UUID,
+										serviceConceptUuid));
+					}
+					BillableService billableService = hospitalRestCoreService
+							.getServicesByServiceConceptAndPriceCategory(serviceConcept, priceCategoryConcept);
+					if (billableService == null) {
+						throw new ResourceNotFoundException(
+								String.format(OpenmrsCustomConstants.VALIDATION_ERROR_BILLABLE_SERVICE,
+										serviceConcept.getName().getName(), priceCategoryConcept.getName().getName()));
+					}
+					BillableServiceDetails bsd = new BillableServiceDetails();
+					bsd.setServiceConUuid(serviceConcept.getUuid());
+					bsd.setServiceConName(serviceConcept.getName().getName());
+					bsd.setPrice(billableService.getPrice());
+					bsd.setOpdOrderId(null);
+					billableServiceDetails.add(bsd);
+				}
 			}
 
 			List<ServiceDetailsForTestOrder> serviceDetailsForTestOrders = new ArrayList<ServiceDetailsForTestOrder>();
@@ -138,6 +174,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 
 		Map<Integer, Encounter> patientEncounterMap = new LinkedHashMap<Integer, Encounter>();
 		PatientIdentifierType pit = ps.getPatientIdentifierTypeByUuid("05a29f94-c0ed-11e2-94be-8c13b969e334");
+		CategoryLocation categoryLocation = hospitalRestCoreService.getCategoryLocationByLocation(location);
 
 		for (Map.Entry<Integer, List<ServiceDetailsForTestOrder>> entry : opdTestOrderMap.entrySet()) {
 			Encounter encounter = es.getEncounter(entry.getKey());
@@ -150,7 +187,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 			Encounter enc = entry.getValue();
 			orders.setPatientId(pat.getPatientIdentifier(pit).getIdentifier());
 			orders.setPatientUuid(pat.getUuid());
-			orders.setPatientName(getName(pat));
+			orders.setPatientName(PulseUtil.getName(pat));
 			orders.setGender(pat.getGender());
 			orders.setAge(pat.getAge());
 			if (pat.getBirthdate() != null) {
@@ -162,6 +199,7 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 					orders.setPatientCategory(va.getValueReference());
 				}
 			}
+			orders.setPriceCategoryConceptUuid(categoryLocation.getPriceCategoryConcept().getUuid());
 			orders.setServiceDetailsForTestOrder(opdTestOrderMap.get(enc.getId()));
 			listOforders.add(orders);
 		}
@@ -336,20 +374,6 @@ public class ProcedureInvestigationOrderController extends BaseRestController {
 		processOrdersResponseDTO.setBillId(bill.getPatientServiceBillId());
 
 		return new ResponseEntity<ProcessOrdersResponseDTO>(processOrdersResponseDTO, HttpStatus.CREATED);
-	}
-
-	public String getName(Patient patient) {
-		String name = "";
-		if (patient.getGivenName() != null) {
-			name = patient.getGivenName();
-		}
-		if (patient.getMiddleName() != null) {
-			name = name + " " + patient.getMiddleName();
-		}
-		if (patient.getFamilyName() != null) {
-			name = name + " " + patient.getFamilyName();
-		}
-		return name;
 	}
 
 }

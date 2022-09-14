@@ -11,9 +11,9 @@
 			unsaved-value="0">
 				<generator class="native" />
 		</id>
-		<many-to-one name="billableService" column="service_id" class="org.openmrs.module.hospitalrestcore.billing.BillableService" lazy="false" foreign-key="fk_patientservicebillitem_billableservice"/>
-		<many-to-one name="patientServiceBill" column="patient_service_bill_id" class="org.openmrs.module.hospitalrestcore.billing.PatientServiceBill" foreign-key="fk_patientservicebillitem_patientservicebill"/>
-		<many-to-one name="order" column="order_id"  class="org.openmrs.Order" foreign-key="fk_patientservicebillitem_order"/>
+		<many-to-one name="billableService" column="service_id" class="org.openmrs.module.hospitalrestcore.billing.BillableService" lazy="false" foreign-key="billing_patient_service_bill_item_service_id"/>
+		<many-to-one name="patientServiceBill" column="patient_service_bill_id" class="org.openmrs.module.hospitalrestcore.billing.PatientServiceBill" foreign-key="billing_patient_service_bill_item_patient_service_bill_id"/>
+		<many-to-one name="order" column="order_id"  class="org.openmrs.Order" foreign-key="billing_patient_service_bill_item_order_id"/>
 		<property name="unitPrice" column="unitPrice"/>
 		<property name="amount" column="amount"/>
 		<property name="quantity" column="quantity"/>
@@ -22,6 +22,9 @@
 		<property name="voided" column="voided"  />
 		<property name="voidedDate" column="voided_date"  />
 		<property name="actualAmount" column="actual_amount"  />
-		<many-to-one name="voidedby" column="voided_by"  class="org.openmrs.User" foreign-key="fk_patientservicebillitem_voidedby"/>			
+		<many-to-one name="voidedBy" column="voided_by"  class="org.openmrs.User" foreign-key="billing_patient_service_bill_item_voided_by"/>
+		<property name="edited" column="edited"  />
+		<property name="editedDate" column="edited_date"  />
+		<many-to-one name="editedBy" column="edited_by"  class="org.openmrs.User" foreign-key="billing_patient_service_bill_item_edited_by"/>			
 	</class>
 </hibernate-mapping>

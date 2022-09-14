@@ -18,6 +18,7 @@ public class TestOrderDetails {
 	private Integer age;
 	private String birthDate;
 	private String patientCategory;
+	private String priceCategoryConceptUuid;
 	private List<ServiceDetailsForTestOrder> serviceDetailsForTestOrder;
 
 	/**
@@ -116,6 +117,20 @@ public class TestOrderDetails {
 	 */
 	public void setPatientCategory(String patientCategory) {
 		this.patientCategory = patientCategory;
+	}
+
+	/**
+	 * @return the priceCategoryConceptUuid
+	 */
+	public String getPriceCategoryConceptUuid() {
+		return priceCategoryConceptUuid;
+	}
+
+	/**
+	 * @param priceCategoryConceptUuid the priceCategoryConceptUuid to set
+	 */
+	public void setPriceCategoryConceptUuid(String priceCategoryConceptUuid) {
+		this.priceCategoryConceptUuid = priceCategoryConceptUuid;
 	}
 
 	/**

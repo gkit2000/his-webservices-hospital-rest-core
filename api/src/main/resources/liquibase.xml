@@ -300,7 +300,7 @@
 			baseColumnNames="changed_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="consent_template-table-create"
 		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
@@ -320,9 +320,9 @@
 			<column name="mail_subject" type="varchar(255)" />
 			<column name="description" type="varchar(255)" />
 			<column name="type" type="int" />
-			<column name="template_content" type="CLOB">
-            <constraints nullable="false"/>
-        </column>
+			<column name="template_content" type="text">
+				<constraints nullable="false" />
+			</column>
 			<column name="deleted" type="boolean" />
 			<column defaultValueNumeric="0" name="creator" type="int">
 				<constraints nullable="false" />
@@ -336,8 +336,7 @@
 		</createTable>
 		<addForeignKeyConstraint
 			constraintName="consent_template_type"
-			baseTableName="consent_template"
-			baseColumnNames="type"
+			baseTableName="consent_template" baseColumnNames="type"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 		<addForeignKeyConstraint
 			constraintName="consent_template_creator_fk"
@@ -345,9 +344,1063 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 		<addForeignKeyConstraint
 			constraintName="consent_template_changed_by_fk"
-			baseTableName="consent_template"
-			baseColumnNames="changed_by" referencedTableName="users"
+			baseTableName="consent_template" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="billing_patient_service_bill-table-edit1"
+		author="ghanshyam">
+		<comment>
+			update billing_patient_service_bill table
+		</comment>
+		<addColumn tableName="billing_patient_service_bill">
+			<column name="edited" type="boolean" defaultValue="0" />
+			<column name="edited_by" type="int" />
+			<column name="edited_date" type="datetime" />
+		</addColumn>
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_edited_by"
+			baseTableName="billing_patient_service_bill"
+			baseColumnNames="edited_by" referencedTableName="users"
 			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="billing_patient_service_bill_item-table-edit1"
+		author="ghanshyam">
+		<comment>
+			update billing_patient_service_bill_item table
+		</comment>
+		<addColumn tableName="billing_patient_service_bill_item">
+			<column name="edited" type="boolean" defaultValue="0" />
+			<column name="edited_by" type="int" />
+			<column name="edited_date" type="datetime" />
+		</addColumn>
+		<addForeignKeyConstraint
+			constraintName="billing_patient_service_bill_item_edited_by"
+			baseTableName="billing_patient_service_bill_item"
+			baseColumnNames="edited_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="driver-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_driver" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_driver table
+		</comment>
+		<createTable tableName="billing_driver">
+			<column name="driver_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="address" type="varchar(255)" />
+			<column name="description" type="varchar(255)" />
+			<column name="phone" type="varchar(20)" />
+			<column name="id_card_type" type="int" />
+			<column name="id_card_value" type="varchar(51)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="driver_id_card_type_fk"
+			baseTableName="billing_driver" baseColumnNames="id_card_type"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint
+			constraintName="driver_created_by_fk" baseTableName="billing_driver"
+			baseColumnNames="created_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="driver_deleted_by_fk" baseTableName="billing_driver"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="driver_lastmodified_by_fk"
+			baseTableName="billing_driver" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="driver_retired_by_fk" baseTableName="billing_driver"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="ambulance-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_ambulance" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_ambulance table
+		</comment>
+		<createTable tableName="billing_ambulance">
+			<column name="ambulance_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(255)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="ambulance_created_by_fk"
+			baseTableName="billing_ambulance" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="ambulance_deleted_by_fk"
+			baseTableName="billing_ambulance" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="ambulance_last_modified_by_fk"
+			baseTableName="billing_ambulance" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="ambulance_retired_by_fk"
+			baseTableName="billing_ambulance" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_drug_category-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_drug_category" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_drug_category table
+		</comment>
+		<createTable tableName="inventory_drug_category">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_category_created_by_fk"
+			baseTableName="inventory_drug_category" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_category_deleted_by_fk"
+			baseTableName="inventory_drug_category" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_category_last_modified_by_fk"
+			baseTableName="inventory_drug_category" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_category_retired_by_fk"
+			baseTableName="inventory_drug_category" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_drug_formulation-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_drug_formulation" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_drug_formulation table
+		</comment>
+		<createTable tableName="inventory_drug_formulation">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="dozage" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_formulation_created_by_fk"
+			baseTableName="inventory_drug_formulation" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_formulation_deleted_by_fk"
+			baseTableName="inventory_drug_formulation" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_formulation_last_modified_by_fk"
+			baseTableName="inventory_drug_formulation" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_formulation_retired_by_fk"
+			baseTableName="inventory_drug_formulation" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="inventory_drug_formulations-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_drug_formulations" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_drug_formulations table
+		</comment>
+		<createTable tableName="inventory_drug_formulations">
+			<column name="drug_id" type="int" />
+			<column name="formulation_id" type="int" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="inventory_drug_unit-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_drug_unit" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_drug_unit table
+		</comment>
+		<createTable tableName="inventory_drug_unit">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_unit_created_by_fk"
+			baseTableName="inventory_drug_unit" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_unit_deleted_by_fk"
+			baseTableName="inventory_drug_unit" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_unit_last_modified_by_fk"
+			baseTableName="inventory_drug_unit" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_unit_retired_by_fk"
+			baseTableName="inventory_drug_unit" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_drug-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_drug" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_drug table
+		</comment>
+		<createTable tableName="inventory_drug">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="unit_id" type="int" />
+			<column name="category_id" type="int" />
+			<column name="drug_id" type="int" />
+			<column name="attribute" type="int" />
+			<column name="consumption" type="int" />
+			<column name="reorder_qty" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_created_by_fk"
+			baseTableName="inventory_drug" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_deleted_by_fk"
+			baseTableName="inventory_drug" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_last_modified_by_fk"
+			baseTableName="inventory_drug" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_drug_retired_by_fk"
+			baseTableName="inventory_drug" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store table
+		</comment>
+		<createTable tableName="inventory_store">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="role" type="varchar(255)" />
+			<column name="code" type="varchar(255)" />
+			<column name="is_pharmacy" type="boolean" />
+			<column name="parent_id" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_created_by_fk"
+			baseTableName="inventory_store" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_deleted_by_fk"
+			baseTableName="inventory_store" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_last_modified_by_fk"
+			baseTableName="inventory_store" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_retired_by_fk"
+			baseTableName="inventory_store" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_transaction-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="inventory_store_drug_transaction" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_transaction table
+		</comment>
+		<createTable tableName="inventory_store_drug_transaction">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_id" type="int" />
+			<column name="type_transaction" type="int" />
+			<column name="status" type="int" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_created_by_fk"
+			baseTableName="inventory_store_drug_transaction" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_deleted_by_fk"
+			baseTableName="inventory_store_drug_transaction" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_last_modified_by_fk"
+			baseTableName="inventory_store_drug_transaction" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_retired_by_fk"
+			baseTableName="inventory_store_drug_transaction" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_indent-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_indent" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_indent table
+		</comment>
+		<createTable tableName="inventory_store_drug_indent">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_id" type="int" />
+			<column name="transaction_id" type="int" />
+			<column name="name" type="varchar(255)" />
+			<column name="sub_store_status" type="int" />
+			<column name="main_store_status" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_indent_created_by_fk"
+			baseTableName="inventory_store_drug_indent" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_indent_deleted_by_fk"
+			baseTableName="inventory_store_drug_indent" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_indent_last_modified_by_fk"
+			baseTableName="inventory_store_drug_indent" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_indent_retired_by_fk"
+			baseTableName="inventory_store_drug_indent" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet
+		id="inventory_store_drug_transaction_detail-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="inventory_store_drug_transaction_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_transaction_detail table
+		</comment>
+		<createTable
+			tableName="inventory_store_drug_transaction_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="transaction_id" type="int" />
+			<column name="drug_id" type="int" />
+			<column name="formulation_id" type="int" />
+			<column name="quantity" type="int" />
+			<column name="current_quantity" type="int" />
+			<column name="issue_quantity" type="int" />
+			<column name="unit_price" type="decimal" />
+			<column name="VAT" type="decimal" />
+			<column name="total_price" type="decimal" />
+			<column name="batch_no" type="varchar(255)" />
+			<column name="company_name" type="varchar(255)" />
+			<column name="date_manufacture" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_expiry" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="receipt_date" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="opening_balance" type="int" />
+			<column name="closing_balance" type="int" />
+			<column name="parent_id" type="int" />
+			<column name="expire_status" type="boolean" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_detail_created_by_fk"
+			baseTableName="inventory_store_drug_transaction_detail" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_detail_deleted_by_fk"
+			baseTableName="inventory_store_drug_transaction_detail" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_detail_last_modified_by_fk"
+			baseTableName="inventory_store_drug_transaction_detail" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_drug_transaction_detail_retired_by_fk"
+			baseTableName="inventory_store_drug_transaction_detail" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="inventory_item-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_item" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_item table
+		</comment>
+		<createTable tableName="inventory_item">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="unit_id" type="int" />
+			<column name="category_id" type="int" />
+			<column name="sub_category_id" type="int" />
+			<column name="attribute" type="int" />
+			<column name="consumption" type="int" />
+			<column name="reorder_qty" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_item_created_by_fk"
+			baseTableName="inventory_item" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_deleted_by_fk"
+			baseTableName="inventory_item" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_last_modified_by_fk"
+			baseTableName="inventory_item" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_retired_by_fk"
+			baseTableName="inventory_item" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_item_category-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_item_category" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_item_category table
+		</comment>
+		<createTable tableName="inventory_item_category">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_item_category_created_by_fk"
+			baseTableName="inventory_item_category" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_category_deleted_by_fk"
+			baseTableName="inventory_item_category" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_category_last_modified_by_fk"
+			baseTableName="inventory_item_category"
+			baseColumnNames="last_modified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_category_retired_by_fk"
+			baseTableName="inventory_item_category" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_item_specification-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_item_specification" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_item_specification table
+		</comment>
+		<createTable tableName="inventory_item_specification">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_item_specification_created_by_fk"
+			baseTableName="inventory_item_specification"
+			baseColumnNames="created_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_specification_deleted_by_fk"
+			baseTableName="inventory_item_specification"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_specification_last_modified_by_fk"
+			baseTableName="inventory_item_specification"
+			baseColumnNames="last_modified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_specification_retired_by_fk"
+			baseTableName="inventory_item_specification"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="inventory_item_specifications-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_item_specifications" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_item_specifications table
+		</comment>
+		<createTable tableName="inventory_item_specifications">
+			<column name="item_id" type="int" />
+			<column name="specification_id" type="int" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="inventory_item_sub_category-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_item_sub_category" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_item_sub_category table
+		</comment>
+		<createTable tableName="inventory_item_sub_category">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="code" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="category_id" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_item_sub_category_created_by_fk"
+			baseTableName="inventory_item_sub_category"
+			baseColumnNames="created_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_sub_category_deleted_by_fk"
+			baseTableName="inventory_item_sub_category"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_sub_category_last_modified_by_fk"
+			baseTableName="inventory_item_sub_category"
+			baseColumnNames="last_modified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_sub_category_retired_by_fk"
+			baseTableName="inventory_item_sub_category"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_item_unit-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_item_unit" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_item_unit table
+		</comment>
+		<createTable tableName="inventory_item_unit">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_item_unit_created_by_fk"
+			baseTableName="inventory_item_unit" baseColumnNames="created_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_unit_deleted_by_fk"
+			baseTableName="inventory_item_unit" baseColumnNames="deleted_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_unit_last_modified_by_fk"
+			baseTableName="inventory_item_unit"
+			baseColumnNames="last_modified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_item_unit_retired_by_fk"
+			baseTableName="inventory_item_unit" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_item_transaction-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="inventory_store_item_transaction" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_item_transaction table
+		</comment>
+		<createTable tableName="inventory_store_item_transaction">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_id" type="int" />
+			<column name="type_transaction" type="int" />
+			<column name="status" type="int" />
+			<column name="description" type="varchar(500)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_created_by_fk"
+			baseTableName="inventory_store_item_transaction"
+			baseColumnNames="created_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_deleted_by_fk"
+			baseTableName="inventory_store_item_transaction"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_last_modified_by_fk"
+			baseTableName="inventory_store_item_transaction" baseColumnNames="last_modified_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_retired_by_fk"
+			baseTableName="inventory_store_item_transaction"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_item_indent-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_item_indent" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_item_indent table
+		</comment>
+		<createTable tableName="inventory_store_item_indent">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_id" type="int" />
+			<column name="transaction_id" type="int" />
+			<column name="name" type="varchar(255)" />
+			<column name="sub_store_status" type="int" />
+			<column name="main_store_status" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_indent_created_by_fk"
+			baseTableName="inventory_store_item_indent"
+			baseColumnNames="created_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_indent_deleted_by_fk"
+			baseTableName="inventory_store_item_indent"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_indent_last_modified_by_fk"
+			baseTableName="inventory_store_item_indent"
+			baseColumnNames="last_modified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_indent_retired_by_fk"
+			baseTableName="inventory_store_item_indent"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet
+		id="inventory_store_item_transaction_detail-table-create"
+		author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists
+					tableName="inventory_store_item_transaction_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_item_transaction_detail table
+		</comment>
+		<createTable
+			tableName="inventory_store_item_transaction_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="transaction_id" type="int" />
+			<column name="item_id" type="int" />
+			<column name="specification_id" type="int" />
+			<column name="quantity" type="int" />
+			<column name="current_quantity" type="int" />
+			<column name="issue_quantity" type="int" />
+			<column name="unit_price" type="decimal" />
+			<column name="VAT" type="decimal" />
+			<column name="total_price" type="decimal" />
+			<column name="company_name" type="varchar(255)" />
+			<column name="date_manufacture" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="receipt_date" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="opening_balance" type="int" />
+			<column name="closing_balance" type="int" />
+			<column name="parent_id" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_detail_created_by_fk"
+			baseTableName="inventory_store_item_transaction_detail"
+			baseColumnNames="created_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_detail_deleted_by_fk"
+			baseTableName="inventory_store_item_transaction_detail"
+			baseColumnNames="deleted_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_detail_last_modified_by_fk"
+			baseTableName="inventory_store_item_transaction_detail"
+			baseColumnNames="last_modified_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+			constraintName="inventory_store_item_transaction_detail_retired_by_fk"
+			baseTableName="inventory_store_item_transaction_detail"
+			baseColumnNames="retired_by" referencedTableName="users"
+			referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_receipt_form-table-create"
+			   author="ghanshyam6">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_receipt_form" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_receipt_form table
+		</comment>
+		<createTable tableName="inventory_receipt_form">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="drug_id" type="int"/>
+			<column name="formulation_id" type="int" />
+			<column name="sgst" type="decimal"/>
+			<column name="cgst" type="decimal"/>
+			<column name="mr_price" type="decimal"/>
+			<column name="total_amount" type="decimal"/>
+			<column name="bill_amount" type="decimal"/>
+			<column name="batch_no" type="varchar(255)"/>
+			<column name="rate" type="int"/>
+			<column name="quantity" type="int"/>
+			<column name="vat" type="decimal"/>
+			<column name="company_name" type="varchar(255)"/>
+			<column name="date_manufacture" type="DATETIME"/>
+			<column name="date_expiry" type="DATETIME"/>
+			<column name="receipt_date" type="DATETIME"/>
+			<column name="receipt_number" type="varchar(255)"/>
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="discount" type="float" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+				baseTableName="inventory_receipt_form" baseColumnNames="created_by"
+				constraintName="inventory_receipt_form_created_by_fk"
+				referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+				baseTableName="inventory_receipt_form" baseColumnNames="deleted_by"
+				constraintName="inventory_receipt_form_deleted_by_fk"
+				referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+				baseTableName="inventory_receipt_form" baseColumnNames="last_modified_by"
+				constraintName="inventory_receipt_form_lastmodified_by_fk"
+				referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint
+				baseTableName="inventory_receipt_form" baseColumnNames="retired_by"
+				constraintName="inventory_receipt_form_retired_by_fk"
+				referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
 </databaseChangeLog>
