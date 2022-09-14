@@ -33,13 +33,14 @@ public class HibernateInventoryDrugUnitDAO extends HibernateSingleClassDAO imple
 	public InventoryDrugUnit getInventoryDrugUnitByUuidString(String uuid) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryDrugUnit.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("deleted", false));
 		return (InventoryDrugUnit) criteria.uniqueResult();
 	}
 
 	@Override
 	public List<InventoryDrugUnit> listAllInventoryDrugUnit() throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryDrugUnit.class);
-		criteria.add(Restrictions.eq("retired", false));
+		criteria.add(Restrictions.eq("deleted", false));
 		return criteria.list();
 	}
 

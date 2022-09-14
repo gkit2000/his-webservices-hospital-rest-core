@@ -54,6 +54,7 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 	public InventoryStore getStoreByCollectionRole(List<Role> roles) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.in("role", roles));
+		criteria.add(Restrictions.eq("deleted", false));
 		criteria.setMaxResults(1);
 		List<InventoryStore> list = criteria.list();
 		return CollectionUtils.isEmpty(list) ? null : list.get(0);
@@ -63,14 +64,14 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 	public InventoryStore getInventoryStoreByUuid(String uuid) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.eq("uuid", uuid));
-		criteria.add(Restrictions.eq("retired", false));
+		criteria.add(Restrictions.eq("deleted", false));
 		return (InventoryStore) criteria.uniqueResult();
 	}
 
 	@Override
 	public List<InventoryStore> listAllInventoryStore() throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-		criteria.add(Restrictions.eq("retired", false));
+		criteria.add(Restrictions.eq("deleted", false));
 		return criteria.list();
 	}
 

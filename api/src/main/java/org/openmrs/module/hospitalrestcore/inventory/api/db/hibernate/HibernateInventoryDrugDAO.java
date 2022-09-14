@@ -34,7 +34,7 @@ public class HibernateInventoryDrugDAO extends HibernateSingleClassDAO implement
 	@Override
 	public List<InventoryDrug> listAllInventoryDrug() throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-		criteria.add(Restrictions.eq("retired", false));
+		criteria.add(Restrictions.eq("deleted", false));
 		return criteria.list();
 	}
 
@@ -43,6 +43,7 @@ public class HibernateInventoryDrugDAO extends HibernateSingleClassDAO implement
 	public InventoryDrug getInventoryDrugByUuidString(String uuid) throws DAOException {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("deleted", false));
 		return (InventoryDrug) criteria.uniqueResult();
 	}
 

@@ -35,6 +35,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Ghanshyam
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class DrugCategoryController extends BaseRestController {
 
 	@RequestMapping(value = "/all-category-details", method = RequestMethod.GET)
-	public void getAllStores(HttpServletRequest request, HttpServletResponse response)
+	public void getAllCategories(HttpServletRequest request, HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		response.setContentType("application/json");
@@ -60,9 +61,24 @@ public class DrugCategoryController extends BaseRestController {
 		new ObjectMapper().writeValue(out, isds);
 	}
 
+	@RequestMapping(value = "/category-details", method = RequestMethod.GET)
+	public void getCategory(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "categoryUuid") String categoryUuid)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryDrugCategory inventoryDrugCategory = hospitalRestCoreService
+				.getInventoryDrugCategoryByUuidString(categoryUuid);
+
+		new ObjectMapper().writeValue(out, getInventoryDrugCategoryDetails(inventoryDrugCategory));
+	}
+
 	@RequestMapping(value = "/add-drug-category", method = RequestMethod.POST)
-	public ResponseEntity<Void> addStore(HttpServletRequest request, HttpServletResponse response,
-			@Valid @RequestBody InventoryDrugCategoryPayload inventoryDrugCategoryPayload)
+	public ResponseEntity<InventoryDrugCategoryDetails> addStore(HttpServletRequest request,
+			HttpServletResponse response, @Valid @RequestBody InventoryDrugCategoryPayload inventoryDrugCategoryPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
@@ -72,14 +88,15 @@ public class DrugCategoryController extends BaseRestController {
 		inventoryDrugCategory.setRetired(inventoryDrugCategoryPayload.getRetired());
 		inventoryDrugCategory.setCreatedDate(new Date());
 		inventoryDrugCategory.setCreatedBy(Context.getAuthenticatedUser());
-		hospitalRestCoreService.saveOrUpdateInventoryDrugCategory(inventoryDrugCategory);
+		inventoryDrugCategory = hospitalRestCoreService.saveOrUpdateInventoryDrugCategory(inventoryDrugCategory);
 
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		return new ResponseEntity<InventoryDrugCategoryDetails>(getInventoryDrugCategoryDetails(inventoryDrugCategory),
+				HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/edit-drug-category", method = RequestMethod.PUT)
-	public ResponseEntity<Void> editStore(HttpServletRequest request, HttpServletResponse response,
-			@Valid @RequestBody InventoryDrugCategoryPayload inventoryDrugCategoryPayload)
+	public ResponseEntity<InventoryDrugCategoryDetails> editStore(HttpServletRequest request,
+			HttpServletResponse response, @Valid @RequestBody InventoryDrugCategoryPayload inventoryDrugCategoryPayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
@@ -104,9 +121,10 @@ public class DrugCategoryController extends BaseRestController {
 			inventoryDrugCategory.setLastModifiedBy(Context.getAuthenticatedUser());
 		}
 
-		hospitalRestCoreService.saveOrUpdateInventoryDrugCategory(inventoryDrugCategory);
+		inventoryDrugCategory = hospitalRestCoreService.saveOrUpdateInventoryDrugCategory(inventoryDrugCategory);
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<InventoryDrugCategoryDetails>(getInventoryDrugCategoryDetails(inventoryDrugCategory),
+				HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/delete-drug-categories", method = RequestMethod.DELETE)
@@ -144,7 +162,7 @@ public class DrugCategoryController extends BaseRestController {
 		idcd.setDescription(inventoryDrugCategory.getDescription());
 		idcd.setUuid(inventoryDrugCategory.getUuid());
 		idcd.setDeleted(inventoryDrugCategory.getDeleted());
-		idcd.setRetired(inventoryDrugCategory.getRetired());
+		// idcd.setRetired(inventoryDrugCategory.getRetired());
 		idcd.setCreatedBy(PulseUtil.getName(inventoryDrugCategory.getCreatedBy().getPerson()));
 		idcd.setCreatedDate(formatter.format(inventoryDrugCategory.getCreatedDate()));
 		return idcd;

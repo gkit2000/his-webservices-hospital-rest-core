@@ -266,20 +266,6 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	}
 
 	/**
-	 * @return the inventoryDrugDAO
-	 */
-	public InventoryDrugDAO getInventoryDrugDAO() {
-		return inventoryDrugDAO;
-	}
-
-	/**
-	 * @param inventoryDrugDAO the inventoryDrugDAO to set
-	 */
-	public void setInventoryDrugDAO(InventoryDrugDAO inventoryDrugDAO) {
-		this.inventoryDrugDAO = inventoryDrugDAO;
-	}
-
-	/**
 	 * @return the inventoryDrugCategoryDAO
 	 */
 	public InventoryDrugCategoryDAO getInventoryDrugCategoryDAO() {

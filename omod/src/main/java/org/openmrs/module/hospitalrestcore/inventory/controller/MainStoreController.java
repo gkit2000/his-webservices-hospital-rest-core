@@ -37,6 +37,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Ghanshyam
@@ -47,7 +48,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class MainStoreController extends BaseRestController {
 
 	@RequestMapping(value = "/store-form-details", method = RequestMethod.GET)
-	public void getStore(HttpServletRequest request, HttpServletResponse response)
+	public void getStoreFormDetails(HttpServletRequest request, HttpServletResponse response)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
 		response.setContentType("application/json");
@@ -87,8 +88,22 @@ public class MainStoreController extends BaseRestController {
 		new ObjectMapper().writeValue(out, isds);
 	}
 
+	@RequestMapping(value = "/store-details", method = RequestMethod.GET)
+	public void getStore(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "storeUuid") String storeUuid)
+			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+		response.setContentType("application/json");
+		ServletOutputStream out = response.getOutputStream();
+
+		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryStore store = hospitalRestCoreService.getInventoryStoreByUuid(storeUuid);
+
+		new ObjectMapper().writeValue(out, getInventoryStoreDetails(store));
+	}
+
 	@RequestMapping(value = "/add-store", method = RequestMethod.POST)
-	public ResponseEntity<Void> addStore(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryStoreDetails> addStore(HttpServletRequest request, HttpServletResponse response,
 			@Valid @RequestBody InventoryStorePayload inventoryStorePayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
@@ -117,23 +132,23 @@ public class MainStoreController extends BaseRestController {
 		}
 		inventoryStore.setCreatedDate(new Date());
 		inventoryStore.setCreatedBy(Context.getAuthenticatedUser());
-		hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
+		inventoryStore = hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
 
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		return new ResponseEntity<InventoryStoreDetails>(getInventoryStoreDetails(inventoryStore), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/edit-store", method = RequestMethod.PUT)
-	public ResponseEntity<Void> editStore(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<InventoryStoreDetails> editStore(HttpServletRequest request, HttpServletResponse response,
 			@Valid @RequestBody InventoryStorePayload inventoryStorePayload)
 			throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 		response.setContentType("application/json");
 		ServletOutputStream out = response.getOutputStream();
 
 		HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+		InventoryStore inventoryStore = null;
 
 		if (inventoryStorePayload.getStoreUuid() != null) {
-			InventoryStore inventoryStore = hospitalRestCoreService
-					.getInventoryStoreByUuid(inventoryStorePayload.getStoreUuid());
+			inventoryStore = hospitalRestCoreService.getInventoryStoreByUuid(inventoryStorePayload.getStoreUuid());
 			if (inventoryStore == null) {
 				throw new ResourceNotFoundException(
 						String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_INVENTORY_STORE_UUID,
@@ -170,11 +185,11 @@ public class MainStoreController extends BaseRestController {
 				inventoryStore.setLastModifiedBy(Context.getAuthenticatedUser());
 			}
 
-			hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
+			inventoryStore = hospitalRestCoreService.saveOrUpdateInventoryStore(inventoryStore);
 
 		}
 
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<InventoryStoreDetails>(getInventoryStoreDetails(inventoryStore), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/delete-stores", method = RequestMethod.DELETE)
@@ -213,7 +228,7 @@ public class MainStoreController extends BaseRestController {
 		isd.setCode(inventoryStore.getCode());
 		isd.setStoreUuid(inventoryStore.getUuid());
 		isd.setDeleted(inventoryStore.getDeleted());
-		isd.setRetired(inventoryStore.getRetired());
+		//isd.setRetired(inventoryStore.getRetired());
 		isd.setCreatedBy(PulseUtil.getName(inventoryStore.getCreatedBy().getPerson()));
 		isd.setCreatedDate(formatter.format(inventoryStore.getCreatedDate()));
 		return isd;
