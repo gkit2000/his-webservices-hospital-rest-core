@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
+import org.openmrs.Drug;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -49,6 +50,19 @@ import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.openmrs.module.hospitalrestcore.inventory.*;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.*;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugCategoryDAO;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugDAO;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugFormulationDAO;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryDrugUnitDAO;
+import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -79,23 +93,23 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	private AmbulanceDAO ambulanceDAO;
 
-	private InventoryDrugDAO inventoryDrugDAO;
-
 	private InventoryStoreDAO inventoryStoreDAO;
 
 	private InventoryDrugCategoryDAO inventoryDrugCategoryDAO;
 
-	private InventoryReceiptFormDAO inventoryReceiptFormDAO;
-
-	private InventoryStoreDrugDAO inventoryStoreDrugDAO;
-
-	private InventoryStoreDrugTransactionDetailDAO inventoryStoreDrugTransactionDetailDAO;
-
-	private InventoryStoreDrugTransactionDAO inventoryStoreDrugTransactionDAO;
-
 	private InventoryDrugUnitDAO inventoryDrugUnitDAO;
 
 	private InventoryDrugFormulationDAO inventoryDrugFormulationDAO;
+
+	private InventoryDrugDAO inventoryDrugDAO;
+	
+	private InventoryReceiptFormDAO inventoryReceiptFormDAO;
+	
+	private InventoryStoreDrugDAO inventoryStoreDrugDAO;
+	
+	private InventoryStoreDrugTransactionDetailDAO inventoryStoreDrugTransactionDetailDAO;
+
+	private InventoryStoreDrugTransactionDAO inventoryStoreDrugTransactionDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -362,6 +376,20 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryDrugFormulationDAO(InventoryDrugFormulationDAO inventoryDrugFormulationDAO) {
 		this.inventoryDrugFormulationDAO = inventoryDrugFormulationDAO;
+	}
+
+	/**
+	 * @return the inventoryDrugDAO
+	 */
+	public InventoryDrugDAO getInventoryDrugDAO() {
+		return inventoryDrugDAO;
+	}
+
+	/**
+	 * @param inventoryDrugDAO the inventoryDrugDAO to set
+	 */
+	public void setInventoryDrugDAO(InventoryDrugDAO inventoryDrugDAO) {
+		this.inventoryDrugDAO = inventoryDrugDAO;
 	}
 
 	@Override
@@ -674,6 +702,17 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
+	public InventoryDrug saveOrUpdateInventoryDrug(InventoryDrug inventoryDrug) throws APIException {
+		return (InventoryDrug) getInventoryDrugDAO().saveOrUpdate(inventoryDrug);
+	}
+
+	@Override
+	public InventoryDrug getInventoryDrugByUuidString(String uuid) throws APIException {
+		return getInventoryDrugDAO().getInventoryDrugByUuidString(uuid);
+	}
+
+	@Override
+	@Transactional
 	public Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate,
 			String toDate, boolean isExpiry) throws APIException {
 		return getInventoryStoreDAO().countViewStockBalance(storeId, categoryId, drugName, fromDate, toDate, isExpiry);
@@ -712,6 +751,18 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	@Transactional
 	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws APIException {
 		return getInventoryStoreDAO().listItemSubCategory(name, min, max);
+	}
+	
+	public int countListDrug(Integer categoryId, String name) throws APIException {
+		return getInventoryDrugDAO().countListDrug(categoryId, name);
+	}
+	
+	public List<InventoryDrug> listDrug(Integer categoryId, String name, int min, int max) throws APIException {
+		return getInventoryDrugDAO().listDrug(categoryId, name, min, max);
+	}
+	
+	public Drug getDrugByUuid(String uuid) throws APIException {
+		return getInventoryDrugDAO().getDrugByUuid(uuid);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
+import org.openmrs.Drug;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -35,6 +36,14 @@ import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.inventory.*;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -157,6 +166,10 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryDrugFormulation> listAllInventoryDrugFormulation() throws APIException;
 
+	InventoryDrug saveOrUpdateInventoryDrug(InventoryDrug inventoryDrug) throws APIException;
+
+	InventoryDrug getInventoryDrugByUuidString(String uuid) throws APIException;
+
 	Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate, String toDate,
 			boolean isExpiry) throws APIException;
 
@@ -172,6 +185,12 @@ public interface HospitalRestCoreService extends OpenmrsService {
 			String itemName, String fromDate, String toDate, int min, int max) throws APIException;
 
 	List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws APIException;
+	
+	int countListDrug(Integer categoryId, String name) throws APIException;
+	
+	List<InventoryDrug> listDrug(Integer categoryId, String name, int min, int max) throws APIException;
+	
+	Drug getDrugByUuid(String uuid) throws APIException;
 
 	Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
 									  String toDate) throws APIException;
