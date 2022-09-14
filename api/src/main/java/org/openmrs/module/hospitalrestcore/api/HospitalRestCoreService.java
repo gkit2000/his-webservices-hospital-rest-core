@@ -35,6 +35,7 @@ import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
+import org.openmrs.module.hospitalrestcore.inventory.*;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
@@ -190,5 +191,53 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<InventoryDrug> listDrug(Integer categoryId, String name, int min, int max) throws APIException;
 	
 	Drug getDrugByUuid(String uuid) throws APIException;
+
+	Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
+									  String toDate) throws APIException;
+
+	InventoryStoreDrugTransaction saveOrUpdateStoreDrugTransaction(InventoryStoreDrugTransaction inventoryStoreDrugTransaction) throws APIException;
+
+	List<InventoryStoreDrugTransaction> listStoreDrugTransaction(Integer transactionType, Integer storeId,
+																 String description, String fromDate, String toDate, int min, int max) throws APIException;
+
+	InventoryStoreDrugTransaction getInventoryStoreDrugTransactionByUuidString(String uuid) throws APIException;
+
+	InventoryStoreDrugTransactionDetail saveOrUpdateDrugTransactionDetail(
+			InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail) throws APIException;
+
+	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
+
+	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
+			String fromDate, String toDate, int min, int max) throws APIException;
+
+	InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException;
+
+	InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException;
+
+	InventoryReceiptForm saveOrUpdateInventoryReceiptForm(InventoryReceiptForm inventoryReceiptForm)
+			throws APIException;
+
+	List<InventoryReceiptForm> listAllInventoryReceiptForm() throws APIException;
+
+	Integer countReceiptsToGeneralStore(String companyName, String fromDate, String toDate) throws APIException;
+
+	List<InventoryReceiptForm> listReceiptsToGeneralStore(String companyName,
+														  String fromDate, String toDate, int min, int max) throws APIException;
+
+	List<InventoryStoreDrugIndent> listAllInventoryStoreDrug() throws APIException;
+
+	InventoryStoreDrugIndent saveOrUpdateInventoryDrugIndent(InventoryStoreDrugIndent inventoryStoreDrugIndent) throws APIException;
+
+	InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws APIException;
+
+	Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
+										   String toDate) throws APIException;
+
+	List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName,
+																 String fromDate, String toDate, int min, int max) throws APIException;
+
+	Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws APIException;
+
+	List<InventoryDrug> listAllInventoryDrug() throws APIException;
 
 }

@@ -71,6 +71,8 @@ public final class OpenmrsCustomConstants {
 	public static final String MLC = "ecd9f478-40ac-4716-b63f-ff2dbb2bfa74";
 	
 	public static final String MLC_SUBCATEGORY = "70f8d129-3136-4d2e-bdee-05f88cd33f13";
+
+	public static final String DRUG_ERROR_NOT_ENOUGH_DRUG_QUANTITY = "Current quantity of drug %s is not enough";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_BILL_ITEM_ID = "Bill item id %s is not valid";
 	
@@ -89,7 +91,17 @@ public final class OpenmrsCustomConstants {
 	public static final String VALIDATION_ERROR_NOT_VALID_INVENTORY_STORE_UUID = "Inventory Store uuid %s is not valid";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY_UUID = "Drug category uuid %s is not valid";
-	
+
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY = "Drug category %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_FORMULATION = "Drug formulation %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_INDENT = "Drug indent %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION = "Drug transaction %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL = "Drug transaction detail %s is not valid";
+
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_UNIT_UUID = "Drug unit uuid %s is not valid";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_FORMULATION_UUID = "Drug formulation uuid %s is not valid";
