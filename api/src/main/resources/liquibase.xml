@@ -735,6 +735,35 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
+	<changeSet id="inventory_store_drug-table-create"
+			   author="mujuzi">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug table
+		</comment>
+		<createTable tableName="inventory_store_drug">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_id" type="int"/>
+			<column name="drug_id" type="int"/>
+			<column name="formulation_id" type="int" />
+			<column name="current_quantity" type="int" />
+			<column name="receipt_quantity" type="int" />
+			<column name="issue_quantity" type="int" />
+			<column name="status_indent" type="int" />
+			<column name="reorder_quantity" type="int" />
+			<column name="opening_balance" type="int" />
+			<column name="closing_balance" type="int" />
+			<column name="status" type="int" />
+			<column name="created_on" type="DATETIME" />
+		</createTable>
+	</changeSet>
+
 	<changeSet id="inventory_store_drug_transaction-table-create"
 		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
@@ -831,6 +860,30 @@
 			constraintName="inventory_store_drug_indent_retired_by_fk"
 			baseTableName="inventory_store_drug_indent" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_indent_detail-table-create"
+			   author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_indent_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_indent_detail table
+		</comment>
+		<createTable tableName="inventory_store_drug_indent_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="indent_id" type="int"/>
+			<column name="drug_id" type="int"/>
+			<column name="formulation_id" type="int" />
+			<column name="quantity" type="int"/>
+			<column name="main_store_transfer" type="int"/>
+			<column name="created_on" type="DATETIME"/>
+			<column name="deleted" type="boolean"/>
+		</createTable>
 	</changeSet>
 
 	<changeSet
@@ -1343,7 +1396,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_receipt_form-table-create"
-			   author="ghanshyam6">
+			   author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_receipt_form" />

@@ -207,9 +207,6 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
 
-	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
-			String fromDate, String toDate, int min, int max) throws APIException;
-
 	InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException;
 
 	InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException;
@@ -224,20 +221,32 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	List<InventoryReceiptForm> listReceiptsToGeneralStore(String companyName,
 														  String fromDate, String toDate, int min, int max) throws APIException;
 
-	List<InventoryStoreDrugIndent> listAllInventoryStoreDrug() throws APIException;
+	InventoryStoreDrugIndentDetail saveOrUpdateInventoryStoreDrugIndentDetail(
+			InventoryStoreDrugIndentDetail inventoryStoreDrugIndentDetail) throws APIException;
+
+	List<InventoryStoreDrugIndentDetail> listAllInventoryStoreDrugIndentDetail() throws APIException;
+
+	List<InventoryStoreDrugIndent> listAllInventoryStoreDrugIndent() throws APIException;
 
 	InventoryStoreDrugIndent saveOrUpdateInventoryDrugIndent(InventoryStoreDrugIndent inventoryStoreDrugIndent) throws APIException;
 
-	InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws APIException;
+	InventoryStoreDrugIndent getInventoryStoreDrugIndentByUuidString(String uuid) throws APIException;
 
-	Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
-										   String toDate) throws APIException;
+	Integer countStoreDrugIndent(Integer storeId, String storeName, String indentStatus, String indentName, String fromDate,
+								 String toDate) throws APIException;
 
-	List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName,
-																 String fromDate, String toDate, int min, int max) throws APIException;
+	List<InventoryStoreDrugIndent> listStoreDrugIndent(Integer storeId, String storeName, String indentStatus, String indentName,
+													   String fromDate, String toDate, int min, int max) throws APIException;
 
-	Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws APIException;
+	Integer countViewStockBalanceExpiry(Integer storeId, String category, String drugName, String fromDate, String toDate) throws APIException;
 
 	List<InventoryDrug> listAllInventoryDrug() throws APIException;
+
+	InventoryStoreDrug saveOrUpdateInventoryStoreDrug(InventoryStoreDrug inventoryStoreDrug) throws APIException;
+
+	List<InventoryStoreDrug> listAllInventoryStoreDrug(InventoryStore storeId) throws APIException;
+
+	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(Integer storeId, String category, String drugName,
+																			 String fromDate, String toDate, int min, int max) throws APIException;
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
@@ -29,8 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.openmrs.module.hospitalrestcore.inventory.ActionValue.INDENT_MAINSTORE;
-
 /**
  * @author Mujuzi Moses
  *
@@ -55,8 +54,10 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
 
-        int total = hospitalRestCoreService.countStoreDrugFromGeneralStore(storeName, indentStatus, indentName, fromDate, toDate);
+        int total = hospitalRestCoreService.countStoreDrugIndent(store.getId(), storeName, indentStatus, indentName, fromDate, toDate);
         String temp = "";
         if (storeName != null)
             temp = "?storeName=" + storeName;
@@ -92,7 +93,7 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
 
         PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request) + temp, pageSize, currentPage,
                 total);
-        List<InventoryStoreDrugIndent> inventoryStoreDrugIndents = hospitalRestCoreService.listStoreDrugFromGeneralStore(
+        List<InventoryStoreDrugIndent> inventoryStoreDrugIndents = hospitalRestCoreService.listStoreDrugIndent(store.getId(),
                 storeName, indentStatus, indentName, fromDate, toDate, pagingUtil.getStartPos(), pagingUtil.getPageSize());
 
         List<InventoryStoreDrugDetails> indents = inventoryStoreDrugIndents.stream()
@@ -118,7 +119,7 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStoreDrugIndent drugIndent = hospitalRestCoreService.getInventoryStoreDrugByUuidString(indentUuid);
+        InventoryStoreDrugIndent drugIndent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(indentUuid);
 
         if (drugIndent == null)
             throw new ResourceNotFoundException(
@@ -140,14 +141,19 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
 
     @RequestMapping(value = "/transfer-indent", method = RequestMethod.PUT)
     public ResponseEntity<Void> transferIndentRequest(HttpServletRequest request, HttpServletResponse response,
-            @Valid @RequestBody InventoryStoreDrugTransactionPayload inventoryStoreDrugTransactionPayload)
+                                                      @Valid @RequestBody InventoryStoreDrugTransactionPayload inventoryStoreDrugTransactionPayload)
             throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
         response.setContentType("application/json");
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugByUuidString(
+
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+
+
+        InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(
                 inventoryStoreDrugTransactionPayload.getIndentUuid());
 
         if (indent == null)
@@ -161,7 +167,7 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
         if (inventoryStoreDrugTransaction == null)
             throw new ResourceNotFoundException(
                     String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION,
-                    inventoryStoreDrugTransactionPayload.getTransactionUuid()));
+                            inventoryStoreDrugTransactionPayload.getTransactionUuid()));
 
         List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails = hospitalRestCoreService.listAllStoreDrugTransactionDetail();
         List<InventoryStoreDrugTransactionDetail> transactionDetails = new ArrayList<>();
@@ -170,54 +176,66 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
             if (Objects.equals(detail.getTransaction(), inventoryStoreDrugTransaction))
                 transactionDetails.add(detail);
 
-        List<String> transactionDetailUuids = inventoryStoreDrugTransactionPayload.getTransactionDetailUuids();
+        List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
+        for (InventoryStoreDrugTransactionDetail d : transactionDetails) {
+            InventoryStoreDrug inventoryStoreDrug = new InventoryStoreDrug();
+            for (InventoryStoreDrug drug : drugs)
+                if (Objects.equals(drug.getDrug().getName(), d.getDrug().getName()))
+                    if (Objects.equals(drug.getFormulation().getName(), d.getFormulation().getName()))
+                        inventoryStoreDrug = drug;
 
-        for (String detailUuid : transactionDetailUuids)
+            if (inventoryStoreDrug.getDrug() == null)
+                throw new ResourceNotFoundException(
+                        String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG,
+                                d.getDrug().getName()));
 
-            for (int i = 0; i < transactionDetails.size(); i++) {
-                InventoryStoreDrugTransactionDetail d = transactionDetails.get(i);
+            Map<String, Integer> transfers = inventoryStoreDrugTransactionPayload.getTransfers();
+            Integer transfer = transfers.get(d.getUuid());
 
-                if (Objects.equals(d.getUuid(), detailUuid)) {
-                    Map<String, Integer> transfers = inventoryStoreDrugTransactionPayload.getTransfers();
-                    Integer transfer = transfers.get(detailUuid);
+            if (inventoryStoreDrug.getCurrentQuantity() >= transfer) {
+                inventoryStoreDrug.setReceiptQuantity(transfer);
+                inventoryStoreDrug.setStatusIndent(1);
+                inventoryStoreDrug.setReorderQuantity(d.getQuantity());
+                inventoryStoreDrug.setOpeningBalance(inventoryStoreDrug.getClosingBalance());
+                inventoryStoreDrug.setClosingBalance(inventoryStoreDrug.getClosingBalance() - transfer);
+                inventoryStoreDrug.setCurrentQuantity(inventoryStoreDrug.getClosingBalance());
+                inventoryStoreDrug.setStatus(1);
+                d.setClosingBalance(d.getClosingBalance() + transfer);
+                d.setCurrentQuantity((int) d.getClosingBalance());
+                d.setQuantity(transfer);
+                d.setLastModifiedDate(new Date());
+                d.setLastModifiedBy(Context.getAuthenticatedUser());
+                hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
+                hospitalRestCoreService.saveOrUpdateDrugTransactionDetail(d);
+            } else
+                throw new ResourceNotFoundException(
+                        String.format(OpenmrsCustomConstants.DRUG_ERROR_NOT_ENOUGH_DRUG_QUANTITY,
+                                d.getDrug().getName()));
+        }
 
-                    if (d.getCurrentQuantity() >= transfer) {
-                        Integer oldCurrent = d.getCurrentQuantity();
-                        Integer newCurrent = oldCurrent - transfer;
-                        d.setCurrentQuantity(newCurrent);
-                        d.setQuantity(transfer);
-                        d.setLastModifiedDate(new Date());
-                        d.setLastModifiedBy(Context.getAuthenticatedUser());
-                        indent.setMainStoreStatus(ActionValue.INDENT_MAINSTORE[2]); // DONE
-                        indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[4]); // DONE
-                        indent.setLastModifiedDate(new Date());
-                        indent.setLastModifiedBy(Context.getAuthenticatedUser());
-                        inventoryStoreDrugTransaction.setStatus(1); //DONE
-                        inventoryStoreDrugTransaction.setLastModifiedDate(new Date());
-                        inventoryStoreDrugTransaction.setLastModifiedBy(Context.getAuthenticatedUser());
-                        hospitalRestCoreService.saveOrUpdateDrugTransactionDetail(d);
-                        hospitalRestCoreService.saveOrUpdateStoreDrugTransaction(inventoryStoreDrugTransaction);
-                        hospitalRestCoreService.saveOrUpdateInventoryDrugIndent(indent);
+        indent.setMainStoreStatus(ActionValue.INDENT_MAINSTORE[2]); // DONE
+        indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[2]); // RECEIPT
+        indent.setLastModifiedDate(new Date());
+        indent.setLastModifiedBy(Context.getAuthenticatedUser());
+        inventoryStoreDrugTransaction.setStatus(1); //DONE
+        inventoryStoreDrugTransaction.setLastModifiedDate(new Date());
+        inventoryStoreDrugTransaction.setLastModifiedBy(Context.getAuthenticatedUser());
+        hospitalRestCoreService.saveOrUpdateStoreDrugTransaction(inventoryStoreDrugTransaction);
+        hospitalRestCoreService.saveOrUpdateInventoryDrugIndent(indent);
 
-                    } else
-                        throw new ResourceNotFoundException(
-                                String.format(OpenmrsCustomConstants.DRUG_ERROR_NOT_ENOUGH_DRUG_QUANTITY,
-                                        d.getDrug().getName()));
-                }
-            }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/refuse-indent", method = RequestMethod.PUT)
     public ResponseEntity<Void> refuseIndentRequest(HttpServletRequest request, HttpServletResponse response,
-            @Valid @RequestBody InventoryStoreDrugTransactionPayload inventoryStoreDrugTransactionPayload)
+                                                    @Valid @RequestBody InventoryStoreDrugTransactionPayload inventoryStoreDrugTransactionPayload)
             throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
         response.setContentType("application/json");
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugByUuidString(
+        InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(
                 inventoryStoreDrugTransactionPayload.getIndentUuid());
 
         if (indent == null)

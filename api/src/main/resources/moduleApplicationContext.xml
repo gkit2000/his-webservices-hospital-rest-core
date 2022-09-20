@@ -177,6 +177,22 @@
 						</property>
 					</bean>
 				</property>
+				<property name="inventoryStoreDrugIndentDAO">
+					<bean
+							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIndentDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="inventoryStoreDrugIndentDetailDAO">
+					<bean
+							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIndentDetailDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
 				<property name="inventoryStoreDrugTransactionDAO">
 					<bean
 						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugTransactionDAO">
