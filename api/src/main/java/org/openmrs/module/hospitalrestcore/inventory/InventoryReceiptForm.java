@@ -16,7 +16,7 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
 
     private static final long serialVersionUID = 1L;
     private Integer id;
-    private InventoryDrugCategory drug;
+    private InventoryDrug drug;
     private InventoryDrugFormulation formulation;
 
     private Integer rate;
@@ -91,11 +91,11 @@ public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Ser
         this.waiverPercentage = waiverPercentage;
     }
 
-    public InventoryDrugCategory getDrug() {
+    public InventoryDrug getDrug() {
         return drug;
     }
 
-    public void setDrug(InventoryDrugCategory drug) {
+    public void setDrug(InventoryDrug drug) {
         this.drug = drug;
     }
 

@@ -11,13 +11,8 @@ import java.util.List;
 public class InventoryStoreDrugTransactionPayload {
 
     private String transactionUuid;
-
-    private List<String> transactionDetailUuids;
-
     private String indentUuid;
-
     private Map<String, Integer> transfers;
-
 
 
     public String getTransactionUuid() {
@@ -26,14 +21,6 @@ public class InventoryStoreDrugTransactionPayload {
 
     public void setTransactionUuid(String transactionUuid) {
         this.transactionUuid = transactionUuid;
-    }
-
-    public List<String> getTransactionDetailUuids() {
-        return transactionDetailUuids;
-    }
-
-    public void setTransactionDetailUuids(List<String> transactionDetailUuids) {
-        this.transactionDetailUuids = transactionDetailUuids;
     }
 
     public String getIndentUuid() {

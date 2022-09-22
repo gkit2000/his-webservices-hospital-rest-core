@@ -47,10 +47,12 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
 
     @Override
     @Transactional(readOnly = true)
-    public Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws DAOException {
+    public Integer countViewStockBalanceExpiry(Integer storeId, String category, String drugName, String fromDate, String toDate) throws DAOException {
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "transactionDetail")
                 .createAlias("transactionDetail.drug", "drugAlias")
+                .createAlias("transactionDetail.transaction", "transaction")
+                .createAlias("transaction.store", "store")
                 .createAlias("drugAlias.category", "category");
 
         ProjectionList proList = Projections.projectionList();
@@ -60,7 +62,9 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
                 .add(Projections.groupProperty("currentQuantity"));
 
         criteria.add(Restrictions.eq("expireStatus", 1))
-                .add(Restrictions.eq("retired", false));
+                .add(Restrictions.eq("retired", false))
+                .add(Restrictions.eq("store.id", storeId));
+
         if (!StringUtils.isBlank(category))
             criteria.add(Restrictions.eq("category.name", category));
 
@@ -117,13 +121,15 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
 
     @Override
     @Transactional(readOnly = true)
-    public List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
-            String fromDate, String toDate, int min, int max) throws DAOException {
+    public List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(Integer storeId, String category, String drugName,
+                                                                                    String fromDate, String toDate, int min, int max) throws DAOException {
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "transactionDetail")
                 .createAlias("transactionDetail.drug", "drugAlias")
+                .createAlias("transactionDetail.transaction", "transaction")
+                .createAlias("transaction.store", "store")
                 .createAlias("drugAlias.category", "category")
-                .setResultTransformer(Criteria.PROJECTION);
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 
         ProjectionList proList = Projections.projectionList();
         proList.add(Projections.groupProperty("drug"))
@@ -132,7 +138,8 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
                 .add(Projections.groupProperty("currentQuantity"));
         criteria.add(Restrictions.eq("expireStatus", 1))
                 .add(Restrictions.eq("retired", false))
-                .addOrder(Order.desc("createdDate"));
+                .addOrder(Order.desc("createdDate"))
+                .add(Restrictions.eq("store.id", storeId));
         if (!StringUtils.isBlank(category))
             criteria.add(Restrictions.eq("category.name", category));
 

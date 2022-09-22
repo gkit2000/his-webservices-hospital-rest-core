@@ -106,6 +106,10 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private InventoryReceiptFormDAO inventoryReceiptFormDAO;
 	
 	private InventoryStoreDrugDAO inventoryStoreDrugDAO;
+
+	private InventoryStoreDrugIndentDAO inventoryStoreDrugIndentDAO;
+
+	private InventoryStoreDrugIndentDetailDAO inventoryStoreDrugIndentDetailDAO;
 	
 	private InventoryStoreDrugTransactionDetailDAO inventoryStoreDrugTransactionDetailDAO;
 
@@ -376,6 +380,34 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryDrugDAO(InventoryDrugDAO inventoryDrugDAO) {
 		this.inventoryDrugDAO = inventoryDrugDAO;
+	}
+
+	/**
+	 * @return the inventoryStoreDrugIndentDAO
+	 */
+	public InventoryStoreDrugIndentDAO getInventoryStoreDrugIndentDAO() {
+		return inventoryStoreDrugIndentDAO;
+	}
+
+	/**
+	 * @param inventoryStoreDrugIndentDAO the inventoryStoreDrugIndent to set
+	 */
+	public void setInventoryStoreDrugIndentDAO(InventoryStoreDrugIndentDAO inventoryStoreDrugIndentDAO) {
+		this.inventoryStoreDrugIndentDAO = inventoryStoreDrugIndentDAO;
+	}
+
+	/**
+	 * @return the inventoryStoreDrugIndentDetailDAO
+	 */
+	public InventoryStoreDrugIndentDetailDAO getInventoryStoreDrugIndentDetailDAO() {
+		return inventoryStoreDrugIndentDetailDAO;
+	}
+
+	/**
+	 * @param inventoryStoreDrugIndentDetailDAO the inventoryStoreDrugIndent to set
+	 */
+	public void setInventoryStoreDrugIndentDetailDAO(InventoryStoreDrugIndentDetailDAO inventoryStoreDrugIndentDetailDAO) {
+		this.inventoryStoreDrugIndentDetailDAO = inventoryStoreDrugIndentDetailDAO;
 	}
 
 	@Override
@@ -812,38 +844,6 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
-	public List<InventoryStoreDrugIndent> listAllInventoryStoreDrug() throws APIException {
-		return getInventoryStoreDrugDAO().listAllInventoryStoreDrug();
-	}
-
-	@Override
-	@Transactional
-	public InventoryStoreDrugIndent saveOrUpdateInventoryDrugIndent(InventoryStoreDrugIndent inventoryStoreDrugIndent) throws APIException {
-		return (InventoryStoreDrugIndent) getInventoryStoreDrugDAO().saveOrUpdate(inventoryStoreDrugIndent);
-	}
-
-	@Override
-	@Transactional
-	public InventoryStoreDrugIndent getInventoryStoreDrugByUuidString(String uuid) throws APIException {
-		return getInventoryStoreDrugDAO().getInventoryStoreDrugByUuidString(uuid);
-	}
-
-	@Override
-	@Transactional
-	public Integer countStoreDrugFromGeneralStore(String storeName, String indentStatus, String indentName, String fromDate,
-												  String toDate) throws APIException {
-		return getInventoryStoreDrugDAO().countStoreDrugFromGeneralStore(storeName, indentStatus, indentName, fromDate, toDate);
-	}
-
-	@Override
-	@Transactional
-	public List<InventoryStoreDrugIndent> listStoreDrugFromGeneralStore(String storeName, String indentStatus,
-																		String indentName, String fromDate, String toDate, int min, int max) throws APIException {
-		return getInventoryStoreDrugDAO().listStoreDrugFromGeneralStore(storeName, indentStatus, indentName, fromDate, toDate, min, max);
-	}
-
-	@Override
-	@Transactional
 	public InventoryStoreDrugTransactionDetail saveOrUpdateDrugTransactionDetail(
 			InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail) throws APIException {
 		return (InventoryStoreDrugTransactionDetail) getInventoryStoreDrugTransactionDetailDAO().saveOrUpdate(inventoryStoreDrugTransactionDetail);
@@ -857,9 +857,9 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
-	public List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(String category, String drugName,
-			String fromDate, String toDate, int min, int max) throws APIException {
-		return getInventoryStoreDrugTransactionDetailDAO().listStoreDrugTransactionDetail(category, drugName, fromDate,
+	public List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(Integer storeId, String category, String drugName,
+																					String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryStoreDrugTransactionDetailDAO().listStoreDrugTransactionDetail(storeId, category, drugName, fromDate,
 				toDate, min, max);
 	}
 
@@ -871,13 +871,70 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
-	public Integer countViewStockBalanceExpiry(String category, String drugName, String fromDate, String toDate) throws APIException {
-		return getInventoryStoreDrugTransactionDetailDAO().countViewStockBalanceExpiry(category, drugName, fromDate, toDate);
+	public Integer countViewStockBalanceExpiry(Integer storeId, String category, String drugName, String fromDate, String toDate) throws APIException {
+		return getInventoryStoreDrugTransactionDetailDAO().countViewStockBalanceExpiry(storeId, category, drugName, fromDate, toDate);
 	}
 
 	@Override
 	@Transactional
 	public List<InventoryDrug> listAllInventoryDrug() throws APIException {
 		return getInventoryDrugDAO().listAllInventoryDrug();
+	}
+
+	@Override
+	@Transactional
+	public InventoryStoreDrug saveOrUpdateInventoryStoreDrug(InventoryStoreDrug inventoryStoreDrug) throws APIException {
+		return (InventoryStoreDrug) getInventoryStoreDrugDAO().saveOrUpdate(inventoryStoreDrug);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrug> listAllInventoryStoreDrug(InventoryStore store) throws APIException {
+		return getInventoryStoreDrugDAO().listAllInventoryStoreDrug(store);
+	}
+
+	@Override
+	@Transactional
+	public InventoryStoreDrugIndentDetail saveOrUpdateInventoryStoreDrugIndentDetail(
+			InventoryStoreDrugIndentDetail inventoryStoreDrugIndentDetail) throws APIException {
+		return (InventoryStoreDrugIndentDetail) getInventoryStoreDrugIndentDetailDAO().saveOrUpdate(inventoryStoreDrugIndentDetail);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugIndentDetail> listAllInventoryStoreDrugIndentDetail() throws APIException {
+		return getInventoryStoreDrugIndentDetailDAO().listAllInventoryStoreDrugIndentDetail();
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugIndent> listAllInventoryStoreDrugIndent() throws APIException {
+		return getInventoryStoreDrugIndentDAO().listAllInventoryStoreDrugIndent();
+	}
+
+	@Override
+	@Transactional
+	public InventoryStoreDrugIndent saveOrUpdateInventoryDrugIndent(InventoryStoreDrugIndent inventoryStoreDrugIndent) throws APIException {
+		return (InventoryStoreDrugIndent) getInventoryStoreDrugIndentDAO().saveOrUpdate(inventoryStoreDrugIndent);
+	}
+
+	@Override
+	@Transactional
+	public InventoryStoreDrugIndent getInventoryStoreDrugIndentByUuidString(String uuid) throws APIException {
+		return getInventoryStoreDrugIndentDAO().getInventoryStoreDrugIndentByUuidString(uuid);
+	}
+
+	@Override
+	@Transactional
+	public Integer countStoreDrugIndent(Integer storeId, String storeName, String indentStatus, String indentName, String fromDate,
+										String toDate) throws APIException {
+		return getInventoryStoreDrugIndentDAO().countStoreDrugIndent(storeId, storeName, indentStatus, indentName, fromDate, toDate);
+	}
+
+	@Override
+	@Transactional
+	public List<InventoryStoreDrugIndent> listStoreDrugIndent(Integer storeId, String storeName, String indentStatus,
+															  String indentName, String fromDate, String toDate, int min, int max) throws APIException {
+		return getInventoryStoreDrugIndentDAO().listStoreDrugIndent(storeId, storeName, indentStatus, indentName, fromDate, toDate, min, max);
 	}
 }

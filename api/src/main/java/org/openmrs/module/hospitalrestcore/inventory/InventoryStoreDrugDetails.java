@@ -14,6 +14,7 @@ public class InventoryStoreDrugDetails implements Serializable, Comparable<Inven
     private String store;
     private String name;
     private Integer mainStoreStatus;
+    private Integer subStoreStatus;
     private String createdDate;
 
     SimpleDateFormat formatterExt = new SimpleDateFormat("dd/MM/yyyy");
@@ -40,6 +41,14 @@ public class InventoryStoreDrugDetails implements Serializable, Comparable<Inven
 
     public void setMainStoreStatus(Integer mainStoreStatus) {
         this.mainStoreStatus = mainStoreStatus;
+    }
+
+    public Integer getSubStoreStatus() {
+        return subStoreStatus;
+    }
+
+    public void setSubStoreStatus(Integer subStoreStatus) {
+        this.subStoreStatus = subStoreStatus;
     }
 
     public String getCreatedDate() {
