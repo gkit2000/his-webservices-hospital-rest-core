@@ -687,7 +687,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store-table-create"
-		author="ghanshyam3333">
+		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store" />
@@ -736,7 +736,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store_drug-table-create"
-			   author="mujuzi33">
+			   author="mujuzi">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store_drug" />
@@ -910,7 +910,7 @@
 
 	<changeSet
 		id="inventory_store_drug_transaction_detail-table-create"
-		author="ghanshyam333">
+		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists
@@ -1418,7 +1418,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_receipt_form-table-create"
-			   author="ghanshyam66">
+			   author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_receipt_form" />

@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.*;
 import org.openmrs.api.APIException;
-import org.openmrs.api.db.DAOException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.billing.Ambulance;
@@ -1031,14 +1030,14 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
-	public InventoryStoreDrugPatient getInventoryStoreDrugPatientById(Integer id) throws DAOException {
+	public InventoryStoreDrugPatient getInventoryStoreDrugPatientById(Integer id) throws APIException {
 		return getInventoryStoreDrugPatientDAO().getInventoryStoreDrugPatientById(id);
 	}
 
 	@Override
 	@Transactional
 	public Integer countStoreDrugPatient(Integer storeId, String identifierOrName, Integer billNo, String fromDate,
-										 String toDate) throws DAOException {
+										 String toDate) throws APIException {
 		return getInventoryStoreDrugPatientDAO().countStoreDrugPatient(storeId, identifierOrName, billNo, fromDate, toDate);
 	}
 

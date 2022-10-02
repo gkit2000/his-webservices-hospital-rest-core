@@ -20,7 +20,6 @@ import java.util.List;
 import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalrestcore.billing.Ambulance;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
