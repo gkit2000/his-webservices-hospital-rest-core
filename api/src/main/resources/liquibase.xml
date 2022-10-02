@@ -687,7 +687,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store-table-create"
-		author="ghanshyam">
+		author="ghanshyam3333">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store" />
@@ -736,7 +736,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store_drug-table-create"
-			   author="mujuzi">
+			   author="mujuzi33">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store_drug" />
@@ -886,9 +886,31 @@
 		</createTable>
 	</changeSet>
 
+	<changeSet id="inventory_store_drug_issue_detail-table-create"
+			   author="mujuzi">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_issue_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_issue_detail table
+		</comment>
+		<createTable tableName="inventory_store_drug_issue_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="drug_id" type="int"/>
+			<column name="formulation_id" type="int" />
+			<column name="quantity" type="int"/>
+			<column name="created_on" type="DATETIME"/>
+			<column name="deleted" type="boolean"/>
+		</createTable>
+	</changeSet>
+
 	<changeSet
 		id="inventory_store_drug_transaction_detail-table-create"
-		author="ghanshyam">
+		author="ghanshyam333">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists
@@ -1396,7 +1418,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_receipt_form-table-create"
-			   author="ghanshyam">
+			   author="ghanshyam66">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_receipt_form" />
@@ -1454,6 +1476,86 @@
 				baseTableName="inventory_receipt_form" baseColumnNames="retired_by"
 				constraintName="inventory_receipt_form_retired_by_fk"
 				referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_patient-table-create"
+			author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_patient" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_patient table
+		</comment>
+		<createTable tableName="inventory_store_drug_patient">
+
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_id" type="int" />
+			<column name="patient_id" type="int" />
+			<column name="name" type="varchar(255)" />
+			<column name="prescription" type="varchar(255)" />
+			<column name="identifier" type="varchar(255)" />
+			<column name="total" type="int" />
+			<column name="discount" type="float" />
+			<column name="total_payable" type="int" />
+			<column name="amount_paid" type="int" />
+			<column name="balance_returned" type="int" />
+			<column name="created_on" type="DATETIME" />
+			<column name="created_by" type="int" />
+		</createTable>
+		<addForeignKeyConstraint
+				constraintName="inventory_store_drug_patient_created_by_fk"
+				baseTableName="inventory_store_drug_patient"
+				baseColumnNames="created_by" referencedTableName="users"
+				referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_patient_detail-table-create"
+			author="mujuzi">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_patient_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_patient_detail table
+		</comment>
+		<createTable tableName="inventory_store_drug_patient_detail">
+
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="store_drug_patient_id" type="int" />
+			<column name="transaction_detail_id" type="int" />
+			<column name="quantity" type="int" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="inventory_store_issue_patient_detail-table-create"
+			   author="mujuzi">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_issue_patient_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_issue_patient_detail table
+		</comment>
+		<createTable tableName="inventory_store_issue_patient_detail">
+
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="patient_identifier" type="varchar(255)" />
+			<column name="patient_name" type="varchar(255)" />
+			<column name="category" type="varchar(255)" />
+			<column name="age" type="int" />
+			<column name="created_on" type="DATETIME"/>
+			<column name="deleted" type="boolean"/>
+		</createTable>
 	</changeSet>
 
 </databaseChangeLog>

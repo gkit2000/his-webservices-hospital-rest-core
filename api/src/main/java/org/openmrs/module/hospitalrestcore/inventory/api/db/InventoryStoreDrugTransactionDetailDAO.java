@@ -2,6 +2,7 @@ package org.openmrs.module.hospitalrestcore.inventory.api.db;
 
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalrestcore.api.db.SingleClassDAO;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public interface InventoryStoreDrugTransactionDetailDAO extends SingleClassDAO {
 
-    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws DAOException;
+    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail(InventoryStore store) throws DAOException;
 
     public InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws DAOException;
 

@@ -8,12 +8,14 @@ import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalrestcore.api.db.hibernate.HibernateSingleClassDAO;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDrugTransactionDetailDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,9 +32,11 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
     }
 
     @Override
-    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws DAOException {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-        criteria.add(Restrictions.eq("retired", false));
+    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail(InventoryStore store) throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "transactionDetail")
+                .createAlias("transactionDetail.transaction", "transaction");
+        criteria.add(Restrictions.eq("retired", false))
+                .add(Restrictions.eq("transaction.store", store));
         return criteria.list();
     }
 
@@ -61,7 +65,8 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
                 .add(Projections.groupProperty("formulation"))
                 .add(Projections.groupProperty("currentQuantity"));
 
-        criteria.add(Restrictions.eq("expireStatus", 1))
+//        criteria.add(Restrictions.eq("expireStatus", 1))
+        criteria.add(Restrictions.le("dateExpiry", new Date()))
                 .add(Restrictions.eq("retired", false))
                 .add(Restrictions.eq("store.id", storeId));
 
@@ -136,7 +141,9 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
                 .add(Projections.max("createdDate"))
                 .add(Projections.groupProperty("formulation"))
                 .add(Projections.groupProperty("currentQuantity"));
-        criteria.add(Restrictions.eq("expireStatus", 1))
+
+//        criteria.add(Restrictions.eq("expireStatus", 1))
+        criteria.add(Restrictions.le("dateExpiry", new Date()))
                 .add(Restrictions.eq("retired", false))
                 .addOrder(Order.desc("createdDate"))
                 .add(Restrictions.eq("store.id", storeId));

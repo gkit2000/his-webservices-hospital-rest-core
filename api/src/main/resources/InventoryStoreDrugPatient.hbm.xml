@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping
+        package="org.openmrs.module.hospitalrestcore.inventory">
+
+    <class name="InventoryStoreDrugPatient"
+           table="inventory_store_drug_patient" batch-size="500">
+        <id name="id" type="int" column="id" unsaved-value="0">
+            <generator class="native" />
+        </id>
+        <many-to-one name="store"
+                class="org.openmrs.module.hospitalrestcore.inventory.InventoryStore"
+                column="store_id" cascade="none" lazy="false" />
+        <many-to-one name="patient"
+                     class="org.openmrs.Patient"
+                     column="patient_id" cascade="none" lazy="false" />
+        <property name="name" column="name" />
+        <property name="prescription" column="prescription" />
+        <property name="identifier" column="identifier" />
+        <property name="total" column="total" />
+        <property name="waiverPercentage" column="discount" />
+        <property name="totalPayable" column="total_payable" />
+        <property name="amountPaid" column="amount_paid" />
+        <property name="balanceReturned" column="balance_returned" />
+        <property name="createdDate" column="created_on" />
+        <many-to-one name="createdBy" column="created_by"
+                class="org.openmrs.User"
+                foreign-key="inventory_store_drug_patient_created_by_fk" />
+    </class>
+</hibernate-mapping>

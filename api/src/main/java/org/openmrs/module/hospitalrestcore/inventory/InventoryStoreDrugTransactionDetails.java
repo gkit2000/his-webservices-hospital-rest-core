@@ -15,6 +15,7 @@ public class InventoryStoreDrugTransactionDetails implements Serializable, Compa
     private Integer currentQuantity;
     private String batchNo;
     private String companyName;
+    private String uuid;
 
     public String getDrugName() {
         return drugName;
@@ -62,6 +63,14 @@ public class InventoryStoreDrugTransactionDetails implements Serializable, Compa
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override

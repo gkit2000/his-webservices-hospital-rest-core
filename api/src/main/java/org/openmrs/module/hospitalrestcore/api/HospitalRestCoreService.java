@@ -17,15 +17,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Drug;
-import org.openmrs.Encounter;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.Role;
+import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.module.hospitalrestcore.billing.Ambulance;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
@@ -205,7 +200,7 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	InventoryStoreDrugTransactionDetail saveOrUpdateDrugTransactionDetail(
 			InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail) throws APIException;
 
-	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
+	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail(InventoryStore store) throws APIException;
 
 	InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException;
 
@@ -244,9 +239,47 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	InventoryStoreDrug saveOrUpdateInventoryStoreDrug(InventoryStoreDrug inventoryStoreDrug) throws APIException;
 
+	InventoryStoreDrugPatient saveOrUpdateInventoryStoreDrugPatient(InventoryStoreDrugPatient inventoryStoreDrugPatient) throws APIException;
+
+	InventoryStoreDrugPatient getInventoryStoreDrugPatientByIdentifier(String identifier) throws APIException;
+
+	InventoryStoreDrugPatient getInventoryStoreDrugPatientById(Integer id) throws APIException;
+
+	List<InventoryStoreDrugPatientDetail> listAllInventoryStoreDrugPatientDetail() throws APIException;
+
+	InventoryStoreIssuePatientDetail getInventoryStoreIssuePatientDetail() throws APIException;
+
+	Integer countStoreDrugPatient(Integer storeId, String identifierOrName, Integer billNo, String fromDate,
+										 String toDate) throws APIException;
+
+	List<InventoryStoreDrugPatient> listStoreDrugPatient(Integer storeId, String identifierOrName, Integer billNo,
+																String fromDate, String toDate, int min, int max) throws APIException;
+
+	InventoryStoreDrugPatientDetail saveOrUpdateInventoryStoreDrugPatientDetail(
+			InventoryStoreDrugPatientDetail inventoryStoreDrugPatientDetail) throws APIException;
+
+	InventoryStoreIssuePatientDetail saveOrUpdateInventoryStoreIssuePatientDetail(
+			InventoryStoreIssuePatientDetail inventoryStoreIssuePatientDetail) throws APIException;
+
 	List<InventoryStoreDrug> listAllInventoryStoreDrug(InventoryStore storeId) throws APIException;
 
 	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(Integer storeId, String category, String drugName,
 																			 String fromDate, String toDate, int min, int max) throws APIException;
+
+	InventoryStoreDrugIssueDetail saveOrUpdateInventoryStoreDrugIssueDetail(InventoryStoreDrugIssueDetail inventoryStoreDrugIssueDetail) throws APIException;
+
+	List<InventoryStoreDrugIssueDetail> listAllInventoryStoreDrugIssueDetail() throws APIException;
+
+	PatientIdentifier getPatientIdentifierByPatientId(Integer patientId) throws APIException;
+
+	Integer getPatientIdByIdentifierString(String identifier) throws APIException;
+
+	Person getPersonByPersonId(Integer personId) throws APIException;
+
+	Patient getPatientByPatientId(Integer patientId) throws APIException;
+
+	PersonName getPersonNameByPersonId(Integer personId) throws APIException;
+
+	PersonName getPersonNameByNameString(String name) throws APIException;
 
 }

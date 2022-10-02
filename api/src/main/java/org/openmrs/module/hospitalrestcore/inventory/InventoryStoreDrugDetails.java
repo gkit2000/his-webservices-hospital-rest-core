@@ -16,6 +16,8 @@ public class InventoryStoreDrugDetails implements Serializable, Comparable<Inven
     private Integer mainStoreStatus;
     private Integer subStoreStatus;
     private String createdDate;
+    private String uuid;
+    private String transactionUuid;
 
     SimpleDateFormat formatterExt = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -57,6 +59,22 @@ public class InventoryStoreDrugDetails implements Serializable, Comparable<Inven
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getTransactionUuid() {
+        return transactionUuid;
+    }
+
+    public void setTransactionUuid(String transactionUuid) {
+        this.transactionUuid = transactionUuid;
     }
 
     @Override
