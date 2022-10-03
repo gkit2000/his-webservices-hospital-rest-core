@@ -12,6 +12,7 @@ import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
 import org.openmrs.module.hospitalrestcore.api.db.hibernate.HibernateSingleClassDAO;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugIndent;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransaction;
 import org.openmrs.module.hospitalrestcore.inventory.api.db.InventoryStoreDrugIndentDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +65,9 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
         ProjectionList proList = Projections.projectionList();
         proList.add(Projections.groupProperty("store"))
                 .add(Projections.groupProperty("name"))
-                .add(Projections.groupProperty("createdDate"));
+                .add(Projections.groupProperty("createdDate"))
+                .add(Projections.groupProperty("transaction"))
+                .add(Projections.groupProperty("uuid"));
 
         if (storeId == 1)
             proList.add(Projections.groupProperty("mainStoreStatus"));
@@ -156,7 +159,9 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
         ProjectionList proList = Projections.projectionList();
         proList.add(Projections.groupProperty("store"))
                 .add(Projections.groupProperty("name"))
-                .add(Projections.groupProperty("createdDate"));
+                .add(Projections.groupProperty("createdDate"))
+                .add(Projections.groupProperty("transaction"))
+                .add(Projections.groupProperty("uuid"));
 
         if (storeId == 1)
             proList.add(Projections.groupProperty("mainStoreStatus"));
@@ -241,10 +246,12 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
             sdi.setStore((InventoryStore) row[0]);
             sdi.setName(row[1].toString());
             sdi.setCreatedDate((Date) row[2]);
+            sdi.setTransaction((InventoryStoreDrugTransaction) row[3]);
+            sdi.setUuid((String) row[4]);
             if (storeId == 1)
-                sdi.setMainStoreStatus((Integer) row[3]);
+                sdi.setMainStoreStatus((Integer) row[5]);
             else
-                sdi.setSubStoreStatus((Integer) row[3]);
+                sdi.setSubStoreStatus((Integer) row[5]);
             lst.add(sdi);
         }
 

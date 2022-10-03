@@ -28,6 +28,7 @@ public class MainStoreDrugTransactions implements Serializable, Comparable<MainS
     private String batchNo;
     private String dateExpiry;
     private String receiptDate;
+    private String uuid;
 
     public String getDrugName() {
         return drugName;
@@ -155,6 +156,14 @@ public class MainStoreDrugTransactions implements Serializable, Comparable<MainS
 
     public void setReceiptDate(String receiptDate) {
         this.receiptDate = receiptDate;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override

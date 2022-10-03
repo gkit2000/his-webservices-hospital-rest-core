@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
@@ -58,8 +57,14 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Main Store"))
+                store = s;
 
         int total = hospitalRestCoreService.countViewStockBalanceExpiry(store.getId(), category, drugName, fromDate, toDate);
         String temp = "";
@@ -116,7 +121,16 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        List<InventoryStoreDrugTransactionDetail>  transactionDetails = hospitalRestCoreService.listAllStoreDrugTransactionDetail();
+//                InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Main Store"))
+                store = s;
+        List<InventoryStoreDrugTransactionDetail>  transactionDetails =
+                hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
         List<InventoryStoreDrugTransactionDetail> details = new ArrayList<>();
 
         for (InventoryStoreDrugTransactionDetail d : transactionDetails)
@@ -180,6 +194,7 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         mdts.setBatchNo(inventoryStoreDrugTransactionDetail.getBatchNo());
         mdts.setDateExpiry(formatter.format(inventoryStoreDrugTransactionDetail.getDateExpiry()));
         mdts.setReceiptDate(formatter.format(inventoryStoreDrugTransactionDetail.getReceiptDate()));
+        mdts.setUuid(inventoryStoreDrugTransactionDetail.getUuid());
         return mdts;
     }
 

@@ -89,38 +89,53 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles())); //TODO: commit this
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Pharmacy"))
+                store = s;
 
         List<InventoryStoreDrugIndentDetail> indentDetails = hospitalRestCoreService.listAllInventoryStoreDrugIndentDetail();
 
         InventoryStoreDrugTransaction transaction = new InventoryStoreDrugTransaction();
         transaction.setStore(store);
         transaction.setStatus(0);
-        transaction.setTypeTransaction(ActionValue.TRANSACTION[0]);
+        transaction.setTypeTransaction(ActionValue.TRANSACTION[0]); //RECEIPT
         transaction.setCreatedDate(new Date());
         transaction.setCreatedBy(Context.getAuthenticatedUser());
         hospitalRestCoreService.saveOrUpdateStoreDrugTransaction(transaction);
 
         for (InventoryStoreDrugIndentDetail d : indentDetails) {
 
-            InventoryReceiptForm form = new InventoryReceiptForm();
+            InventoryReceiptForm form = new InventoryReceiptForm(); //TODO change to latest transaction detail
             List<InventoryReceiptForm> forms = hospitalRestCoreService.listAllInventoryReceiptForm();
 
             for (InventoryReceiptForm f : forms)
                 if (Objects.equals(f.getDrug().getName(), d.getDrug().getName()))
-                    form = f;
+                    if (Objects.equals(f.getFormulation().getName(), d.getFormulation().getName()))
+                        form = f;
 
             if (form.getDrug() == null)
                 throw new ResourceNotFoundException(
-                        String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG, d.getDrug().getName()));
+                        String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_RECEIPT_FORM, d.getDrug().getName()));
+
+            List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
+            InventoryStoreDrug inventoryStoreDrug = new InventoryStoreDrug();
+            for (InventoryStoreDrug drug : drugs)
+                if (Objects.equals(drug.getDrug().getName(), d.getDrug().getName()))
+                    if (Objects.equals(drug.getFormulation().getName(), d.getFormulation().getName()))
+                        inventoryStoreDrug = drug;
 
             InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
+            int currentQuantity = inventoryStoreDrug.getDrug() != null ? inventoryStoreDrug.getCurrentQuantity() : 0;
             transactionDetail.setTransaction(transaction);
             transactionDetail.setDrug(d.getDrug());
             transactionDetail.setFormulation(d.getFormulation());
             transactionDetail.setQuantity(d.getQuantity());
-            transactionDetail.setCurrentQuantity(form.getQuantity());
+            transactionDetail.setCurrentQuantity(currentQuantity);
             transactionDetail.setIssueQuantity(0);
             transactionDetail.setUnitPrice(BigDecimal.valueOf(form.getRate()));
             transactionDetail.setTotalPrice(form.getTotalAmount());
@@ -129,9 +144,9 @@ public class IndentDrugListController extends BaseRestController {
             transactionDetail.setCompanyName(form.getCompanyName());
             transactionDetail.setDateManufacture(form.getDateManufacture());
             transactionDetail.setDateExpiry(form.getDateExpiry());
-            transactionDetail.setOpeningBalance(form.getQuantity());
-            transactionDetail.setClosingBalance((form.getQuantity() + d.getQuantity()));
-            transactionDetail.setReceiptDate(form.getReceiptDate());
+            transactionDetail.setOpeningBalance(currentQuantity);
+            transactionDetail.setClosingBalance(0);
+            transactionDetail.setReceiptDate(new Date());
             transactionDetail.setCreatedDate(new Date());
             transactionDetail.setCreatedBy(Context.getAuthenticatedUser());
             hospitalRestCoreService.saveOrUpdateDrugTransactionDetail(transactionDetail);
@@ -180,8 +195,14 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Pharmacy"))
+                store = s;
 
         InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(
                 inventoryStoreDrugTransactionPayload.getIndentUuid());
@@ -199,7 +220,8 @@ public class IndentDrugListController extends BaseRestController {
                     String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION,
                             inventoryStoreDrugTransactionPayload.getTransactionUuid()));
 
-        List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails = hospitalRestCoreService.listAllStoreDrugTransactionDetail();
+        List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails =
+                hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
         List<InventoryStoreDrugTransactionDetail> transactionDetails = new ArrayList<>();
 
         for (InventoryStoreDrugTransactionDetail detail : inventoryStoreDrugTransactionDetails)
@@ -230,15 +252,8 @@ public class IndentDrugListController extends BaseRestController {
                 hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
             } else {
                 inventoryStoreDrug.setCurrentQuantity((inventoryStoreDrug.getCurrentQuantity() + d.getQuantity()));
-                inventoryStoreDrug.setReceiptQuantity(d.getQuantity());
-                inventoryStoreDrug.setStatusIndent(1);
-                inventoryStoreDrug.setReorderQuantity(d.getQuantity());
-                inventoryStoreDrug.setOpeningBalance(inventoryStoreDrug.getClosingBalance());
-                inventoryStoreDrug.setClosingBalance((inventoryStoreDrug.getClosingBalance() + d.getQuantity()));
-                inventoryStoreDrug.setStatus(1);
                 hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
             }
-
         }
 
         indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[4]); // DONE
@@ -266,7 +281,8 @@ public class IndentDrugListController extends BaseRestController {
                     String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_INDENT,
                             inventoryStoreDrugTransactionPayload.getIndentUuid()));
 
-        indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[3]);
+        indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[3]); // REFUSE
+        indent.setMainStoreStatus(ActionValue.INDENT_MAINSTORE[3]); // SUB-STORE REFUSE
         indent.setLastModifiedDate(new Date());
         indent.setLastModifiedBy(Context.getAuthenticatedUser());
         hospitalRestCoreService.saveOrUpdateInventoryDrugIndent(indent);
@@ -288,8 +304,14 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Pharmacy"))
+                store = s;
 
 
         int total = hospitalRestCoreService.countStoreDrugIndent(store.getId(), null, indentStatus, indentName, fromDate, toDate);
@@ -346,6 +368,16 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+
+//                InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Pharmacy"))
+                store = s;
+
         InventoryStoreDrugIndent drugIndent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(indentUuid);
 
         if (drugIndent == null)
@@ -353,7 +385,8 @@ public class IndentDrugListController extends BaseRestController {
                     String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_INDENT, indentUuid));
 
         InventoryStoreDrugTransaction inventoryStoreDrugTransaction = drugIndent.getTransaction();
-        List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails = hospitalRestCoreService.listAllStoreDrugTransactionDetail();
+        List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails =
+                hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
         List<InventoryStoreDrugTransactionDetail> transactionDetails = new ArrayList<>();
 
         for (InventoryStoreDrugTransactionDetail detail : inventoryStoreDrugTransactionDetails)
@@ -374,6 +407,7 @@ public class IndentDrugListController extends BaseRestController {
         isdtds.setCurrentQuantity(inventoryStoreDrugTransactionDetail.getCurrentQuantity());
         isdtds.setBatchNo(inventoryStoreDrugTransactionDetail.getBatchNo());
         isdtds.setCompanyName(inventoryStoreDrugTransactionDetail.getCompanyName());
+        isdtds.setUuid(inventoryStoreDrugTransactionDetail.getUuid());
         return isdtds;
     }
 
@@ -384,6 +418,8 @@ public class IndentDrugListController extends BaseRestController {
         isdd.setName(inventoryStoreDrugIndent.getName());
         isdd.setCreatedDate(formatterExt.format(inventoryStoreDrugIndent.getCreatedDate()));
         isdd.setSubStoreStatus(inventoryStoreDrugIndent.getSubStoreStatus());
+        isdd.setUuid(inventoryStoreDrugIndent.getUuid());
+        isdd.setTransactionUuid(inventoryStoreDrugIndent.getTransaction().getUuid());
         return isdd;
     }
 

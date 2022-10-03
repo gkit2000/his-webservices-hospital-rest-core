@@ -35,19 +35,19 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 
         ProjectionList proList = Projections.projectionList();
-        proList.add(Projections.property("store"));
-        proList.add(Projections.property("drug"));
-        proList.add(Projections.property("formulation"));
-        proList.add(Projections.property("currentQuantity"));
-        proList.add(Projections.property("receiptQuantity"));
-        proList.add(Projections.property("issueQuantity"));
-        proList.add(Projections.property("statusIndent"));
-        proList.add(Projections.property("reorderQuantity"));
-        proList.add(Projections.property("openingBalance"));
-        proList.add(Projections.property("closingBalance"));
-        proList.add(Projections.property("status"));
-        proList.add(Projections.property("id"));
-        proList.add(Projections.property("createdDate"));
+        proList.add(Projections.property("store"))
+                .add(Projections.property("drug"))
+                .add(Projections.property("formulation"))
+                .add(Projections.property("currentQuantity"))
+                .add(Projections.property("receiptQuantity"))
+                .add(Projections.property("issueQuantity"))
+                .add(Projections.property("statusIndent"))
+                .add(Projections.property("reorderQuantity"))
+                .add(Projections.property("openingBalance"))
+                .add(Projections.property("closingBalance"))
+                .add(Projections.property("status"))
+                .add(Projections.property("id"))
+                .add(Projections.property("createdDate"));
 
         criteria.add(Restrictions.eq("store", store))
                 .setProjection(proList);
