@@ -70,9 +70,15 @@
 		InventoryDrugFormulation.hbm.xml
 		InventoryDrugUnit.hbm.xml
 		InventoryStore.hbm.xml
+		InventoryStoreDrug.hbm.xml
 		InventoryStoreDrugIndent.hbm.xml
+		InventoryStoreDrugIndentDetail.hbm.xml
+		InventoryStoreDrugIssueDetail.hbm.xml
+		InventoryStoreDrugPatient.hbm.xml
+		InventoryStoreDrugPatientDetail.hbm.xml
 		InventoryStoreDrugTransaction.hbm.xml
 		InventoryStoreDrugTransactionDetail.hbm.xml
+		InventoryStoreIssuePatientDetail.hbm.xml
 		InventoryItem.hbm.xml
 		InventoryItemCategory.hbm.xml
 		InventoryItemSpecification.hbm.xml

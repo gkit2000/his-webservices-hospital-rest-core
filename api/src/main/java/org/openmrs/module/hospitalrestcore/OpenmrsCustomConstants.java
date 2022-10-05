@@ -92,7 +92,9 @@ public final class OpenmrsCustomConstants {
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY_UUID = "Drug category uuid %s is not valid";
 
-	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY = "Drug category %s is not valid";
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG = "Drug %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_RECEIPT_FORM = "Receipt form for drug %s is not valid";
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_FORMULATION = "Drug formulation %s is not valid";
 
@@ -101,6 +103,14 @@ public final class OpenmrsCustomConstants {
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION = "Drug transaction %s is not valid";
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL = "Drug transaction detail %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_PATIENT_IDENTIFIER = "Patient Identifier %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_BILL_NO = "Bill Number %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_PATIENT_IDENTIFIER_OR_NAME = "Patient Identifier or Name %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_PERSON_NAME = "Person Name %s is not valid";
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_UNIT_UUID = "Drug unit uuid %s is not valid";
 	

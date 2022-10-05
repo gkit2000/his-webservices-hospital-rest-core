@@ -23,8 +23,7 @@ public class HibernateInventoryStoreDrugTransactionDAO extends HibernateSingleCl
     @Override
     public List<InventoryStoreDrugTransaction> listAllInventoryStoreDrugTransaction() throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-        criteria.add(Restrictions.eq("retired", false))
-                .add(Restrictions.eq("retired", false));
+        criteria.add(Restrictions.eq("retired", false));
         return criteria.list();
     }
 }

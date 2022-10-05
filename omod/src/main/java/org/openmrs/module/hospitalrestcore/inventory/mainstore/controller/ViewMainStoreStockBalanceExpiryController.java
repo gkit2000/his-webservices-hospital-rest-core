@@ -8,6 +8,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
+import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactions;
 import org.openmrs.module.hospitalrestcore.inventory.MainStoreDrugTransactions;
@@ -56,8 +57,16 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
 
-        int total = hospitalRestCoreService.countViewStockBalanceExpiry(category, drugName, fromDate, toDate);
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Main Store"))
+                store = s;
+
+        int total = hospitalRestCoreService.countViewStockBalanceExpiry(store.getId(), category, drugName, fromDate, toDate);
         String temp = "";
         if (category != null)
             temp = "?category=" + category;
@@ -86,7 +95,7 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request) + temp, pageSize, currentPage,
                 total);
         List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails = hospitalRestCoreService
-                .listStoreDrugTransactionDetail(category, drugName, fromDate, toDate, pagingUtil.getStartPos(),
+                .listStoreDrugTransactionDetail(store.getId(), category, drugName, fromDate, toDate, pagingUtil.getStartPos(),
                         pagingUtil.getPageSize());
         List<InventoryStoreDrugTransactions> drugs = inventoryStoreDrugTransactionDetails.stream()
                 .map(isdi -> getInventoryStoreDrugTransactions(isdi)).collect(Collectors.toList());
@@ -112,7 +121,16 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        List<InventoryStoreDrugTransactionDetail>  transactionDetails = hospitalRestCoreService.listAllStoreDrugTransactionDetail();
+//                InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = new InventoryStore();
+        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+
+        for (InventoryStore s : storeList)
+            if (Objects.equals(s.getName(), "Main Store"))
+                store = s;
+        List<InventoryStoreDrugTransactionDetail>  transactionDetails =
+                hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
         List<InventoryStoreDrugTransactionDetail> details = new ArrayList<>();
 
         for (InventoryStoreDrugTransactionDetail d : transactionDetails)
@@ -176,6 +194,7 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         mdts.setBatchNo(inventoryStoreDrugTransactionDetail.getBatchNo());
         mdts.setDateExpiry(formatter.format(inventoryStoreDrugTransactionDetail.getDateExpiry()));
         mdts.setReceiptDate(formatter.format(inventoryStoreDrugTransactionDetail.getReceiptDate()));
+        mdts.setUuid(inventoryStoreDrugTransactionDetail.getUuid());
         return mdts;
     }
 

@@ -5,7 +5,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
 import org.openmrs.module.hospitalrestcore.api.HospitalRestCoreService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -23,7 +22,7 @@ import java.util.Random;
 
 public class InventoryReceiptFormPayload {
 
-    private InventoryDrugCategory drug;
+    private InventoryDrug drug;
     private InventoryDrugFormulation formulation;
 
     private Integer rate;
@@ -46,12 +45,6 @@ public class InventoryReceiptFormPayload {
     private float waiverPercentage;
 
     private Boolean retired = false;
-
-    @Autowired
-    InventoryDrugFormulation drugFormulation = new InventoryDrugFormulation();
-
-    @Autowired
-    InventoryDrugCategory drugCategory = new InventoryDrugCategory();
 
     HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
@@ -122,27 +115,24 @@ public class InventoryReceiptFormPayload {
         this.retired = retired;
     }
 
-    public InventoryDrugCategory getDrug() {
+    public InventoryDrug getDrug() {
         return drug;
     }
 
     public void setDrug(String drug) {
 
-        InventoryDrugCategory drugCategory1 = new InventoryDrugCategory();
-        List<InventoryDrugCategory> categoryList = hospitalRestCoreService.listAllInventoryDrugCategory();
+        InventoryDrug inventoryDrug = new InventoryDrug();
+        List<InventoryDrug> drugList = hospitalRestCoreService.listAllInventoryDrug();
 
-        for (InventoryDrugCategory category : categoryList) {
-            if (Objects.equals(category.getName(), drug)) {
-                drugCategory1 = category;
-            }
-        }
+        for (InventoryDrug d : drugList)
+            if (Objects.equals(d.getName(), drug))
+                inventoryDrug = d;
 
-        if (drugCategory1.getName() == null) {
+        if (StringUtils.isBlank(inventoryDrug.getName()))
             throw new ResourceNotFoundException(String.format(
-                    OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY, drug));
-        } else {
-            this.drug = drugCategory1;
-        }
+                    OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG, drug));
+        else
+            this.drug = inventoryDrug;
     }
 
     public InventoryDrugFormulation getFormulation() {
