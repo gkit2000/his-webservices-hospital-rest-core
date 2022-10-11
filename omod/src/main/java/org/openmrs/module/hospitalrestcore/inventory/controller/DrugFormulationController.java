@@ -172,8 +172,9 @@ public class DrugFormulationController extends BaseRestController {
 		idud.setUuid(inventoryDrugFormulation.getUuid());
 		idud.setDeleted(inventoryDrugFormulation.getDeleted());
 		// idud.setRetired(inventoryDrugFormulation.getRetired());
-		idud.setCreatedBy(PulseUtil.getName(inventoryDrugFormulation.getCreatedBy().getPerson()));
+		//idud.setCreatedBy(PulseUtil.getName(inventoryDrugFormulation.getCreatedBy().getPerson()));
 		idud.setCreatedDate(formatter.format(inventoryDrugFormulation.getCreatedDate()));
+		idud.setCreatedBy("Admin");
 		return idud;
 	}
 }
