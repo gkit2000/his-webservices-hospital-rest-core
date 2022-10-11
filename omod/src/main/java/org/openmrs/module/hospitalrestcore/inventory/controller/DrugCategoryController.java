@@ -163,8 +163,9 @@ public class DrugCategoryController extends BaseRestController {
 		idcd.setUuid(inventoryDrugCategory.getUuid());
 		idcd.setDeleted(inventoryDrugCategory.getDeleted());
 		// idcd.setRetired(inventoryDrugCategory.getRetired());
-		idcd.setCreatedBy(PulseUtil.getName(inventoryDrugCategory.getCreatedBy().getPerson()));
+		//idcd.setCreatedBy(PulseUtil.getName(inventoryDrugCategory.getCreatedBy().getPerson()));
 		idcd.setCreatedDate(formatter.format(inventoryDrugCategory.getCreatedDate()));
+		idcd.setCreatedBy("Admin");
 		return idcd;
 	}
 }

@@ -13,13 +13,13 @@ import org.openmrs.module.hospitalrestcore.BaseDetails;
 public class InventoryDrugDetails extends BaseDetails {
 
 	private Integer id;
-	private String name;
+	private String brandName;
 	private InventoryDrugUnitDetails inventoryDrugUnitDetails;
 	private InventoryDrugCategoryDetails inventoryDrugCategoryDetails;
 	private InventoryDrugFormulationDetails inventoryDrugFormulationDetails;
 	private Integer drugId;
-	private String drugName;
-	private String drugUuid;
+	private String genericName;
+	private String genericUuid;
 	private Drug drugCore;
 	private int attribute;
 	private Integer reorderQty;
@@ -40,17 +40,17 @@ public class InventoryDrugDetails extends BaseDetails {
 	}
 
 	/**
-	 * @return the name
+	 * @return the brandName
 	 */
-	public String getName() {
-		return name;
+	public String getBrandName() {
+		return brandName;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param brandName the brandName to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 	/**
@@ -111,31 +111,31 @@ public class InventoryDrugDetails extends BaseDetails {
 	}
 
 	/**
-	 * @return the drugName
+	 * @return the genericName
 	 */
-	public String getDrugName() {
-		return drugName;
+	public String getGenericName() {
+		return genericName;
 	}
 
 	/**
-	 * @param drugName the drugName to set
+	 * @param genericName the genericName to set
 	 */
-	public void setDrugName(String drugName) {
-		this.drugName = drugName;
+	public void setGenericName(String genericName) {
+		this.genericName = genericName;
 	}
 
 	/**
-	 * @return the drugUuid
+	 * @return the genericUuid
 	 */
-	public String getDrugUuid() {
-		return drugUuid;
+	public String getGenericUuid() {
+		return genericUuid;
 	}
 
 	/**
-	 * @param drugUuid the drugUuid to set
+	 * @param genericUuid the genericUuid to set
 	 */
-	public void setDrugUuid(String drugUuid) {
-		this.drugUuid = drugUuid;
+	public void setGenericUuid(String genericUuid) {
+		this.genericUuid = genericUuid;
 	}
 
 	/**
