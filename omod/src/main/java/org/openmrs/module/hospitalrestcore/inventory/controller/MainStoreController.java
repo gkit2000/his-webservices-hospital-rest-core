@@ -227,10 +227,15 @@ public class MainStoreController extends BaseRestController {
 		isd.setRoleUuid(inventoryStore.getRole().getUuid());
 		isd.setCode(inventoryStore.getCode());
 		isd.setStoreUuid(inventoryStore.getUuid());
+		isd.setIsPharmacy(inventoryStore.getIsPharmacy());
+		if (inventoryStore.getParent() != null) {
+			isd.setParentUuid(inventoryStore.getParent().getUuid());
+		}
 		isd.setDeleted(inventoryStore.getDeleted());
-		//isd.setRetired(inventoryStore.getRetired());
-		isd.setCreatedBy(PulseUtil.getName(inventoryStore.getCreatedBy().getPerson()));
+		// isd.setRetired(inventoryStore.getRetired());
+		// isd.setCreatedBy(PulseUtil.getName(inventoryStore.getCreatedBy().getPerson()));
 		isd.setCreatedDate(formatter.format(inventoryStore.getCreatedDate()));
+		isd.setCreatedBy("Admin");
 		return isd;
 	}
 }
