@@ -254,18 +254,19 @@ public class InventoryDrugController extends BaseRestController {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		InventoryDrugDetails idd = new InventoryDrugDetails();
 		idd.setId(inventoryDrug.getId());
-		idd.setName(inventoryDrug.getName());
+		idd.setBrandName(inventoryDrug.getName());
 		idd.setInventoryDrugUnitDetails(getInventoryDrugUnitDetails(inventoryDrug.getUnit()));
 		idd.setInventoryDrugCategoryDetails(getInventoryDrugCategoryDetails(inventoryDrug.getCategory()));
 		// idd.setInventoryDrugFormulationDetails(inventoryDrug.getFormulations());
 		idd.setDrugId(inventoryDrug.getDrugCore().getId());
-		idd.setDrugName(inventoryDrug.getDrugCore().getName());
-		idd.setDrugUuid(inventoryDrug.getDrugCore().getUuid());
+		idd.setGenericName(inventoryDrug.getDrugCore().getName());
+		idd.setGenericUuid(inventoryDrug.getDrugCore().getUuid());
 
 		idd.setUuid(inventoryDrug.getUuid());
 		idd.setDeleted(inventoryDrug.getDeleted());
 		//idd.setRetired(inventoryDrug.getRetired());
-		idd.setCreatedBy(PulseUtil.getName(inventoryDrug.getCreatedBy().getPerson()));
+		//idd.setCreatedBy(PulseUtil.getName(inventoryDrug.getCreatedBy().getPerson()));
+		idd.setCreatedBy("Admin");
 		idd.setCreatedDate(formatter.format(inventoryDrug.getCreatedDate()));
 		if (inventoryDrug.getLastModifiedDate() != null) {
 			idd.setLastModifiedBy(PulseUtil.getName(inventoryDrug.getLastModifiedBy().getPerson()));
@@ -283,7 +284,8 @@ public class InventoryDrugController extends BaseRestController {
 		idud.setUuid(inventoryDrugUnit.getUuid());
 		idud.setDeleted(inventoryDrugUnit.getDeleted());
 		//idud.setRetired(inventoryDrugUnit.getRetired());
-		idud.setCreatedBy(PulseUtil.getName(inventoryDrugUnit.getCreatedBy().getPerson()));
+		//idud.setCreatedBy(PulseUtil.getName(inventoryDrugUnit.getCreatedBy().getPerson()));
+		idud.setCreatedBy("Admin");
 		idud.setCreatedDate(formatter.format(inventoryDrugUnit.getCreatedDate()));
 		return idud;
 	}
@@ -297,7 +299,8 @@ public class InventoryDrugController extends BaseRestController {
 		idcd.setUuid(inventoryDrugCategory.getUuid());
 		idcd.setDeleted(inventoryDrugCategory.getDeleted());
 		//idcd.setRetired(inventoryDrugCategory.getRetired());
-		idcd.setCreatedBy(PulseUtil.getName(inventoryDrugCategory.getCreatedBy().getPerson()));
+		//idcd.setCreatedBy(PulseUtil.getName(inventoryDrugCategory.getCreatedBy().getPerson()));
+		idcd.setCreatedBy("Admin");
 		idcd.setCreatedDate(formatter.format(inventoryDrugCategory.getCreatedDate()));
 		return idcd;
 	}
@@ -313,8 +316,9 @@ public class InventoryDrugController extends BaseRestController {
 		idud.setUuid(inventoryDrugFormulation.getUuid());
 		idud.setDeleted(inventoryDrugFormulation.getDeleted());
 		//idud.setRetired(inventoryDrugFormulation.getRetired());
-		idud.setCreatedBy(PulseUtil.getName(inventoryDrugFormulation.getCreatedBy().getPerson()));
+		//idud.setCreatedBy(PulseUtil.getName(inventoryDrugFormulation.getCreatedBy().getPerson()));
 		idud.setCreatedDate(formatter.format(inventoryDrugFormulation.getCreatedDate()));
+		idud.setCreatedBy("Admin");
 		return idud;
 	}
 

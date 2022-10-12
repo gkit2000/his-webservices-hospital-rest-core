@@ -17,6 +17,8 @@ public class InventoryStoreDetails extends BaseDetails {
 	private String roleUuid;
 	private String code;
 	private String storeUuid;
+	private Boolean isPharmacy;
+	private String parentUuid;
 
 	/**
 	 * @return the id
@@ -100,6 +102,34 @@ public class InventoryStoreDetails extends BaseDetails {
 	 */
 	public void setStoreUuid(String storeUuid) {
 		this.storeUuid = storeUuid;
+	}
+
+	/**
+	 * @return the isPharmacy
+	 */
+	public Boolean getIsPharmacy() {
+		return isPharmacy;
+	}
+
+	/**
+	 * @param isPharmacy the isPharmacy to set
+	 */
+	public void setIsPharmacy(Boolean isPharmacy) {
+		this.isPharmacy = isPharmacy;
+	}
+
+	/**
+	 * @return the parentUuid
+	 */
+	public String getParentUuid() {
+		return parentUuid;
+	}
+
+	/**
+	 * @param parentUuid the parentUuid to set
+	 */
+	public void setParentUuid(String parentUuid) {
+		this.parentUuid = parentUuid;
 	}
 
 }
