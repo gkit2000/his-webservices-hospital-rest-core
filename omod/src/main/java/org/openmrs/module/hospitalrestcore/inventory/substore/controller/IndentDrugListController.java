@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
@@ -107,14 +108,14 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-//        InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles())); //TODO: commit this
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
         List<InventoryStoreDrugIndentDetail> indentDetails = hospitalRestCoreService.listAllInventoryStoreDrugIndentDetail();
 
@@ -224,14 +225,14 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-//        InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
         InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(
                 inventoryStoreDrugTransactionPayload.getIndentUuid());
@@ -344,14 +345,14 @@ public class IndentDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-//        InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
 
         int total = hospitalRestCoreService.countStoreDrugIndent(store.getId(), null, indentStatus, indentName, fromDate, toDate);
@@ -414,14 +415,14 @@ public class IndentDrugListController extends BaseRestController {
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
-//                InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+                InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
         InventoryStoreDrugIndent drugIndent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(indentUuid);
 

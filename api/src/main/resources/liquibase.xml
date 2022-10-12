@@ -481,7 +481,7 @@
 	</changeSet>
 
 	<changeSet id="opd_drug_order-table-create"
-			   author="ghanshyam2">
+			   author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="opd_drug_order" />
@@ -513,7 +513,7 @@
 	</changeSet>
 
 	<changeSet id="opd_drug_order_detail-table-create"
-			   author="ghanshyam1">
+			   author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="opd_drug_order_detail" />
@@ -743,7 +743,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store-table-create"
-		author="ghanshyam3333">
+		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store" />
@@ -792,7 +792,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store_drug-table-create"
-			   author="mujuzi33">
+			   author="mujuzi">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store_drug" />
@@ -988,7 +988,7 @@
 
 	<changeSet
 		id="inventory_store_drug_transaction_detail-table-create"
-		author="ghanshyam333">
+		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists
@@ -1666,7 +1666,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store_drug_order_patient-table-create"
-			   author="mujuzi111">
+			   author="mujuzi">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store_drug_order_patient" />
@@ -1695,7 +1695,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store_drug_order_patient_detail-table-create"
-			   author="mujuzi111">
+			   author="mujuzi">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store_drug_order_patient_detail" />

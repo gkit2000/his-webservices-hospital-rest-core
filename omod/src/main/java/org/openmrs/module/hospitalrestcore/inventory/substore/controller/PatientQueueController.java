@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonName;
+import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalrestcore.OpenmrsCustomConstants;
 import org.openmrs.module.hospitalrestcore.ResourceNotFoundException;
@@ -174,14 +175,14 @@ public class PatientQueueController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-//        InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
 
         List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
@@ -293,14 +294,14 @@ public class PatientQueueController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-//        InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles())); //TODO: commit this
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles())); //TODO: commit this
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
         List<InventoryStoreDrugOrderIssueDetail> issueDetails = hospitalRestCoreService.listAllInventoryStoreDrugOrderIssueDetail();
 
@@ -420,14 +421,14 @@ public class PatientQueueController extends BaseRestController {
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
         InventoryStoreDrugIssueDetails isdid = new InventoryStoreDrugIssueDetails();
-//        InventoryStore store = hospitalRestCoreService
-//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-        InventoryStore store = new InventoryStore();
-        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-
-        for (InventoryStore s : storeList)
-            if (Objects.equals(s.getName(), "Pharmacy"))
-                store = s;
+        InventoryStore store = hospitalRestCoreService
+                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = new InventoryStore();
+//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
+//
+//        for (InventoryStore s : storeList)
+//            if (Objects.equals(s.getName(), "Pharmacy"))
+//                store = s;
 
         InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
         List<InventoryStoreDrugTransactionDetail>  transactionDetails =
