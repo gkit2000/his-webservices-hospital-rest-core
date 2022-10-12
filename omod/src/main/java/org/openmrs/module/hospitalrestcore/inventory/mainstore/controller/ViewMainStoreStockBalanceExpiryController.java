@@ -2,6 +2,7 @@ package org.openmrs.module.hospitalrestcore.inventory.mainstore.controller;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openmrs.api.context.Context;
@@ -97,7 +98,12 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails = hospitalRestCoreService
                 .listStoreDrugTransactionDetail(store.getId(), category, drugName, fromDate, toDate, pagingUtil.getStartPos(),
                         pagingUtil.getPageSize());
-        List<InventoryStoreDrugTransactions> drugs = inventoryStoreDrugTransactionDetails.stream()
+
+        List<InventoryStoreDrugTransactions> drugs;
+        if (CollectionUtils.isEmpty(inventoryStoreDrugTransactionDetails))
+            drugs = new ArrayList<InventoryStoreDrugTransactions>();
+        else
+            drugs = inventoryStoreDrugTransactionDetails.stream()
                 .map(isdi -> getInventoryStoreDrugTransactions(isdi)).collect(Collectors.toList());
 
         if (drugs != null)
@@ -130,16 +136,19 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
             if (Objects.equals(s.getName(), "Main Store"))
                 store = s;
         List<InventoryStoreDrugTransactionDetail>  transactionDetails =
-                hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
+                hospitalRestCoreService.listAllStoreDrugExpiryTransactionDetail(store);
         List<InventoryStoreDrugTransactionDetail> details = new ArrayList<>();
 
         for (InventoryStoreDrugTransactionDetail d : transactionDetails)
             if (Objects.equals(d.getDrug().getName(), drugName))
                 if (Objects.equals(d.getFormulation().getName(), drugFormulation))
-                    if (Objects.equals(d.getExpireStatus(), 1))
                         details.add(d);
 
-        List<MainStoreDrugTransactions> mdts = details.stream()
+        List<MainStoreDrugTransactions> mdts;
+        if (CollectionUtils.isEmpty(details))
+            mdts = new ArrayList<MainStoreDrugTransactions>();
+        else
+            mdts = details.stream()
                 .map(tds -> getMainStoreDrugTransactions(tds)).collect(Collectors.toList());
 
         new ObjectMapper().writeValue(out, mdts);

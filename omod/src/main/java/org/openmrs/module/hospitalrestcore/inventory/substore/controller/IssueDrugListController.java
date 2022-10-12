@@ -1,5 +1,6 @@
 package org.openmrs.module.hospitalrestcore.inventory.substore.controller;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -50,9 +51,12 @@ import java.util.stream.Collectors;
 public class IssueDrugListController extends BaseRestController {
 
     @RequestMapping(value = "/add-to-slip", method = RequestMethod.POST)
-    public ResponseEntity<Void> addToSlip(HttpServletRequest request, HttpServletResponse response,
+    public ResponseEntity<Void> addToSlip(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model,
             @Valid @RequestBody InventoryStoreDrugIssueDetailPayload InventoryStoreDrugIssueDetailPayload)
             throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+        response.setContentType("application/json");
+        ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
         InventoryStoreDrugIssueDetail drugIssueDetail = new InventoryStoreDrugIssueDetail();
@@ -62,6 +66,16 @@ public class IssueDrugListController extends BaseRestController {
         drugIssueDetail.setCreatedDate(new Date());
         drugIssueDetail.setDeleted(false);
         hospitalRestCoreService.saveOrUpdateInventoryStoreDrugIssueDetail(drugIssueDetail);
+
+        List<InventoryStoreDrugIssueDetail> issueDetails = hospitalRestCoreService.listAllInventoryStoreDrugIssueDetail();
+
+        List<InventoryStoreDrugIssueDetails> issues = issueDetails.stream().
+                map(id -> getInventoryStoreDrugIssueDetails(id)).collect(Collectors.toList());
+
+        if (issues != null)
+            Collections.sort(issues);
+        model.put("issues", issues);
+        new ObjectMapper().writeValue(out, issues);
 
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
@@ -168,9 +182,12 @@ public class IssueDrugListController extends BaseRestController {
     }
 
     @RequestMapping(value = "/save-issue-patient", method = RequestMethod.POST)
-    public ResponseEntity<Void> saveIssuePatient(HttpServletRequest request, HttpServletResponse response,
+    public ResponseEntity<Void> saveIssuePatient(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model,
             @Valid @RequestBody InventoryStoreIssuePatientDetailPayload inventoryStoreIssuePatientDetailPayload)
             throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
+
+        response.setContentType("application/json");
+        ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
         InventoryStoreIssuePatientDetail isipd = new InventoryStoreIssuePatientDetail();
@@ -181,6 +198,15 @@ public class IssueDrugListController extends BaseRestController {
         isipd.setCreatedDate(new Date());
         isipd.setDeleted(false);
         hospitalRestCoreService.saveOrUpdateInventoryStoreIssuePatientDetail(isipd);
+
+        InventoryStoreIssuePatientDetail patientDetails = hospitalRestCoreService.getInventoryStoreIssuePatientDetail();
+        PatientDetails patient = null;
+
+        if (patientDetails != null)
+            patient = getInventoryStoreIssuePatientDetails(patientDetails);
+
+        model.put("patients", patient);
+        new ObjectMapper().writeValue(out, patient);
 
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
@@ -207,7 +233,7 @@ public class IssueDrugListController extends BaseRestController {
 
     @RequestMapping(value = "/save-and-send", method = RequestMethod.POST)
     public ResponseEntity<Void> saveAndSend(HttpServletRequest request, HttpServletResponse response,
-            @Valid @RequestBody InventoryStoreDrugIssuePayload inventoryStoreDrugIssuePayload)
+            @Valid @RequestBody InventoryStoreDrugIssuePayload inventoryStoreDrugIssuePayload, Map<String, Object> model)
             throws ResponseException, JsonGenerationException, JsonMappingException, IOException, ParseException {
 
         response.setContentType("application/json");
@@ -253,6 +279,7 @@ public class IssueDrugListController extends BaseRestController {
         drugPatient.setCreatedBy(Context.getAuthenticatedUser());
         hospitalRestCoreService.saveOrUpdateInventoryStoreDrugPatient(drugPatient);
 
+        List<InventoryStoreDrugTransactionDetail> detailList = new ArrayList<InventoryStoreDrugTransactionDetail>();
         if (issueDetails.size() > 0) {
             for (InventoryStoreDrugIssueDetail d : issueDetails) {
 
@@ -302,6 +329,7 @@ public class IssueDrugListController extends BaseRestController {
                 transactionDetail.setCreatedDate(new Date());
                 transactionDetail.setCreatedBy(Context.getAuthenticatedUser());
                 hospitalRestCoreService.saveOrUpdateDrugTransactionDetail(transactionDetail);
+                detailList.add(transactionDetail);
                 d.setDeleted(true);
                 hospitalRestCoreService.saveOrUpdateInventoryStoreDrugIssueDetail(d);
                 patientDetail.setStoreDrugPatient(drugPatient);
@@ -313,6 +341,14 @@ public class IssueDrugListController extends BaseRestController {
             patientDetails.setDeleted(true);
             hospitalRestCoreService.saveOrUpdateInventoryStoreIssuePatientDetail(patientDetails);
         }
+
+        List<InventoryStoreDrugTransactionDetails> details = detailList.stream()
+                .map(sdtds -> getTransactionDetails(sdtds)).collect(Collectors.toList());
+
+        if (!CollectionUtils.isEmpty(details))
+            Collections.sort(details);
+        model.put("details", details);
+        new ObjectMapper().writeValue(out, details);
 
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
@@ -392,7 +428,12 @@ public class IssueDrugListController extends BaseRestController {
         List<InventoryStoreDrugPatient> inventoryStoreDrugPatients = hospitalRestCoreService.listStoreDrugPatient(store.getId(),
                 identifierOrName, billNo, fromDate, toDate, pagingUtil.getStartPos(), pagingUtil.getPageSize());
 
-        List<InventoryStoreDrugPatientDetails> issues = inventoryStoreDrugPatients.stream()
+        List<InventoryStoreDrugPatientDetails> issues;
+
+        if (CollectionUtils.isEmpty(inventoryStoreDrugPatients))
+            issues = new ArrayList<InventoryStoreDrugPatientDetails>();
+        else
+            issues = inventoryStoreDrugPatients.stream()
                 .map(isdp -> getInventoryStoreDrugPatientDetails(isdp)).collect(Collectors.toList());
 
         if (issues != null)
@@ -445,7 +486,12 @@ public class IssueDrugListController extends BaseRestController {
 
         IssuePatientDetails patients = getIssuePatientDetails(patient);
         IssueDetails issues = getIssueDetails(patient);
-        List<DrugDetails> drugs = transactionDetails.stream()
+        List<DrugDetails> drugs;
+
+        if (CollectionUtils.isEmpty(transactionDetails))
+            drugs = new ArrayList<DrugDetails>();
+        else
+            drugs = transactionDetails.stream()
                 .map(dds -> getDrugDetails(dds)).collect(Collectors.toList());
 
         if (drugs != null)
@@ -481,6 +527,20 @@ public class IssueDrugListController extends BaseRestController {
         ipds.setIssueDate(formatterExt.format(inventoryStoreDrugPatient.getCreatedDate()));
         ipds.setGender(person.getGender());
         return ipds;
+    }
+
+    public InventoryStoreDrugTransactionDetails getTransactionDetails(InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail) {
+        InventoryStoreDrugTransactionDetails isdtds = new InventoryStoreDrugTransactionDetails();
+
+        isdtds.setDrugName(inventoryStoreDrugTransactionDetail.getDrug().getName());
+        isdtds.setDrugFormulation(inventoryStoreDrugTransactionDetail.getFormulation().getName());
+        isdtds.setQuantity(inventoryStoreDrugTransactionDetail.getQuantity());
+        isdtds.setCurrentQuantity(inventoryStoreDrugTransactionDetail.getCurrentQuantity());
+        isdtds.setBatchNo(inventoryStoreDrugTransactionDetail.getBatchNo());
+        isdtds.setCompanyName(inventoryStoreDrugTransactionDetail.getCompanyName());
+        isdtds.setUuid(inventoryStoreDrugTransactionDetail.getUuid());
+        return isdtds;
+
     }
 
     public DrugDetails getDrugDetails(InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail) {
@@ -572,19 +632,27 @@ public class IssueDrugListController extends BaseRestController {
         Integer age = Period.between(birthDate, LocalDate.now()).getYears();
 
         PatientDetails pds = new PatientDetails();
+        pds.setPatientId(patientId);
         pds.setPatientIdentifier(patientIdentifier.getIdentifier());
         pds.setPatientName(fullName);
         pds.setAge(age);
+        pds.setGender(person.getGender());
         return pds;
     }
 
     public PatientDetails getInventoryStoreIssuePatientDetails(InventoryStoreIssuePatientDetail inventoryStoreIssuePatientDetail) {
 
+        HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
+        int personId = hospitalRestCoreService.getPatientIdByIdentifierString(inventoryStoreIssuePatientDetail.getPatientIdentifier());
+        Person person = hospitalRestCoreService.getPersonByPersonId(personId);
+
         PatientDetails pds = new PatientDetails();
+        pds.setPatientId(personId);
         pds.setPatientIdentifier(inventoryStoreIssuePatientDetail.getPatientIdentifier());
         pds.setPatientName(inventoryStoreIssuePatientDetail.getPatientName());
         pds.setCategory(inventoryStoreIssuePatientDetail.getCategory());
         pds.setAge(inventoryStoreIssuePatientDetail.getAge());
+        pds.setGender(person.getGender());
         return pds;
     }
 

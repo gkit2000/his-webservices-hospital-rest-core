@@ -42,8 +42,6 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 
 	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws DAOException;
 
-	public List<InventoryReceiptForm> listReceiptForm(String name, int min, int max) throws DAOException; //TODO: change parameters
-
 	public Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
 											 String toDate) throws DAOException;
 

@@ -480,6 +480,62 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
+	<changeSet id="opd_drug_order-table-create"
+			   author="ghanshyam2">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="opd_drug_order" />
+			</not>
+		</preConditions>
+		<comment>
+			Create opd_drug_order table
+		</comment>
+		<createTable tableName="opd_drug_order">
+			<column name="opd_drug_order_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="patient_id" type="int" />
+			<column name="encounter_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_on" type="DATETIME"/>
+			<column name="created_by" type="int" />
+			<column name="order_status" type="int" />
+			<column name="cancel_status" type="int" />
+			<column name="order_from" type="int" />
+			<column name="referral_opd_name" type="varchar(255)" />
+		</createTable>
+		<addForeignKeyConstraint
+				constraintName="opd_drug_order_created_by_fk"
+				baseTableName="opd_drug_order"
+				baseColumnNames="created_by" referencedTableName="users"
+				referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="opd_drug_order_detail-table-create"
+			   author="ghanshyam1">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="opd_drug_order_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create opd_drug_order_detail table
+		</comment>
+		<createTable tableName="opd_drug_order_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="opd_drug_order_id" type="int" />
+			<column name="inventory_drug_id" type="int" />
+			<column name="formulation_id" type="int" />
+			<column name="frequency_concept_id" type="int" />
+			<column name="no_of_days" type="int" />
+			<column name="comments" type="varchar(255)" />
+			<column name="deleted" type="boolean" />
+		</createTable>
+	</changeSet>
+
 	<changeSet id="inventory_drug_category-table-create"
 		author="ghanshyam">
 		<preConditions onFail="MARK_RAN">
@@ -687,7 +743,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store-table-create"
-		author="ghanshyam">
+		author="ghanshyam3333">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store" />
@@ -736,7 +792,7 @@
 	</changeSet>
 
 	<changeSet id="inventory_store_drug-table-create"
-			   author="mujuzi">
+			   author="mujuzi33">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="inventory_store_drug" />
@@ -908,9 +964,31 @@
 		</createTable>
 	</changeSet>
 
+	<changeSet id="inventory_store_drug_order_issue_detail-table-create"
+			   author="mujuzi">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_order_issue_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_order_issue_detail table
+		</comment>
+		<createTable tableName="inventory_store_drug_order_issue_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="drug_id" type="int"/>
+			<column name="formulation_id" type="int" />
+			<column name="quantity" type="int"/>
+			<column name="created_on" type="DATETIME"/>
+			<column name="deleted" type="boolean"/>
+		</createTable>
+	</changeSet>
+
 	<changeSet
 		id="inventory_store_drug_transaction_detail-table-create"
-		author="ghanshyam">
+		author="ghanshyam333">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists
@@ -1417,65 +1495,39 @@
 			referencedColumnNames="user_id" />
 	</changeSet>
 
-	<changeSet id="inventory_receipt_form-table-create"
-			   author="ghanshyam">
+	<changeSet id="inventory_receipt_form_detail-table-create"
+			   author="mujuzi">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="inventory_receipt_form" />
+				<tableExists tableName="inventory_receipt_form_detail" />
 			</not>
 		</preConditions>
 		<comment>
-			Create inventory_receipt_form table
+			Create inventory_receipt_form_detail table
 		</comment>
-		<createTable tableName="inventory_receipt_form">
+		<createTable tableName="inventory_receipt_form_detail">
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="drug_id" type="int"/>
 			<column name="formulation_id" type="int" />
-			<column name="sgst" type="decimal"/>
-			<column name="cgst" type="decimal"/>
-			<column name="mr_price" type="decimal"/>
-			<column name="total_amount" type="decimal"/>
-			<column name="bill_amount" type="decimal"/>
-			<column name="batch_no" type="varchar(255)"/>
-			<column name="rate" type="int"/>
 			<column name="quantity" type="int"/>
+			<column name="rate" type="int"/>
 			<column name="vat" type="decimal"/>
+			<column name="mr_price" type="decimal"/>
 			<column name="company_name" type="varchar(255)"/>
-			<column name="date_manufacture" type="DATETIME"/>
-			<column name="date_expiry" type="DATETIME"/>
-			<column name="receipt_date" type="DATETIME"/>
-			<column name="receipt_number" type="varchar(255)"/>
-			<column name="created_date" type="DATETIME" />
-			<column name="created_by" type="int" />
-			<column name="deleted" type="boolean" />
-			<column name="deleted_date" type="DATETIME" />
-			<column name="deleted_by" type="int" />
-			<column name="last_modified_date" type="DATETIME" />
-			<column name="last_modified_by" type="int" />
-			<column name="retired" type="boolean" />
-			<column name="retired_date" type="DATETIME" />
-			<column name="retired_by" type="int" />
+			<column name="batch_no" type="varchar(255)"/>
 			<column name="discount" type="float" />
-			<column name="uuid" type="char(38)" />
+			<column name="cgst" type="decimal"/>
+			<column name="sgst" type="decimal"/>
+			<column name="date_expiry" type="DATETIME"/>
+			<column name="date_manufacture" type="DATETIME"/>
+			<column name="receipt_date" type="DATETIME"/>
+			<column name="unit_price" type="decimal"/>
+			<column name="total_amount" type="decimal"/>
+			<column name="amount_after_gst" type="decimal"/>
+			<column name="deleted" type="boolean" />
 		</createTable>
-		<addForeignKeyConstraint
-				baseTableName="inventory_receipt_form" baseColumnNames="created_by"
-				constraintName="inventory_receipt_form_created_by_fk"
-				referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint
-				baseTableName="inventory_receipt_form" baseColumnNames="deleted_by"
-				constraintName="inventory_receipt_form_deleted_by_fk"
-				referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint
-				baseTableName="inventory_receipt_form" baseColumnNames="last_modified_by"
-				constraintName="inventory_receipt_form_lastmodified_by_fk"
-				referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint
-				baseTableName="inventory_receipt_form" baseColumnNames="retired_by"
-				constraintName="inventory_receipt_form_retired_by_fk"
-				referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
 	<changeSet id="inventory_store_drug_patient-table-create"
@@ -1534,6 +1586,61 @@
 		</createTable>
 	</changeSet>
 
+	<changeSet id="inventory_store_drug_receipt-table-create"
+			   author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_receipt" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_receipt table
+		</comment>
+		<createTable tableName="inventory_store_drug_receipt">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="transaction_id" type="int" />
+			<column name="vendor_name" type="varchar(255)" />
+			<column name="receipt_number" type="varchar(255)" />
+			<column name="bill_amount" type="int" />
+			<column name="created_on" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint
+				constraintName="inventory_store_drug_receipt_created_by_fk"
+				baseTableName="inventory_store_drug_receipt" baseColumnNames="created_by"
+				referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_receipt_detail-table-create"
+			   author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_receipt_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_receipt_detail table
+		</comment>
+		<createTable tableName="inventory_store_drug_receipt_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="receipt_id" type="int" />
+			<column name="cgst" type="decimal" />
+			<column name="cgst_amount" type="decimal" />
+			<column name="sgst" type="decimal" />
+			<column name="sgst_amount" type="decimal" />
+			<column name="mr_price" type="decimal" />
+			<column name="cd" type="decimal" />
+			<column name="cd_amount" type="decimal" />
+			<column name="total_amount" type="decimal" />
+			<column name="amount_after_gst" type="decimal" />
+		</createTable>
+	</changeSet>
+
 	<changeSet id="inventory_store_issue_patient_detail-table-create"
 			   author="mujuzi">
 		<preConditions onFail="MARK_RAN">
@@ -1556,6 +1663,62 @@
 			<column name="created_on" type="DATETIME"/>
 			<column name="deleted" type="boolean"/>
 		</createTable>
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_order_patient-table-create"
+			   author="mujuzi111">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_order_patient" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_order_patient table
+		</comment>
+		<createTable tableName="inventory_store_drug_order_patient">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="patient_id" type="int" />
+			<column name="identifier" type="varchar(255)" />
+			<column name="name" type="varchar(255)" />
+			<column name="age" type="int" />
+			<column name="gender" type="varchar(255)" />
+			<column name="created_on" type="DATETIME"/>
+			<column name="created_by" type="int" />
+		</createTable>
+		<addForeignKeyConstraint
+				constraintName="inventory_store_drug_order_patient_created_by_fk"
+				baseTableName="inventory_store_drug_order_patient"
+				baseColumnNames="created_by" referencedTableName="users"
+				referencedColumnNames="user_id" />
+	</changeSet>
+
+	<changeSet id="inventory_store_drug_order_patient_detail-table-create"
+			   author="mujuzi111">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="inventory_store_drug_order_patient_detail" />
+			</not>
+		</preConditions>
+		<comment>
+			Create inventory_store_drug_order_patient_detail table
+		</comment>
+		<createTable tableName="inventory_store_drug_order_patient_detail">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="drug_order_patient_id" type="int" />
+			<column name="order_date" type="varchar(255)" />
+			<column name="opd_drug_order_id" type="int" />
+			<column name="created_on" type="DATETIME"/>
+			<column name="created_by" type="int" />
+		</createTable>
+		<addForeignKeyConstraint
+				constraintName="inventory_store_drug_order_patient_detail_created_by_fk"
+				baseTableName="inventory_store_drug_order_patient_detail"
+				baseColumnNames="created_by" referencedTableName="users"
+				referencedColumnNames="user_id" />
 	</changeSet>
 
 </databaseChangeLog>

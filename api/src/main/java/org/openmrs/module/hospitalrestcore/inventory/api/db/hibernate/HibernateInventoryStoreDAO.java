@@ -533,20 +533,4 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 		return (InventoryStoreDrugTransaction) criteria.uniqueResult();
 	}
 
-	@Override
-	@Transactional
-	public List<InventoryReceiptForm> listReceiptForm(String name, int min, int max) throws DAOException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(InventoryReceiptForm.class,
-				"receiptForm");
-		if (!StringUtils.isBlank(name)) {
-			criteria.add(Restrictions.like("receiptForm.name", "%" + name));
-		}
-		if (max > 0) {
-			criteria.setFirstResult(min).setMaxResults(max);
-		}
-		List<InventoryReceiptForm> l = criteria.list();
-
-		return l;
-	}
-
 }

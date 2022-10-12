@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping
+        package="org.openmrs.module.hospitalrestcore.inventory">
+
+    <class name="InventoryStoreDrugOrderPatient"
+           table="inventory_store_drug_order_patient" batch-size="500">
+        <id name="id" type="int" column="id" unsaved-value="0">
+            <generator class="native" />
+        </id>
+
+        <many-to-one name="patient"
+                     class="org.openmrs.Patient"
+                     column="patient_id" cascade="none" lazy="false" />
+
+        <property name="identifier" column="identifier" />
+        <property name="name" column="name" />
+        <property name="age" column="age" />
+        <property name="gender" column="gender" />
+        <property name="createdDate" column="created_on" />
+        <many-to-one name="createdBy" column="created_by"  class="org.openmrs.User" foreign-key="inventory_store_drug_order_patient_created_by_fk"/>
+    </class>
+
+</hibernate-mapping>
