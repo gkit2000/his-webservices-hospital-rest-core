@@ -199,6 +199,11 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
                     String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION,
                             inventoryStoreDrugTransactionPayload.getTransactionUuid()));
 
+        List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
+        if (CollectionUtils.isEmpty(drugs))
+            throw new ResourceNotFoundException(
+                    String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_LIST, store.getName()));
+
         InventoryStoreDrugTransaction transaction = new InventoryStoreDrugTransaction();
         transaction.setStore(store);
         transaction.setStatus(0);
@@ -215,7 +220,6 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
             if (Objects.equals(detail.getTransaction(), inventoryStoreDrugTransaction))
                 transactionDetails.add(detail);
 
-        List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
         List<InventoryStoreDrugTransactionDetail> detailList = new ArrayList<InventoryStoreDrugTransactionDetail>();
 
         for (InventoryStoreDrugTransactionDetail d : transactionDetails) {
@@ -240,8 +244,8 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
 
             if (inventoryStoreDrug.getDrug() == null)
                 throw new ResourceNotFoundException(
-                        String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG,
-                                d.getDrug().getName()));
+                        String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_2,
+                                d.getDrug().getName(), d.getFormulation().getName(),store.getName()));
 
             Map<String, Integer> transfers = inventoryStoreDrugTransactionPayload.getTransfers();
             Integer transfer = transfers.get(d.getUuid());

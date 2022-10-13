@@ -99,6 +99,10 @@ public class IssueDrugListController extends BaseRestController {
 
 
         List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
+        if (CollectionUtils.isEmpty(drugs))
+            throw new ResourceNotFoundException(
+                    String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_LIST, store.getName()));
+
         InventoryStoreDrug inventoryStoreDrug = new InventoryStoreDrug();
         for (InventoryStoreDrug drug : drugs)
             if (Objects.equals(drug.getDrug().getName(), drugName))
@@ -107,7 +111,7 @@ public class IssueDrugListController extends BaseRestController {
 
         if (inventoryStoreDrug.getDrug() == null)
             throw new ResourceNotFoundException(
-                    String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG, drugName));
+                    String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_2, drugName, formulation, store.getName()));
 
         List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails =
                 hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
@@ -249,6 +253,11 @@ public class IssueDrugListController extends BaseRestController {
         List<InventoryStoreDrugIssueDetail> issueDetails = hospitalRestCoreService.listAllInventoryStoreDrugIssueDetail();
         InventoryStoreIssuePatientDetail patientDetails = hospitalRestCoreService.getInventoryStoreIssuePatientDetail();
 
+        List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
+        if (CollectionUtils.isEmpty(drugs))
+            throw new ResourceNotFoundException(
+                    String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_LIST, store.getName()));
+
         InventoryStoreDrugTransaction transaction = new InventoryStoreDrugTransaction();
         transaction.setStore(store);
         transaction.setStatus(1);
@@ -280,7 +289,6 @@ public class IssueDrugListController extends BaseRestController {
         if (issueDetails.size() > 0) {
             for (InventoryStoreDrugIssueDetail d : issueDetails) {
 
-                List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
                 InventoryStoreDrug inventoryStoreDrug = new InventoryStoreDrug();
                 for (InventoryStoreDrug drug : drugs)
                     if (Objects.equals(drug.getDrug().getName(), d.getDrug().getName()))
@@ -289,7 +297,8 @@ public class IssueDrugListController extends BaseRestController {
 
                 if (inventoryStoreDrug.getDrug() == null)
                     throw new ResourceNotFoundException(
-                            String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG, d.getDrug().getName()));
+                            String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_2,
+                                    d.getDrug().getName(), d.getFormulation().getName(), store.getName()));
 
                 List<InventoryStoreDrugTransactionDetail> inventoryStoreDrugTransactionDetails =
                         hospitalRestCoreService.listAllStoreDrugTransactionDetail(store);
@@ -304,35 +313,44 @@ public class IssueDrugListController extends BaseRestController {
                     throw new ResourceNotFoundException(
                             String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL, d.getDrug().getName()));
 
-                InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
-                InventoryStoreDrugPatientDetail patientDetail = new InventoryStoreDrugPatientDetail();
-                int closingQuantity = Math.toIntExact(transactionD.getClosingBalance() - d.getQuantity());
-                transactionDetail.setTransaction(transaction);
-                transactionDetail.setDrug(d.getDrug());
-                transactionDetail.setFormulation(d.getFormulation());
-                transactionDetail.setQuantity(0);
-                transactionDetail.setCurrentQuantity(closingQuantity);
-                transactionDetail.setIssueQuantity(d.getQuantity());
-                transactionDetail.setUnitPrice(transactionD.getUnitPrice());
-                transactionDetail.setTotalPrice(transactionD.getTotalPrice());
-                transactionDetail.setVAT(transactionD.getVAT());
-                transactionDetail.setBatchNo(transactionD.getBatchNo());
-                transactionDetail.setCompanyName(transactionD.getCompanyName());
-                transactionDetail.setDateManufacture(transactionD.getDateManufacture());
-                transactionDetail.setDateExpiry(transactionD.getDateExpiry());
-                transactionDetail.setOpeningBalance(transactionD.getClosingBalance());
-                transactionDetail.setClosingBalance(closingQuantity);
-                transactionDetail.setReceiptDate(new Date());
-                transactionDetail.setCreatedDate(new Date());
-                transactionDetail.setCreatedBy(Context.getAuthenticatedUser());
-                hospitalRestCoreService.saveOrUpdateDrugTransactionDetail(transactionDetail);
-                detailList.add(transactionDetail);
-                d.setDeleted(true);
-                hospitalRestCoreService.saveOrUpdateInventoryStoreDrugIssueDetail(d);
-                patientDetail.setStoreDrugPatient(drugPatient);
-                patientDetail.setTransactionDetail(transactionDetail);
-                patientDetail.setQuantity(d.getQuantity());
-                hospitalRestCoreService.saveOrUpdateInventoryStoreDrugPatientDetail(patientDetail);
+                if (inventoryStoreDrug.getCurrentQuantity() >= d.getQuantity()) {
+                    InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
+                    InventoryStoreDrugPatientDetail patientDetail = new InventoryStoreDrugPatientDetail();
+                    int closingQuantity = Math.toIntExact(transactionD.getClosingBalance() - d.getQuantity());
+                    transactionDetail.setTransaction(transaction);
+                    transactionDetail.setDrug(d.getDrug());
+                    transactionDetail.setFormulation(d.getFormulation());
+                    transactionDetail.setQuantity(0);
+                    transactionDetail.setCurrentQuantity(closingQuantity);
+                    transactionDetail.setIssueQuantity(d.getQuantity());
+                    transactionDetail.setUnitPrice(transactionD.getUnitPrice());
+                    transactionDetail.setTotalPrice(transactionD.getTotalPrice());
+                    transactionDetail.setVAT(transactionD.getVAT());
+                    transactionDetail.setBatchNo(transactionD.getBatchNo());
+                    transactionDetail.setCompanyName(transactionD.getCompanyName());
+                    transactionDetail.setDateManufacture(transactionD.getDateManufacture());
+                    transactionDetail.setDateExpiry(transactionD.getDateExpiry());
+                    transactionDetail.setOpeningBalance(transactionD.getClosingBalance());
+                    transactionDetail.setClosingBalance(closingQuantity);
+                    transactionDetail.setReceiptDate(new Date());
+                    transactionDetail.setCreatedDate(new Date());
+                    transactionDetail.setCreatedBy(Context.getAuthenticatedUser());
+                    inventoryStoreDrug.setCurrentQuantity(inventoryStoreDrug.getCurrentQuantity() - d.getQuantity());
+                    inventoryStoreDrug.setLastModifiedDate(new Date());
+                    inventoryStoreDrug.setLastModifiedBy(Context.getAuthenticatedUser());
+                    hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
+                    hospitalRestCoreService.saveOrUpdateDrugTransactionDetail(transactionDetail);
+                    detailList.add(transactionDetail);
+                    d.setDeleted(true);
+                    hospitalRestCoreService.saveOrUpdateInventoryStoreDrugIssueDetail(d);
+                    patientDetail.setStoreDrugPatient(drugPatient);
+                    patientDetail.setTransactionDetail(transactionDetail);
+                    patientDetail.setQuantity(d.getQuantity());
+                    hospitalRestCoreService.saveOrUpdateInventoryStoreDrugPatientDetail(patientDetail);
+                } else
+                    throw new ResourceNotFoundException(
+                            String.format(OpenmrsCustomConstants.DRUG_ERROR_NOT_ENOUGH_DRUG_QUANTITY,
+                                    d.getDrug().getName()));
             }
 
             patientDetails.setDeleted(true);
@@ -361,11 +379,12 @@ public class IssueDrugListController extends BaseRestController {
         List<InventoryStoreDrugIssueDetail> issueDetails = hospitalRestCoreService.listAllInventoryStoreDrugIssueDetail();
         InventoryStoreIssuePatientDetail patient = hospitalRestCoreService.getInventoryStoreIssuePatientDetail();
 
-        if (issueDetails.size() > 0) {
+        if (issueDetails.size() > 0)
             for (InventoryStoreDrugIssueDetail detail : issueDetails) {
                 detail.setDeleted(true);
                 hospitalRestCoreService.saveOrUpdateInventoryStoreDrugIssueDetail(detail);
             }
+        if (!StringUtils.isEmpty(patient.getPatientName())) {
             patient.setDeleted(true);
             hospitalRestCoreService.saveOrUpdateInventoryStoreIssuePatientDetail(patient);
         }

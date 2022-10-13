@@ -72,7 +72,7 @@ public final class OpenmrsCustomConstants {
 	
 	public static final String MLC_SUBCATEGORY = "70f8d129-3136-4d2e-bdee-05f88cd33f13";
 
-	public static final String DRUG_ERROR_NOT_ENOUGH_DRUG_QUANTITY = "Current quantity of drug %s is not enough";
+	public static final String DRUG_ERROR_NOT_ENOUGH_DRUG_QUANTITY = "Current quantity of drug %s is not enough, please indent first";
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_BILL_ITEM_ID = "Bill item id %s is not valid";
 	
@@ -92,7 +92,11 @@ public final class OpenmrsCustomConstants {
 	
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_CATEGORY_UUID = "Drug category uuid %s is not valid";
 
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_2 = "Drug %s with formulation %s is not valid in the %s, please indent first";
+
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG = "Drug %s is not valid";
+
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_LIST = "There is no drug in %s, please indent first";
 
 	public static final String VALIDATION_ERROR_NOT_VALID_RECEIPT_FORM = "Receipt form for drug %s is not valid";
 

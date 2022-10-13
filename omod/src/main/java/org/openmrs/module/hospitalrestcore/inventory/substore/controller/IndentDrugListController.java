@@ -145,10 +145,42 @@ public class IndentDrugListController extends BaseRestController {
 
             List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
             InventoryStoreDrug inventoryStoreDrug = new InventoryStoreDrug();
-            for (InventoryStoreDrug drug : drugs)
-                if (Objects.equals(drug.getDrug().getName(), d.getDrug().getName()))
-                    if (Objects.equals(drug.getFormulation().getName(), d.getFormulation().getName()))
-                        inventoryStoreDrug = drug;
+            if (!CollectionUtils.isEmpty(drugs)) {
+                inventoryStoreDrug.setStore(store);
+                inventoryStoreDrug.setDrug(d.getDrug());
+                inventoryStoreDrug.setFormulation(d.getFormulation());
+                inventoryStoreDrug.setCurrentQuantity(0);
+                inventoryStoreDrug.setReceiptQuantity(0);
+                inventoryStoreDrug.setIssueQuantity(0);
+                inventoryStoreDrug.setStatusIndent(1);
+                inventoryStoreDrug.setReorderQuantity(0);
+                inventoryStoreDrug.setOpeningBalance(0);
+                inventoryStoreDrug.setClosingBalance(0);
+                inventoryStoreDrug.setStatus(1);
+                inventoryStoreDrug.setCreatedDate(new Date());
+                hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
+            } else  {
+                for (InventoryStoreDrug drug : drugs)
+                    if (Objects.equals(drug.getDrug().getName(), d.getDrug().getName()))
+                        if (Objects.equals(drug.getFormulation().getName(), d.getFormulation().getName()))
+                            inventoryStoreDrug = drug;
+
+                if (inventoryStoreDrug.getDrug().getName() == null) {
+                    inventoryStoreDrug.setStore(store);
+                    inventoryStoreDrug.setDrug(d.getDrug());
+                    inventoryStoreDrug.setFormulation(d.getFormulation());
+                    inventoryStoreDrug.setCurrentQuantity(0);
+                    inventoryStoreDrug.setReceiptQuantity(0);
+                    inventoryStoreDrug.setIssueQuantity(0);
+                    inventoryStoreDrug.setStatusIndent(1);
+                    inventoryStoreDrug.setReorderQuantity(0);
+                    inventoryStoreDrug.setOpeningBalance(0);
+                    inventoryStoreDrug.setClosingBalance(0);
+                    inventoryStoreDrug.setStatus(1);
+                    inventoryStoreDrug.setCreatedDate(new Date());
+                    hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
+                }
+            }
 
             InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
             int currentQuantity = inventoryStoreDrug.getDrug() != null ? inventoryStoreDrug.getCurrentQuantity() : 0;
@@ -267,26 +299,15 @@ public class IndentDrugListController extends BaseRestController {
                     if (Objects.equals(drug.getFormulation().getName(), d.getFormulation().getName()))
                         inventoryStoreDrug = drug;
 
-            if (inventoryStoreDrug.getDrug() == null) {
-                inventoryStoreDrug.setStore(store);
-                inventoryStoreDrug.setDrug(d.getDrug());
-                inventoryStoreDrug.setFormulation(d.getFormulation());
-                inventoryStoreDrug.setCurrentQuantity(d.getQuantity());
-                inventoryStoreDrug.setReceiptQuantity(d.getQuantity());
-                inventoryStoreDrug.setIssueQuantity(0);
-                inventoryStoreDrug.setStatusIndent(1);
-                inventoryStoreDrug.setReorderQuantity(d.getQuantity());
-                inventoryStoreDrug.setOpeningBalance(0);
-                inventoryStoreDrug.setClosingBalance(d.getCurrentQuantity());
-                inventoryStoreDrug.setStatus(1);
-                inventoryStoreDrug.setCreatedDate(new Date());
-                hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
-                drugList.add(inventoryStoreDrug);
-            } else {
                 inventoryStoreDrug.setCurrentQuantity((inventoryStoreDrug.getCurrentQuantity() + d.getQuantity()));
+                inventoryStoreDrug.setReceiptQuantity(d.getQuantity());
+                inventoryStoreDrug.setReorderQuantity(d.getQuantity());
+                inventoryStoreDrug.setOpeningBalance(inventoryStoreDrug.getClosingBalance());
+                inventoryStoreDrug.setClosingBalance(inventoryStoreDrug.getClosingBalance() + d.getQuantity());
+                inventoryStoreDrug.setLastModifiedDate(new Date());
+                inventoryStoreDrug.setLastModifiedBy(Context.getAuthenticatedUser());
                 hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(inventoryStoreDrug);
                 drugList.add(inventoryStoreDrug);
-            }
         }
 
         indent.setSubStoreStatus(ActionValue.INDENT_SUBSTORE[4]); // DONE
