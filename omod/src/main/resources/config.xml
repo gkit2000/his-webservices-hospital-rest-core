@@ -88,6 +88,10 @@
 		InventoryStoreItemIndent.hbm.xml
 		InventoryStoreItemTransaction.hbm.xml
 		InventoryStoreItemTransactionDetail.hbm.xml
+		Tender.hbm.xml
+		Company.hbm.xml
+		TenderBill.hbm.xml
+		TenderBillItem.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

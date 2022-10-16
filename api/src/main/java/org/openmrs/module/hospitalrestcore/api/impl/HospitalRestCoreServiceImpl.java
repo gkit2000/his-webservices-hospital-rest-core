@@ -27,19 +27,25 @@ import org.openmrs.module.hospitalrestcore.billing.Ambulance;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
+import org.openmrs.module.hospitalrestcore.billing.Company;
 import org.openmrs.module.hospitalrestcore.billing.Driver;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
+import org.openmrs.module.hospitalrestcore.billing.Tender;
+import org.openmrs.module.hospitalrestcore.billing.TenderBill;
 import org.openmrs.module.hospitalrestcore.billing.api.db.AmbulanceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillableServiceDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.BillingReceiptDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.CategoryLocationDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.CompanyDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.ConceptAnswerDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.DriverDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.OpdTestOrderDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillDAO;
 import org.openmrs.module.hospitalrestcore.billing.api.db.PatientServiceBillItemDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.TenderBillDAO;
+import org.openmrs.module.hospitalrestcore.billing.api.db.TenderDAO;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.consent.api.db.ConsentTemplateDAO;
 import org.openmrs.module.hospitalrestcore.inventory.*;
@@ -124,6 +130,12 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	private InventoryStoreDrugTransactionDAO inventoryStoreDrugTransactionDAO;
 
 	private InventoryStoreIssuePatientDetailDAO inventoryStoreIssuePatientDetailDAO;
+
+	private CompanyDAO companyDAO;
+
+	private TenderBillDAO tenderBillDAO;
+	
+	private TenderDAO tenderDAO;
 
 	/**
 	 * @return the billableServiceDAO
@@ -531,6 +543,30 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	 */
 	public void setInventoryStoreIssuePatientDetailDAO(InventoryStoreIssuePatientDetailDAO inventoryStoreIssuePatientDetailDAO) {
 		this.inventoryStoreIssuePatientDetailDAO = inventoryStoreIssuePatientDetailDAO;
+	}
+
+	public TenderDAO getTenderDAO() {
+		return tenderDAO;
+	}
+
+	public void setTenderDAO(TenderDAO tenderDAO) {
+		this.tenderDAO = tenderDAO;
+	}
+
+	public CompanyDAO getCompanyDAO() {
+		return companyDAO;
+	}
+
+	public void setCompanyDAO(CompanyDAO companyDAO) {
+		this.companyDAO = companyDAO;
+	}
+
+	public TenderBillDAO getTenderBillDAO() {
+		return tenderBillDAO;
+	}
+
+	public void setTenderBillDAO(TenderBillDAO tenderBillDAO) {
+		this.tenderBillDAO = tenderBillDAO;
 	}
 
 	@Override
@@ -1167,4 +1203,70 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 	public PersonName getPersonNameByNameString(String name) throws APIException {
 		return getPersonNameDAO().getPersonNameByNameString(name);
 	}
+	
+	@Override
+	@Transactional
+	public List<Tender> searchTender(String searchText) throws APIException {
+		return getTenderDAO().searchTender(searchText);
+	}
+
+	@Override
+	@Transactional
+	public List<Tender> getAllTender() throws APIException {
+		return getTenderDAO().getAllTender();
+	}
+
+	@Override
+	@Transactional
+	public Tender getTenderByUuid(String uuid) throws APIException {
+		return getTenderDAO().getTenderByUuid(uuid);
+	}
+
+	@Override
+	@Transactional
+	public Tender saveOrUpdateTender(Tender tender) throws APIException {
+		return (Tender) getTenderDAO().saveOrUpdate(tender);
+	}
+	
+	@Override
+	@Transactional
+	public List<Company> searchCompany(String searchText) throws APIException {
+		return getCompanyDAO().searchCompany(searchText);
+	}
+
+	@Override
+	@Transactional
+	public List<Company> getAllCompanies() throws APIException {
+		return getCompanyDAO().getAllCompanies();
+	}
+
+	@Override
+	@Transactional
+	public Company getCompanyByUuid(String uuid) throws APIException {
+		return getCompanyDAO().getCompanyByUuid(uuid);
+	}
+
+	@Override
+	@Transactional
+	public Company saveOrUpdateCompany(Company company) throws APIException {
+		return (Company) getCompanyDAO().saveOrUpdate(company);
+	}
+
+	@Override
+	@Transactional
+	public TenderBill getTenderBillByUuid(String uuid) throws APIException {
+		return (TenderBill) getTenderBillDAO().getTenderBillByUuid(uuid);
+	}
+	
+	@Override
+	@Transactional
+	public List<TenderBill> getTenderBillByCompany(Company company) throws APIException {
+		return getTenderBillDAO().getTenderBillByCompany(company);
+	}
+
+	@Override
+	public TenderBill saveOrUpdateTenderBill(TenderBill tenderBill) throws APIException {
+		return (TenderBill) getTenderBillDAO().saveOrUpdate(tenderBill);
+	}
+
 }

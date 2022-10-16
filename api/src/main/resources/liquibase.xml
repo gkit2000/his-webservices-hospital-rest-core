@@ -1557,5 +1557,156 @@
 			<column name="deleted" type="boolean"/>
 		</createTable>
 	</changeSet>
+	
+	<changeSet id="billing_tender-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_tender" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_tender table
+		</comment>
+		<createTable tableName="billing_tender">
+			<column name="tender_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="number" type="int" />
+			<column name="name" type="varchar(255)" />
+			<column name="description" type="varchar(255)" />
+			<column name="price" type="DECIMAL" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="billing_tender_created_by_fk" baseTableName="billing_tender" baseColumnNames="created_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_deleted_by_fk" baseTableName="billing_tender" baseColumnNames="deleted_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_last_modified_by_fk" baseTableName="billing_tender" baseColumnNames="last_modified_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_retired_by_fk" baseTableName="billing_tender" baseColumnNames="retired_by" referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+		<changeSet id="billing_company-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_company" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_company table
+		</comment>
+		<createTable tableName="billing_company">
+			<column name="company_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="address" type="varchar(255)" />
+			<column name="description" type="varchar(255)" />
+			<column name="phone" type="varchar(20)" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="billing_company_created_by_fk" baseTableName="billing_company" baseColumnNames="created_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_company_deleted_by_fk" baseTableName="billing_company" baseColumnNames="deleted_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_company_lastmodified_by_fk" baseTableName="billing_company" baseColumnNames="last_modified_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_company_retired_by_fk" baseTableName="billing_company" baseColumnNames="retired_by" referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="billing_tender_bill-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_tender_bill" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_tender_bill table
+		</comment>
+		<createTable tableName="billing_tender_bill">
+			<column name="tender_bill_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" />
+			<column name="amount" type="decimal" />
+			<column name="printed" type="boolean" />
+			<column name="phone" type="varchar(20)" />
+			<column name="company_id" type="int" />
+			<column name="billing_receipt_id" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="voided" type="boolean" />
+			<column name="voided_by" type="int" />
+			<column name="voided_date" type="datetime" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="billing_tender_bill_created_by_fk" baseTableName="billing_tender_bill" baseColumnNames="created_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_deleted_by_fk" baseTableName="billing_tender_bill" baseColumnNames="deleted_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_lastmodified_by_fk" baseTableName="billing_tender_bill" baseColumnNames="last_modified_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_retired_by_fk" baseTableName="billing_tender_bill" baseColumnNames="retired_by" referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="billing_tender_bill_item-table-create" author="ghanshyam">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="billing_tender_bill_item" />
+			</not>
+		</preConditions>
+		<comment>
+			Create billing_tender_bill_item table
+		</comment>
+		<createTable tableName="billing_tender_bill_item">
+			<column name="tender_bill_item_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="amount" type="decimal" />
+			<column name="unit_price" type="decimal" />
+			<column name="quantity" type="int" />
+			<column name="tender_id" type="int" />
+			<column name="tender_bill_id" type="int" />
+			<column name="created_date" type="DATETIME" />
+			<column name="created_by" type="int" />
+			<column name="deleted" type="boolean" />
+			<column name="deleted_date" type="DATETIME" />
+			<column name="deleted_by" type="int" />
+			<column name="last_modified_date" type="DATETIME" />
+			<column name="last_modified_by" type="int" />
+			<column name="retired" type="boolean" />
+			<column name="retired_date" type="DATETIME" />
+			<column name="retired_by" type="int" />
+			<column name="voided" type="boolean" />
+			<column name="voided_by" type="int" />
+			<column name="voided_date" type="datetime" />
+			<column name="uuid" type="char(38)" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="billing_tender_bill_item_created_by_fk" baseTableName="billing_tender_bill_item" baseColumnNames="created_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_item_deleted_by_fk" baseTableName="billing_tender_bill_item" baseColumnNames="deleted_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_item_lastmodified_by_fk" baseTableName="billing_tender_bill_item" baseColumnNames="last_modified_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_item_retired_by_fk" baseTableName="billing_tender_bill_item" baseColumnNames="retired_by" referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="billing_tender_bill_item_voided_by" baseTableName="billing_tender_bill_item" baseColumnNames="voided_by" referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
 
 </databaseChangeLog>

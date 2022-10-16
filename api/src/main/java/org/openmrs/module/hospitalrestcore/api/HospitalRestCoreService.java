@@ -24,10 +24,13 @@ import org.openmrs.module.hospitalrestcore.billing.Ambulance;
 import org.openmrs.module.hospitalrestcore.billing.BillableService;
 import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
 import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
+import org.openmrs.module.hospitalrestcore.billing.Company;
 import org.openmrs.module.hospitalrestcore.billing.Driver;
 import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
 import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
+import org.openmrs.module.hospitalrestcore.billing.Tender;
+import org.openmrs.module.hospitalrestcore.billing.TenderBill;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.inventory.*;
 import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
@@ -280,5 +283,27 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	PersonName getPersonNameByPersonId(Integer personId) throws APIException;
 
 	PersonName getPersonNameByNameString(String name) throws APIException;
+	
+	List<Tender> searchTender(String searchText) throws APIException;
+
+	List<Tender> getAllTender() throws APIException;
+
+	Tender getTenderByUuid(String uuid) throws APIException;
+
+	Tender saveOrUpdateTender(Tender tender) throws APIException;
+	
+	List<Company> searchCompany(String searchText) throws APIException;
+
+	List<Company> getAllCompanies() throws APIException;
+	
+	Company getCompanyByUuid(String uuid);
+	
+	Company saveOrUpdateCompany(Company company) throws APIException;
+	
+	TenderBill getTenderBillByUuid(String uuid) throws APIException;
+	
+	List<TenderBill> getTenderBillByCompany(Company company) throws APIException;
+	
+	TenderBill saveOrUpdateTenderBill(TenderBill tenderBill) throws APIException;
 
 }

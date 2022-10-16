@@ -31,5 +31,9 @@
 		<mapping resource="InventoryStoreItemIndent.hbm.xml" />
 		<mapping resource="InventoryStoreItemTransaction.hbm.xml" />
 		<mapping resource="InventoryStoreItemTransactionDetail.hbm.xml" />
+		<mapping resource="Tender.hbm.xml" />
+		<mapping resource="Company.hbm.xml" />
+		<mapping resource="TenderBill.hbm.xml" />
+		<mapping resource="TenderBillItem.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

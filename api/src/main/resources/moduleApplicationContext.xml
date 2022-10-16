@@ -27,7 +27,8 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService</value>
+				<value>${project.parent.groupId}.${project.parent.artifactId}.api.HospitalRestCoreService
+				</value>
 				<ref bean="hospitalRestCoreService"></ref>
 			</list>
 		</property>
@@ -179,7 +180,7 @@
 				</property>
 				<property name="inventoryStoreDrugIndentDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIndentDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIndentDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -187,7 +188,7 @@
 				</property>
 				<property name="inventoryStoreDrugIndentDetailDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIndentDetailDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIndentDetailDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -195,7 +196,7 @@
 				</property>
 				<property name="inventoryStoreDrugIssueDetailDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIssueDetailDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugIssueDetailDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -219,7 +220,7 @@
 				</property>
 				<property name="inventoryStoreDrugPatientDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugPatientDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugPatientDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -227,7 +228,7 @@
 				</property>
 				<property name="inventoryStoreDrugPatientDetailDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugPatientDetailDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreDrugPatientDetailDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -235,7 +236,7 @@
 				</property>
 				<property name="inventoryStoreIssuePatientDetailDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreIssuePatientDetailDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernateInventoryStoreIssuePatientDetailDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -243,7 +244,7 @@
 				</property>
 				<property name="patientIdentifierDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePatientIdentifierDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePatientIdentifierDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -251,7 +252,7 @@
 				</property>
 				<property name="personNameDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePersonNameDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePersonNameDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -259,7 +260,7 @@
 				</property>
 				<property name="personDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePersonDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePersonDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
@@ -267,7 +268,31 @@
 				</property>
 				<property name="patientDAO">
 					<bean
-							class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePatientDAO">
+						class="${project.parent.groupId}.${project.parent.artifactId}.inventory.api.db.hibernate.HibernatePatientDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="companyDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateCompanyDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="tenderBillDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateTenderBillDAO">
+						<property name="sessionFactory">
+							<ref bean="dbSessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="tenderDAO">
+					<bean
+						class="${project.parent.groupId}.${project.parent.artifactId}.billing.api.db.hibernate.HibernateTenderDAO">
 						<property name="sessionFactory">
 							<ref bean="dbSessionFactory" />
 						</property>
