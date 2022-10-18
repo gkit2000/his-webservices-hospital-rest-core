@@ -287,7 +287,7 @@ public class ReceiptsToMainStoreListController extends BaseRestController {
                             if (Objects.equals(sd.getFormulation().getName(), formulation.getName()))
                                 updateDrug = sd;
 
-                    if (updateDrug.getDrug().getName() == null) {
+                    if (updateDrug.getDrug() == null) {
                         InventoryStoreDrug addDrug = new InventoryStoreDrug();
                         addDrug.setStore(store);
                         addDrug.setDrug(inventoryDrug);
@@ -303,11 +303,18 @@ public class ReceiptsToMainStoreListController extends BaseRestController {
                         addDrug.setCreatedDate(new Date());
                         hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(addDrug);
                     } else {
-                        updateDrug.setCurrentQuantity(updateDrug.getCurrentQuantity() + d.getQuantity());
+                        int currentQuantity = updateDrug.getCurrentQuantity() != null ?
+                                updateDrug.getCurrentQuantity() + d.getQuantity() : d.getQuantity();
+
+                        int closingBalance = updateDrug.getClosingBalance() != null ?
+                                updateDrug.getClosingBalance() + d.getQuantity() : d.getQuantity();
+
+                        int openingBalance = updateDrug.getClosingBalance() != null ? updateDrug.getClosingBalance() : 0;
+                        updateDrug.setCurrentQuantity(currentQuantity);
                         updateDrug.setReceiptQuantity(d.getQuantity());
                         updateDrug.setReorderQuantity(d.getQuantity());
-                        updateDrug.setOpeningBalance(updateDrug.getClosingBalance());
-                        updateDrug.setClosingBalance(updateDrug.getClosingBalance() + d.getQuantity());
+                        updateDrug.setOpeningBalance(openingBalance);
+                        updateDrug.setClosingBalance(closingBalance);
                         updateDrug.setLastModifiedDate(new Date());
                         updateDrug.setLastModifiedBy(Context.getAuthenticatedUser());
                         hospitalRestCoreService.saveOrUpdateInventoryStoreDrug(updateDrug);
@@ -508,7 +515,6 @@ public class ReceiptsToMainStoreListController extends BaseRestController {
     public InventoryReceiptFormDetails getInventoryReceiptFormDetails(InventoryReceiptFormDetail inventoryReceiptFormDetail) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         InventoryReceiptFormDetails irfd = new InventoryReceiptFormDetails();
-        irfd.setId(inventoryReceiptFormDetail.getId());
         irfd.setDrugName(inventoryReceiptFormDetail.getDrug().getName());
         irfd.setFormulationName(inventoryReceiptFormDetail.getFormulation().getName());
         irfd.setRate(inventoryReceiptFormDetail.getRate());

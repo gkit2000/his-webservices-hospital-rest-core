@@ -106,7 +106,7 @@ public final class OpenmrsCustomConstants {
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION = "Drug transaction %s is not valid";
 
-	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL = "Drug transaction detail %s is not valid";
+	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL = "Drug transaction detail for %s %s is not valid, indent first from main store";
 
 	public static final String VALIDATION_ERROR_NOT_VALID_PATIENT_IDENTIFIER = "Patient Identifier %s is not valid";
 

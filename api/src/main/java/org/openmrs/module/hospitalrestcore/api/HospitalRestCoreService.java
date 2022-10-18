@@ -255,6 +255,8 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStoreDrug> listAllInventoryStoreDrug(InventoryStore storeId) throws APIException;
 
+	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
+
 	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(Integer storeId, String category, String drugName,
 																			 String fromDate, String toDate, int min, int max) throws APIException;
 

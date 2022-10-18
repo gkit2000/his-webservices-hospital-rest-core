@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 
 public class InventoryReceiptFormDetails implements Serializable, Comparable<InventoryReceiptFormDetails> {
 
-    private Integer id;
     private String drugName;
     private String formulationName;
 
@@ -32,14 +31,6 @@ public class InventoryReceiptFormDetails implements Serializable, Comparable<Inv
     private BigDecimal unitPrice;
     private BigDecimal totalAmount;
     private BigDecimal amountAfterGST;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getDrugName() {
         return drugName;

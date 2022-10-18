@@ -41,6 +41,13 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
     }
 
     @Override
+    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+        criteria.add(Restrictions.eq("retired", false)).addOrder(Order.desc("createdDate"));
+        return criteria.list();
+    }
+
+    @Override
     public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugExpiryTransactionDetail(InventoryStore store) throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "transactionDetail")
                 .createAlias("transactionDetail.transaction", "transaction");

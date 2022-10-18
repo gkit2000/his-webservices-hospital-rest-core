@@ -1119,6 +1119,12 @@ public class HospitalRestCoreServiceImpl extends BaseOpenmrsService implements H
 
 	@Override
 	@Transactional
+	public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException {
+		return getInventoryStoreDrugTransactionDetailDAO().listAllStoreDrugTransactionDetail();
+	}
+
+	@Override
+	@Transactional
 	public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugExpiryTransactionDetail(InventoryStore store) throws APIException {
 		return getInventoryStoreDrugTransactionDetailDAO().listAllStoreDrugExpiryTransactionDetail(store);
 	}

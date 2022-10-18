@@ -18,7 +18,6 @@
                      class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation"
                      column="formulation_id" cascade="none" lazy="false" />
         <property name="quantity" column="quantity" />
-        <property name="voided" column="voided" />
         <property name="createdDate" column="created_on" />
         <property name="deleted" column="deleted" />
 
