@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -73,6 +74,22 @@ public class HibernateInventoryStoreDAO extends HibernateSingleClassDAO implemen
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
 		criteria.add(Restrictions.eq("deleted", false));
 		return criteria.list();
+	}
+
+	@Override
+	public InventoryStore getMainStore() throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("id", 1))
+				.add(Restrictions.eq("name", "Main Store"));
+		return (InventoryStore) criteria.uniqueResult();
+	}
+
+	@Override
+	public InventoryStore getSubStore() throws DAOException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+		criteria.add(Restrictions.eq("name", "Pharmacy"))
+				.addOrder(Order.desc("createdDate")).setMaxResults(1);
+		return (InventoryStore) criteria.uniqueResult();
 	}
 
 	@Override

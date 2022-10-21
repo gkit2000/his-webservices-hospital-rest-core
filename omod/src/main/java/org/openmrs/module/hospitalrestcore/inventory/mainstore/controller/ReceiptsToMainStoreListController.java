@@ -140,14 +140,9 @@ public class ReceiptsToMainStoreListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Main Store"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getMainStore();
 
         List<InventoryReceiptFormDetail> receiptFormDetails = hospitalRestCoreService.listAllInventoryReceiptFormDetail();
 
@@ -400,14 +395,9 @@ public class ReceiptsToMainStoreListController extends BaseRestController {
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Main Store"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getMainStore();
 
         List<InventoryStoreDrugReceipt> receipts = hospitalRestCoreService.getInventoryStoreDrugReceiptByName(vendorName);
         InventoryStoreDrugReceipt receipt = new InventoryStoreDrugReceipt();

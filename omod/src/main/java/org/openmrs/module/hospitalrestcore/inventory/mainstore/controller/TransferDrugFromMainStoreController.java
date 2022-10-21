@@ -56,14 +56,9 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Main Store"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getMainStore();
 
         int total = hospitalRestCoreService.countStoreDrugIndent(store.getId(), storeName, indentStatus, indentName, fromDate, toDate);
         String temp = "";
@@ -173,15 +168,10 @@ public class TransferDrugFromMainStoreController extends BaseRestController {
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
 
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Main Store"))
-//                store = s;
+        InventoryStore store = hospitalRestCoreService.getMainStore();
 
         InventoryStoreDrugIndent indent = hospitalRestCoreService.getInventoryStoreDrugIndentByUuidString(
                 inventoryStoreDrugTransactionPayload.getIndentUuid());

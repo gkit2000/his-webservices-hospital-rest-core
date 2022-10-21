@@ -125,6 +125,10 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStore> listAllInventoryStore() throws APIException;
 
+	InventoryStore getMainStore() throws APIException;
+
+	InventoryStore getSubStore() throws APIException;
+
 	InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory)
 			throws APIException;
 

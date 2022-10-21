@@ -175,14 +175,9 @@ public class PatientQueueController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
 
         List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
@@ -299,14 +294,9 @@ public class PatientQueueController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+////                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles())); //TODO: commit this
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
         List<InventoryStoreDrugOrderIssueDetail> issueDetails = hospitalRestCoreService.listAllInventoryStoreDrugOrderIssueDetail();
 
@@ -440,14 +430,9 @@ public class PatientQueueController extends BaseRestController {
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
         InventoryStoreDrugIssueDetails isdid = new InventoryStoreDrugIssueDetails();
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
         InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
         List<InventoryStoreDrugTransactionDetail>  transactionDetails =
@@ -459,9 +444,9 @@ public class PatientQueueController extends BaseRestController {
                     transactionDetail = d;
 
         if (transactionDetail.getDrug() == null)
-            throw new ResourceNotFoundException(String.format(
-                    OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL,
-                    InventoryStoreDrugOrderIssueDetail.getDrug().getName()));
+            throw new ResourceNotFoundException(
+                    String.format(OpenmrsCustomConstants.VALIDATION_ERROR_NOT_VALID_DRUG_TRANSACTION_DETAIL,
+                    InventoryStoreDrugOrderIssueDetail.getDrug().getName(), InventoryStoreDrugOrderIssueDetail.getFormulation().getName()));
 
 
         isdid.setDrugName(InventoryStoreDrugOrderIssueDetail.getDrug().getName());

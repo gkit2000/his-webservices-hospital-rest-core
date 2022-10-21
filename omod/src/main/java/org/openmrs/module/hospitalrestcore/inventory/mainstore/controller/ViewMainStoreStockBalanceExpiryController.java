@@ -59,14 +59,9 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Main Store"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getMainStore();
 
         int total = hospitalRestCoreService.countViewStockBalanceExpiry(store.getId(), category, drugName, fromDate, toDate);
         String temp = "";
@@ -128,14 +123,9 @@ public class ViewMainStoreStockBalanceExpiryController extends BaseRestControlle
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Main Store"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getMainStore();
         List<InventoryStoreDrugTransactionDetail>  transactionDetails =
                 hospitalRestCoreService.listAllStoreDrugExpiryTransactionDetail(store);
         List<InventoryStoreDrugTransactionDetail> details = new ArrayList<>();

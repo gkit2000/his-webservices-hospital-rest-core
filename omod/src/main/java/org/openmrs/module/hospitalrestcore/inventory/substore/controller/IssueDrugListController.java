@@ -88,14 +88,9 @@ public class IssueDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
 
         List<InventoryStoreDrug> drugs = hospitalRestCoreService.listAllInventoryStoreDrug(store);
@@ -198,7 +193,11 @@ public class IssueDrugListController extends BaseRestController {
         isipd.setAge(inventoryStoreIssuePatientDetailPayload.getAge());
         isipd.setCreatedDate(new Date());
         isipd.setDeleted(false);
-        hospitalRestCoreService.saveOrUpdateInventoryStoreIssuePatientDetail(isipd);
+        InventoryStoreIssuePatientDetail patients = hospitalRestCoreService.getInventoryStoreIssuePatientDetail();
+        if (Objects.isNull(patients))
+            hospitalRestCoreService.saveOrUpdateInventoryStoreIssuePatientDetail(isipd);
+        else
+            throw new ResourceNotFoundException(OpenmrsCustomConstants.VALIDATION_ERROR_PATIENT_LIST_FULL);
 
         InventoryStoreIssuePatientDetail patientDetails = hospitalRestCoreService.getInventoryStoreIssuePatientDetail();
         PatientDetails patient = null;
@@ -241,14 +240,9 @@ public class IssueDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
         List<InventoryStoreDrugIssueDetail> issueDetails = hospitalRestCoreService.listAllInventoryStoreDrugIssueDetail();
         InventoryStoreIssuePatientDetail patientDetails = hospitalRestCoreService.getInventoryStoreIssuePatientDetail();
@@ -406,14 +400,9 @@ public class IssueDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
         int total = hospitalRestCoreService.countStoreDrugPatient(store.getId(), identifierOrName, billNo, fromDate, toDate);
         String temp = "";
@@ -470,14 +459,9 @@ public class IssueDrugListController extends BaseRestController {
         ServletOutputStream out = response.getOutputStream();
 
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
 
         InventoryStoreDrugPatient patient = hospitalRestCoreService.getInventoryStoreDrugPatientById(billNo);
@@ -597,14 +581,9 @@ public class IssueDrugListController extends BaseRestController {
         HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
         InventoryStoreDrugIssueDetails isdid = new InventoryStoreDrugIssueDetails();
-        InventoryStore store = hospitalRestCoreService
-                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
-//        InventoryStore store = new InventoryStore();
-//        List<InventoryStore> storeList = hospitalRestCoreService.listAllInventoryStore();
-//
-//        for (InventoryStore s : storeList)
-//            if (Objects.equals(s.getName(), "Pharmacy"))
-//                store = s;
+//        InventoryStore store = hospitalRestCoreService
+//                .getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        InventoryStore store = hospitalRestCoreService.getSubStore();
 
         InventoryStoreDrugTransactionDetail transactionDetail = new InventoryStoreDrugTransactionDetail();
         List<InventoryStoreDrugTransactionDetail>  transactionDetails =

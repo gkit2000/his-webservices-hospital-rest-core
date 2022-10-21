@@ -26,6 +26,10 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 
 	public List<InventoryStore> listAllInventoryStore() throws DAOException;
 
+	InventoryStore getMainStore() throws DAOException;
+
+	InventoryStore getSubStore() throws DAOException;
+
 	public Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate,
 			String toDate, boolean isExpiry) throws DAOException;
 

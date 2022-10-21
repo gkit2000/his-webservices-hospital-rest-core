@@ -98,7 +98,7 @@ public final class OpenmrsCustomConstants {
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_LIST = "There is no drug in %s, please indent first";
 
-	public static final String VALIDATION_ERROR_NOT_VALID_RECEIPT_FORM = "Receipt form for drug %s is not valid";
+	public static final String VALIDATION_ERROR_PATIENT_LIST_FULL = "Can't save patient, there is already a patient in patient slip, first clear slip";
 
 	public static final String VALIDATION_ERROR_NOT_VALID_DRUG_FORMULATION = "Drug formulation %s is not valid";
 
