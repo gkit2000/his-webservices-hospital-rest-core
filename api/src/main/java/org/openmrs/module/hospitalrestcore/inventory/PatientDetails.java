@@ -10,11 +10,22 @@ import java.io.Serializable;
 public class PatientDetails implements Serializable,
         Comparable<PatientDetails> {
 
+    private Integer patientId;
     private String patientIdentifier;
     private String patientName;
     private String category;
+    private String gender;
     private Integer age;
+    private String createdOn;
 
+
+    public Integer getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(Integer patientId) {
+        this.patientId = patientId;
+    }
 
     public String getPatientIdentifier() {
         return patientIdentifier;
@@ -40,12 +51,28 @@ public class PatientDetails implements Serializable,
         this.category = category;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public Integer getAge() {
         return age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(String createdOn) {
+        this.createdOn = createdOn;
     }
 
     @Override

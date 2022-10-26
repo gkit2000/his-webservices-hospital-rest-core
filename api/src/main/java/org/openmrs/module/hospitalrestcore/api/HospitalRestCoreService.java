@@ -13,31 +13,16 @@
  */
 package org.openmrs.module.hospitalrestcore.api;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.hospitalrestcore.billing.Ambulance;
-import org.openmrs.module.hospitalrestcore.billing.BillableService;
-import org.openmrs.module.hospitalrestcore.billing.BillingReceipt;
-import org.openmrs.module.hospitalrestcore.billing.CategoryLocation;
-import org.openmrs.module.hospitalrestcore.billing.Driver;
-import org.openmrs.module.hospitalrestcore.billing.OpdTestOrder;
-import org.openmrs.module.hospitalrestcore.billing.PatientServiceBill;
-import org.openmrs.module.hospitalrestcore.billing.PatientServiceBillItem;
+import org.openmrs.module.hospitalrestcore.billing.*;
 import org.openmrs.module.hospitalrestcore.consent.ConsentTemplate;
 import org.openmrs.module.hospitalrestcore.inventory.*;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrug;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryDrugUnit;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryItemSubCategory;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStore;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugTransactionDetail;
-import org.openmrs.module.hospitalrestcore.inventory.InventoryStoreItemTransactionDetail;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean
@@ -140,6 +125,10 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStore> listAllInventoryStore() throws APIException;
 
+	InventoryStore getMainStore() throws APIException;
+
+	InventoryStore getSubStore() throws APIException;
+
 	InventoryDrugCategory saveOrUpdateInventoryDrugCategory(InventoryDrugCategory inventoryDrugCategory)
 			throws APIException;
 
@@ -201,19 +190,27 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail(InventoryStore store) throws APIException;
 
+	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugExpiryTransactionDetail(InventoryStore store) throws APIException;
+
 	InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws APIException;
 
-	InventoryReceiptForm getInventoryReceiptFormByUuidString(String uuid) throws APIException;
+	InventoryStoreDrugReceipt saveOrUpdateDrugReceipt(InventoryStoreDrugReceipt inventoryStoreDrugReceipt) throws APIException;
 
-	InventoryReceiptForm saveOrUpdateInventoryReceiptForm(InventoryReceiptForm inventoryReceiptForm)
-			throws APIException;
+	List<InventoryStoreDrugReceipt> listAllInventoryStoreDrugReceipt() throws APIException;
 
-	List<InventoryReceiptForm> listAllInventoryReceiptForm() throws APIException;
+	Integer countStoreDrugReceipt(String vendorName, String fromDate, String toDate) throws APIException;
 
-	Integer countReceiptsToGeneralStore(String companyName, String fromDate, String toDate) throws APIException;
+	List<InventoryStoreDrugReceipt> listStoreDrugReceipt(String vendorName, String fromDate, String toDate, int min, int max) throws APIException;
 
-	List<InventoryReceiptForm> listReceiptsToGeneralStore(String companyName,
-														  String fromDate, String toDate, int min, int max) throws APIException;
+	List<InventoryStoreDrugReceipt> getInventoryStoreDrugReceiptByName(String name) throws APIException;
+
+	InventoryStoreDrugReceiptDetail saveOrUpdateInventoryStoreDrugReceiptDetail(InventoryStoreDrugReceiptDetail inventoryStoreDrugReceiptDetail) throws APIException;
+
+	List<InventoryStoreDrugReceiptDetail> getStoreDrugReceiptDetailByReceiptId(Integer receiptId) throws APIException;
+
+	List<InventoryReceiptFormDetail> listAllInventoryReceiptFormDetail() throws APIException;
+
+	InventoryReceiptFormDetail saveOrUpdateInventoryReceiptFormDetail(InventoryReceiptFormDetail inventoryReceiptFormDetail) throws APIException;
 
 	InventoryStoreDrugIndentDetail saveOrUpdateInventoryStoreDrugIndentDetail(
 			InventoryStoreDrugIndentDetail inventoryStoreDrugIndentDetail) throws APIException;
@@ -262,6 +259,8 @@ public interface HospitalRestCoreService extends OpenmrsService {
 
 	List<InventoryStoreDrug> listAllInventoryStoreDrug(InventoryStore storeId) throws APIException;
 
+	List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws APIException;
+
 	List<InventoryStoreDrugTransactionDetail> listStoreDrugTransactionDetail(Integer storeId, String category, String drugName,
 																			 String fromDate, String toDate, int min, int max) throws APIException;
 
@@ -280,5 +279,29 @@ public interface HospitalRestCoreService extends OpenmrsService {
 	PersonName getPersonNameByPersonId(Integer personId) throws APIException;
 
 	PersonName getPersonNameByNameString(String name) throws APIException;
+
+	Integer countDrugOrderPatient(String identifierOrName, String date) throws APIException;
+
+	List<InventoryStoreDrugOrderPatient> listDrugOrderPatient(String identifierOrName, String date, int min, int max) throws APIException;
+
+	InventoryStoreDrugOrderPatient getDrugOrderPatientByIdentifier(String identifier, String date) throws APIException;
+
+	List<InventoryStoreDrugOrderPatientDetail> getDrugOrderPatientDetail(InventoryStoreDrugOrderPatient patient,
+																		 String date) throws APIException;
+
+	List<OpdDrugOrder> getDrugOrderByOrderId(Integer orderId) throws APIException;
+
+	List<OpdDrugOrder> listAllDrugOrder() throws APIException;
+
+	OpdDrugOrderDetail saveOrUpdateOpdDrugOrderDetail(OpdDrugOrderDetail orderDetail) throws APIException;
+
+	List<OpdDrugOrderDetail> getDrugOrderDetailByOrderId(Integer orderId) throws APIException;
+
+	List<OpdDrugOrderDetail> listAllDrugOrderDetail() throws APIException;
+
+	List<InventoryStoreDrugOrderIssueDetail> listAllInventoryStoreDrugOrderIssueDetail() throws APIException;
+
+	InventoryStoreDrugOrderIssueDetail saveOrUpdateInventoryStoreDrugOrderIssueDetail(
+			InventoryStoreDrugOrderIssueDetail inventoryStoreDrugOrderIssueDetail) throws APIException;
 
 }

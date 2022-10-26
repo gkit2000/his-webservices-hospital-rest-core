@@ -18,6 +18,7 @@ public class InventoryStoreDrugIssueDetailPayload {
     private InventoryDrug drug;
     private InventoryDrugFormulation formulation;
     private Integer quantity;
+    private Integer orderId;
 
     HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
@@ -69,4 +70,11 @@ public class InventoryStoreDrugIssueDetailPayload {
         this.quantity = quantity;
     }
 
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
 }

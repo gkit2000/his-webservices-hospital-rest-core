@@ -32,6 +32,7 @@ public class HibernateInventoryStoreDrugPatientDAO extends HibernateSingleClassD
     @Override
     public List<InventoryStoreDrugPatient> listAllInventoryStoreDrugPatient() throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+        criteria.addOrder(Order.desc("id"));
         return criteria.list();
     }
 
@@ -58,6 +59,7 @@ public class HibernateInventoryStoreDrugPatientDAO extends HibernateSingleClassD
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "patient")
                 .createAlias("patient.store", "store");
+        criteria.addOrder(Order.desc("id"));
 
         ProjectionList proList = Projections.projectionList();
         proList.add(Projections.groupProperty("id"))
@@ -132,6 +134,7 @@ public class HibernateInventoryStoreDrugPatientDAO extends HibernateSingleClassD
 
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "patient")
                 .createAlias("patient.store", "store").setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.addOrder(Order.desc("id"));
 
         ProjectionList proList = Projections.projectionList();
         proList.add(Projections.groupProperty("id"))

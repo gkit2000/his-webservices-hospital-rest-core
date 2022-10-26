@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping
+        package="org.openmrs.module.hospitalrestcore.inventory">
+
+    <class name="OpdDrugOrderDetail"
+           table="opd_drug_order_detail" batch-size="500">
+
+        <id name="id" type="int" column="id" unsaved-value="0">
+            <generator class="native" />
+        </id>
+
+        <many-to-one name="opdDrugOrder"
+                     class="org.openmrs.module.hospitalrestcore.inventory.OpdDrugOrder"
+                     column="opd_drug_order_id" cascade="none" lazy="false" />
+        <many-to-one name="inventoryDrug"
+                     class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrug"
+                     column="inventory_drug_id" cascade="none" lazy="false" />
+        <many-to-one name="inventoryDrugFormulation"
+                     class="org.openmrs.module.hospitalrestcore.inventory.InventoryDrugFormulation"
+                     column="formulation_id" cascade="none" lazy="false" />
+        <many-to-one name="frequency"
+                     class="org.openmrs.Concept"
+                     column="frequency_concept_id" cascade="none" lazy="false" />
+        <property name="noOfDays" column="no_of_days" />
+        <property name="comments" column="comments" />
+        <property name="deleted" column="deleted" />
+    </class>
+
+</hibernate-mapping>
