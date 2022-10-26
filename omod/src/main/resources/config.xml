@@ -74,8 +74,13 @@
 		InventoryStoreDrugIndent.hbm.xml
 		InventoryStoreDrugIndentDetail.hbm.xml
 		InventoryStoreDrugIssueDetail.hbm.xml
+		InventoryStoreDrugOrderIssueDetail.hbm.xml
+		InventoryStoreDrugOrderPatient.hbm.xml
+		InventoryStoreDrugOrderPatientDetail.hbm.xml
 		InventoryStoreDrugPatient.hbm.xml
 		InventoryStoreDrugPatientDetail.hbm.xml
+		InventoryStoreDrugReceipt.hbm.xml
+		InventoryStoreDrugReceiptDetail.hbm.xml
 		InventoryStoreDrugTransaction.hbm.xml
 		InventoryStoreDrugTransactionDetail.hbm.xml
 		InventoryStoreIssuePatientDetail.hbm.xml
@@ -83,11 +88,13 @@
 		InventoryItemCategory.hbm.xml
 		InventoryItemSpecification.hbm.xml
 		InventoryItemSubCategory.hbm.xml
-		InventoryReceiptForm.hbm.xml
+		InventoryReceiptFormDetail.hbm.xml
 		InventoryItemUnit.hbm.xml
 		InventoryStoreItemIndent.hbm.xml
 		InventoryStoreItemTransaction.hbm.xml
 		InventoryStoreItemTransactionDetail.hbm.xml
+		OpdDrugOrder.hbm.xml
+		OpdDrugOrderDetail.hbm.xml
 		Tender.hbm.xml
 		Company.hbm.xml
 		TenderBill.hbm.xml

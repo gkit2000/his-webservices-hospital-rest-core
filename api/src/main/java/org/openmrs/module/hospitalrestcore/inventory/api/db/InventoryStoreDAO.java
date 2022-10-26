@@ -26,6 +26,10 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 
 	public List<InventoryStore> listAllInventoryStore() throws DAOException;
 
+	InventoryStore getMainStore() throws DAOException;
+
+	InventoryStore getSubStore() throws DAOException;
+
 	public Integer countViewStockBalance(Integer storeId, Integer categoryId, String drugName, String fromDate,
 			String toDate, boolean isExpiry) throws DAOException;
 
@@ -41,8 +45,6 @@ public interface InventoryStoreDAO extends SingleClassDAO {
 			String itemName, String fromDate, String toDate, int min, int max) throws DAOException;
 
 	public List<InventoryItemSubCategory> listItemSubCategory(String name, int min, int max) throws DAOException;
-
-	public List<InventoryReceiptForm> listReceiptForm(String name, int min, int max) throws DAOException; //TODO: change parameters
 
 	public Integer countStoreDrugTransaction(Integer transactionType, Integer storeId, String description, String fromDate,
 											 String toDate) throws DAOException;

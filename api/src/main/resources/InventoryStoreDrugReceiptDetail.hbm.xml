@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping
+        package="org.openmrs.module.hospitalrestcore.inventory">
+
+    <class name="InventoryStoreDrugReceiptDetail"
+           table="inventory_store_drug_receipt_detail" batch-size="500">
+
+        <id name="id" type="int" column="id" unsaved-value="0">
+            <generator class="native" />
+        </id>
+
+        <many-to-one name="receipt"
+                     class="org.openmrs.module.hospitalrestcore.inventory.InventoryStoreDrugReceipt"
+                     column="receipt_id" cascade="none" lazy="false" />
+        <property name="cgst" column="cgst" />
+        <property name="cgstAmount" column="cgst_amount" />
+        <property name="sgst" column="sgst" />
+        <property name="sgstAmount" column="sgst_amount" />
+        <property name="mrPrice" column="mr_price" />
+        <property name="cd" column="cd" />
+        <property name="cdAmount" column="cd_amount" />
+        <property name="totalAmount" column="total_amount" />
+        <property name="amountAfterGST" column="amount_after_gst" />
+    </class>
+</hibernate-mapping>

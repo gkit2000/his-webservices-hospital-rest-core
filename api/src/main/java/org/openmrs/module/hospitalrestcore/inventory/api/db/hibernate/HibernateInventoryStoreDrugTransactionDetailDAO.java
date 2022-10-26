@@ -36,7 +36,25 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "transactionDetail")
                 .createAlias("transactionDetail.transaction", "transaction");
         criteria.add(Restrictions.eq("retired", false))
-                .add(Restrictions.eq("transaction.store", store));
+                .add(Restrictions.eq("transaction.store", store)).addOrder(Order.desc("createdDate"));
+        return criteria.list();
+    }
+
+    @Override
+    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugTransactionDetail() throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
+        criteria.add(Restrictions.eq("retired", false)).addOrder(Order.desc("createdDate"));
+        return criteria.list();
+    }
+
+    @Override
+    public List<InventoryStoreDrugTransactionDetail> listAllStoreDrugExpiryTransactionDetail(InventoryStore store) throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass, "transactionDetail")
+                .createAlias("transactionDetail.transaction", "transaction");
+        criteria.add(Restrictions.eq("retired", false))
+                .add(Restrictions.le("dateExpiry", new Date()))
+                .add(Restrictions.eq("transaction.store", store))
+                .addOrder(Order.desc("createdDate"));
         return criteria.list();
     }
 
@@ -45,7 +63,8 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
     public InventoryStoreDrugTransactionDetail getDrugTransactionDetailByUuidString(String uuid) throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
         criteria.add(Restrictions.eq("uuid", uuid))
-                .add(Restrictions.eq("retired", false));
+                .add(Restrictions.eq("retired", false))
+                .addOrder(Order.desc("createdDate"));
         return (InventoryStoreDrugTransactionDetail) criteria.uniqueResult();
     }
 
@@ -114,7 +133,7 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
             }
         }
 
-        criteria.setProjection(proList);
+        criteria.setProjection(proList).addOrder(Order.desc("createdDate"));
         List<Object> list = criteria.list();
 
         Number total = 0;
@@ -191,7 +210,7 @@ public class HibernateInventoryStoreDrugTransactionDetailDAO extends HibernateSi
             }
         }
 
-        criteria.setProjection(proList);
+        criteria.setProjection(proList).addOrder(Order.desc("createdDate"));
         if (max > 0)
             criteria.setFirstResult(min).setMaxResults(max);
         List<Object> list = criteria.list();

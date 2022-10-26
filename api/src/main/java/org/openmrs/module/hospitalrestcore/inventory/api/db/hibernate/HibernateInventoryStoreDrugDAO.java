@@ -1,6 +1,7 @@
 package org.openmrs.module.hospitalrestcore.inventory.api.db.hibernate;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -49,7 +50,7 @@ public class HibernateInventoryStoreDrugDAO extends HibernateSingleClassDAO impl
                 .add(Projections.property("id"))
                 .add(Projections.property("createdDate"));
 
-        criteria.add(Restrictions.eq("store", store))
+        criteria.add(Restrictions.eq("store", store)).addOrder(Order.desc("createdDate"))
                 .setProjection(proList);
 
         List<Object> list = criteria.list();
