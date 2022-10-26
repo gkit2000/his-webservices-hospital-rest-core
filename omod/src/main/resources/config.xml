@@ -95,6 +95,10 @@
 		InventoryStoreItemTransactionDetail.hbm.xml
 		OpdDrugOrder.hbm.xml
 		OpdDrugOrderDetail.hbm.xml
+		Tender.hbm.xml
+		Company.hbm.xml
+		TenderBill.hbm.xml
+		TenderBillItem.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
