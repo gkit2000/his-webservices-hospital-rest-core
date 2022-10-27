@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping
+	package="org.openmrs.module.hospitalrestcore.billing">
+
+	<class name="Tender" table="billing_tender" batch-size="500">
+
+		<id name="tenderId" type="int" column="tender_id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="number" column="number" />
+		<property name="name" column="name" length="255" />
+		<property name="description" column="description"
+			type="java.lang.String" length="255" />
+		<property name="price" column="price" />
+		<property name="openingDate" column="opening_date" />
+		<property name="closingDate" column="closing_date" />
+		<property name="createdDate" column="created_date" />
+		<many-to-one name="createdBy" column="created_by"
+			class="org.openmrs.User" foreign-key="billing_tender_created_by_fk" />
+		<property name="deleted" column="deleted" />
+		<property name="deletedDate" column="deleted_date" />
+		<many-to-one name="deletedBy" column="deleted_by"
+			class="org.openmrs.User" foreign-key="billing_tender_deleted_by_fk" />
+		<property name="lastModifiedDate" column="last_modified_date" />
+		<many-to-one name="lastModifiedBy"
+			column="last_modified_by" class="org.openmrs.User"
+			foreign-key="billing_tender_lastmodified_by_fk" />
+		<property name="retired" column="retired" />
+		<property name="retiredDate" column="retired_date" />
+		<many-to-one name="retiredBy" column="retired_by"
+			class="org.openmrs.User" foreign-key="billing_tender_retired_by_fk" />
+		<property name="uuid" type="java.lang.String" column="uuid"
+			length="38" unique="true" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.hospitalrestcore.billing">
+
+	<class name="TenderBill" table="billing_tender_bill" batch-size="500">
+
+		<id name="tenderBillId" type="int" column="tender_bill_id"
+			unsaved-value="0">
+				<generator class="native" />
+		</id>
+		<property name="description" column="description" />
+		<property name="amount" column="amount" />
+		<property name="printed" column="printed"  />
+		<many-to-one name="company" column="company_id" class="org.openmrs.module.hospitalrestcore.billing.Company" foreign-key="fk_tenderbill_company"/>
+		<set name="billItems" table="billing_tender_bill_item" where="voided=0" cascade="save-update,merge,evict" lazy="false">
+			<key column="tender_bill_id"/>
+			<one-to-many class="org.openmrs.module.hospitalrestcore.billing.TenderBillItem"/>
+		</set>
+		<many-to-one name="billingReceipt" column="billing_receipt_id" class="org.openmrs.module.hospitalrestcore.billing" lazy="false" foreign-key="fk_tenderbill_receipt"/>
+		<property name="createdDate" column="created_date" />
+		<many-to-one name="createdBy" column="created_by"
+			class="org.openmrs.User" foreign-key="billing_tender_bill_created_by_fk" />
+		<property name="deleted" column="deleted" />
+		<property name="deletedDate" column="deleted_date" />
+		<many-to-one name="deletedBy" column="deleted_by"
+			class="org.openmrs.User" foreign-key="billing_tender_bill_deleted_by_fk" />
+		<property name="lastModifiedDate" column="last_modified_date" />
+		<many-to-one name="lastModifiedBy"
+			column="last_modified_by" class="org.openmrs.User"
+			foreign-key="billing_tender_bill_lastmodified_by_fk" />
+		<property name="retired" column="retired" />
+		<property name="retiredDate" column="retired_date" />
+		<many-to-one name="retiredBy" column="retired_by"
+			class="org.openmrs.User" foreign-key="billing_tender_bill_retired_by_fk" />
+		<property name="uuid" type="java.lang.String" column="uuid"
+			length="38" unique="true" />
+		<property name="voided" column="voided"  />
+		<property name="voidedDate" column="voided_date"  />
+		<many-to-one name="voidedby" column="voided_by"  class="org.openmrs.User" foreign-key="billing_tender_bill_voidedby"/>
+	</class>
+</hibernate-mapping>
