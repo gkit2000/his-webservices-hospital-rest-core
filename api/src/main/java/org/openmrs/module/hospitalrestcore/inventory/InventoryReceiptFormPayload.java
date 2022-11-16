@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author Mujuzi Moses
@@ -30,22 +31,28 @@ public class InventoryReceiptFormPayload {
     private BigDecimal sgst;
     private BigDecimal cgst;
     private BigDecimal mrPrice;
+    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     private String batchNo;
     private String companyName;
+    private String uuid;
     private Date dateManufacture;
     private Date dateExpiry;
     private Date receiptDate;
+    private String receiptNumber;
 
     private float waiverPercentage;
 
-    private BigDecimal unitPrice;
-    private BigDecimal totalAmount;
-    private BigDecimal amountAfterGST;
+    private Boolean retired = false;
 
     HospitalRestCoreService hospitalRestCoreService = Context.getService(HospitalRestCoreService.class);
 
     SimpleDateFormat formatterExt = new SimpleDateFormat("dd/MM/yyyy");
+
+    private final String LETTERS = "abcdefghijklmnopqrstuvwxyz";
+
+    private final char[] ALPHANUMERIC = (LETTERS + LETTERS.toUpperCase() + "0123456789").toCharArray();
 
     public Integer getRate() {
         return rate;
@@ -84,13 +91,12 @@ public class InventoryReceiptFormPayload {
         this.companyName = companyName;
     }
 
-    public Date getReceiptDate() {
-        return receiptDate;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setReceiptDate(String receiptDate) throws ParseException{
-
-        this.receiptDate = formatterExt.parse(receiptDate);
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public float getWaiverPercentage() {
@@ -99,6 +105,14 @@ public class InventoryReceiptFormPayload {
 
     public void setWaiverPercentage(float waiverPercentage) {
         this.waiverPercentage = waiverPercentage;
+    }
+
+    public Boolean getRetired() {
+        return retired;
+    }
+
+    public void setRetired(Boolean retired) {
+        this.retired = retired;
     }
 
     public InventoryDrug getDrug() {
@@ -192,20 +206,12 @@ public class InventoryReceiptFormPayload {
         this.dateExpiry = formatterExt.parse(dateExpiry);
     }
 
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
+    public Date getReceiptDate() {
+        return receiptDate;
     }
 
-    public void setUnitPrice() {
-
-        BigDecimal rate = BigDecimal.valueOf(getRate());
-        BigDecimal quantity = BigDecimal.valueOf(getQuantity());
-        BigDecimal cd = BigDecimal.valueOf(getWaiverPercentage());
-        BigDecimal cdAmount = rate.multiply(cd);
-        BigDecimal totalAmount = getTotalAmount();
-        BigDecimal unitPrice = totalAmount.subtract(cdAmount).divide(quantity, 2, RoundingMode.CEILING);
-
-        this.unitPrice = unitPrice;
+    public void setReceiptDate(String receiptDate) throws ParseException {
+        this.receiptDate = formatterExt.parse(receiptDate);
     }
 
     public BigDecimal getTotalAmount() {
@@ -215,30 +221,67 @@ public class InventoryReceiptFormPayload {
     public void setTotalAmount() {
         int rate = getRate();
         int quantity = getQuantity();
+        BigDecimal cgst = getCgst();
+        BigDecimal sgst = getSgst();
 
-        BigDecimal totalAmount = BigDecimal.valueOf((long) rate * quantity);
+        BigDecimal r1 = BigDecimal.valueOf((long) rate * quantity);
+        BigDecimal r2 = (r1.multiply(cgst)).divide(BigDecimal.valueOf(100),2, RoundingMode.CEILING);
+        BigDecimal r3 = (r1.multiply(sgst)).divide(BigDecimal.valueOf(100), 2, RoundingMode.CEILING);
 
-        this.totalAmount = totalAmount;
+        this.totalAmount = r1.add(r2).add(r3);
     }
 
-    public BigDecimal getAmountAfterGST() {
-        return amountAfterGST;
+    public String getReceiptNumber() {
+        return receiptNumber;
     }
 
-    public void setAmountAfterGST() {
-        BigDecimal rate = BigDecimal.valueOf(getRate());
-        BigDecimal quantity = BigDecimal.valueOf(getQuantity());
-        BigDecimal vat = getVat() != null ? getVat() : BigDecimal.ZERO;
-        BigDecimal cgst = getCgst() != null ? getCgst() : BigDecimal.ZERO;
-        BigDecimal sgst = getSgst() != null ? getSgst() : BigDecimal.ZERO;
-        BigDecimal cd = BigDecimal.valueOf(getWaiverPercentage());
-        BigDecimal cgstAmount = rate.multiply(cgst);
-        BigDecimal sgstAmount = rate.multiply(sgst);
-        BigDecimal cdAmount = rate.multiply(cd);
-        BigDecimal totalAmount = getTotalAmount();
-        BigDecimal vatAmount = rate.divide(BigDecimal.valueOf(100),2, RoundingMode.CEILING).multiply(vat).multiply(quantity);
-        BigDecimal amountAfterGST = totalAmount.add(cgstAmount).add(sgstAmount).add(vatAmount).subtract(cdAmount);
+    public void setReceiptNumber() {
 
-        this.amountAfterGST = amountAfterGST;
+        String receiptNumber = "";
+        receiptNumber = generateRandomAlphanumeric(4) + "-" +
+                generateRandomAlphanumeric(3) + "-" + generateRandomAlphanumeric(4);
+        List<InventoryReceiptForm> forms = hospitalRestCoreService.listAllInventoryReceiptForm();
+
+        if (forms != null && forms.size() > 0) {
+            for (InventoryReceiptForm form : forms) {
+                if (Objects.equals(formatterExt.format(form.getReceiptDate()), formatterExt.format(receiptDate))) {
+                    if (Objects.equals(form.getCompanyName(), companyName)) {
+                        receiptNumber = form.getReceiptNumber();
+                    }
+                }
+            }
+        }
+        this.receiptNumber = receiptNumber;
+    }
+
+    public BigDecimal getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount() {
+        Object tot = getTotalAmount();
+        BigDecimal billAmount = (BigDecimal) tot;
+        List<InventoryReceiptForm> forms = hospitalRestCoreService.listAllInventoryReceiptForm();
+
+        if (forms != null && forms.size() > 0) {
+            for (InventoryReceiptForm form : forms) {
+                if (Objects.equals(form.getReceiptNumber(), getReceiptNumber())) {
+                    Object tot1 = form.getTotalAmount();
+                    billAmount = billAmount.add((BigDecimal) tot1);
+                }
+            }
+
+        }
+
+        this.billAmount = billAmount;
+    }
+
+    public String generateRandomAlphanumeric(int length) {
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            builder.append(ALPHANUMERIC[new Random().nextInt(ALPHANUMERIC.length)]);
+        }
+        return builder.toString();
     }
 }

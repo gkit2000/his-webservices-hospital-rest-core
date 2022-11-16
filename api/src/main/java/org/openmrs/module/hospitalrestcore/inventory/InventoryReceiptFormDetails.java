@@ -10,8 +10,11 @@ import java.math.BigDecimal;
 
 public class InventoryReceiptFormDetails implements Serializable, Comparable<InventoryReceiptFormDetails> {
 
+    private Integer id;
     private String drugName;
+    private String drugUuid;
     private String formulationName;
+    private String formulationUuid;
 
     private Integer rate;
     private Integer quantity;
@@ -19,18 +22,29 @@ public class InventoryReceiptFormDetails implements Serializable, Comparable<Inv
     private BigDecimal sgst;
     private BigDecimal cgst;
     private BigDecimal mrPrice;
+    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     private String batchNo;
     private String companyName;
     private String dateManufacture;
     private String dateExpiry;
     private String receiptDate;
+    private String receiptNumber;
 
     private float waiverPercentage;
 
-    private BigDecimal unitPrice;
-    private BigDecimal totalAmount;
-    private BigDecimal amountAfterGST;
+    private String receiptUuid;
+    private Boolean deleted;
+    private Boolean retired;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getDrugName() {
         return drugName;
@@ -40,12 +54,28 @@ public class InventoryReceiptFormDetails implements Serializable, Comparable<Inv
         this.drugName = drugName;
     }
 
+    public String getDrugUuid() {
+        return drugUuid;
+    }
+
+    public void setDrugUuid(String drugUuid) {
+        this.drugUuid = drugUuid;
+    }
+
     public String getFormulationName() {
         return formulationName;
     }
 
     public void setFormulationName(String formulationName) {
         this.formulationName = formulationName;
+    }
+
+    public String getFormulationUuid() {
+        return formulationUuid;
+    }
+
+    public void setFormulationUuid(String formulationUuid) {
+        this.formulationUuid = formulationUuid;
     }
 
     public Integer getRate() {
@@ -144,12 +174,28 @@ public class InventoryReceiptFormDetails implements Serializable, Comparable<Inv
         this.waiverPercentage = waiverPercentage;
     }
 
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
+    public String getReceiptUuid() {
+        return receiptUuid;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setReceiptUuid(String receiptUuid) {
+        this.receiptUuid = receiptUuid;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Boolean getRetired() {
+        return retired;
+    }
+
+    public void setRetired(Boolean retired) {
+        this.retired = retired;
     }
 
     public BigDecimal getTotalAmount() {
@@ -160,12 +206,20 @@ public class InventoryReceiptFormDetails implements Serializable, Comparable<Inv
         this.totalAmount = totalAmount;
     }
 
-    public BigDecimal getAmountAfterGST() {
-        return amountAfterGST;
+    public BigDecimal getBillAmount() {
+        return billAmount;
     }
 
-    public void setAmountAfterGST(BigDecimal amountAfterGST) {
-        this.amountAfterGST = amountAfterGST;
+    public void setBillAmount(BigDecimal billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
     }
 
     @Override

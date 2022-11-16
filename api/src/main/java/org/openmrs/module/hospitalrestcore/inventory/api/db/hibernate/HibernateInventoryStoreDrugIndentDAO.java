@@ -3,7 +3,6 @@ package org.openmrs.module.hospitalrestcore.inventory.api.db.hibernate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -41,8 +40,7 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
     @Override
     public List<InventoryStoreDrugIndent> listAllInventoryStoreDrugIndent() throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
-        criteria.add(Restrictions.eq("retired", false))
-                .addOrder(Order.desc("createdDate"));
+        criteria.add(Restrictions.eq("retired", false));
         return criteria.list();
     }
 
@@ -51,8 +49,7 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
     public InventoryStoreDrugIndent getInventoryStoreDrugIndentByUuidString(String uuid) throws DAOException {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(mappedClass);
         criteria.add(Restrictions.eq("uuid", uuid))
-                .add(Restrictions.eq("retired", false))
-                .addOrder(Order.desc("createdDate"));
+                .add(Restrictions.eq("retired", false));
         return (InventoryStoreDrugIndent) criteria.uniqueResult();
     }
 
@@ -79,8 +76,7 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
             criteria.add(Restrictions.eq("store.id", storeId));
         }
 
-        criteria.add(Restrictions.eq("retired", false))
-                .addOrder(Order.desc("createdDate"));
+        criteria.add(Restrictions.eq("retired", false));
         if (storeName != null) {
             List<InventoryStore> inventoryStores = hospitalRestCoreService.listAllInventoryStore();
             InventoryStore inventoryStore = new InventoryStore();
@@ -174,8 +170,7 @@ public class HibernateInventoryStoreDrugIndentDAO extends HibernateSingleClassDA
             criteria.add(Restrictions.eq("store.id", storeId));
         }
 
-        criteria.add(Restrictions.eq("retired", false))
-                .addOrder(Order.desc("createdDate"));
+        criteria.add(Restrictions.eq("retired", false));
         if (storeName != null) {
             List<InventoryStore> inventoryStores = hospitalRestCoreService.listAllInventoryStore();
             InventoryStore inventoryStore = new InventoryStore();

@@ -1,5 +1,6 @@
 package org.openmrs.module.hospitalrestcore.inventory;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.hospitalrestcore.CustomBaseOpenmrsObject;
 
 import java.io.Serializable;
@@ -8,31 +9,34 @@ import java.util.Date;
 
 /**
  * @author Mujuzi Moses
+ *
  */
-public class InventoryReceiptFormDetail extends CustomBaseOpenmrsObject implements Serializable {
+
+public class InventoryReceiptForm extends CustomBaseOpenmrsObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Integer id;
     private InventoryDrug drug;
     private InventoryDrugFormulation formulation;
+
     private Integer rate;
     private Integer quantity;
     private BigDecimal vat;
     private BigDecimal sgst;
     private BigDecimal cgst;
     private BigDecimal mrPrice;
+    private BigDecimal totalAmount;
+    private BigDecimal billAmount;
 
     private String batchNo;
     private String companyName;
     private Date dateManufacture;
     private Date dateExpiry;
     private Date receiptDate;
+    private String receiptNumber;
 
     private float waiverPercentage;
 
-    private BigDecimal unitPrice;
-    private BigDecimal totalAmount;
-    private BigDecimal amountAfterGST;
 
     public Integer getId() {
         return id;
@@ -40,22 +44,6 @@ public class InventoryReceiptFormDetail extends CustomBaseOpenmrsObject implemen
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public InventoryDrug getDrug() {
-        return drug;
-    }
-
-    public void setDrug(InventoryDrug drug) {
-        this.drug = drug;
-    }
-
-    public InventoryDrugFormulation getFormulation() {
-        return formulation;
-    }
-
-    public void setFormulation(InventoryDrugFormulation formulation) {
-        this.formulation = formulation;
     }
 
     public Integer getRate() {
@@ -72,6 +60,51 @@ public class InventoryReceiptFormDetail extends CustomBaseOpenmrsObject implemen
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public String getCompanyNameShort() {
+        return StringUtils.isNotBlank(companyName) && companyName.length() > 10 ? companyName.substring(0, 7) + "..."
+                : companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public float getWaiverPercentage() {
+        return waiverPercentage;
+    }
+
+    public void setWaiverPercentage(float waiverPercentage) {
+        this.waiverPercentage = waiverPercentage;
+    }
+
+    public InventoryDrug getDrug() {
+        return drug;
+    }
+
+    public void setDrug(InventoryDrug drug) {
+        this.drug = drug;
+    }
+
+    public InventoryDrugFormulation getFormulation() {
+        return formulation;
+    }
+
+    public void setFormulation(InventoryDrugFormulation formulation) {
+        this.formulation = formulation;
     }
 
     public BigDecimal getVat() {
@@ -106,22 +139,6 @@ public class InventoryReceiptFormDetail extends CustomBaseOpenmrsObject implemen
         this.mrPrice = mrPrice;
     }
 
-    public String getBatchNo() {
-        return batchNo;
-    }
-
-    public void setBatchNo(String batchNo) {
-        this.batchNo = batchNo;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
     public Date getDateManufacture() {
         return dateManufacture;
     }
@@ -146,22 +163,6 @@ public class InventoryReceiptFormDetail extends CustomBaseOpenmrsObject implemen
         this.receiptDate = receiptDate;
     }
 
-    public float getWaiverPercentage() {
-        return waiverPercentage;
-    }
-
-    public void setWaiverPercentage(float waiverPercentage) {
-        this.waiverPercentage = waiverPercentage;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public BigDecimal getTotalAmount() {
         return totalAmount;
     }
@@ -170,11 +171,19 @@ public class InventoryReceiptFormDetail extends CustomBaseOpenmrsObject implemen
         this.totalAmount = totalAmount;
     }
 
-    public BigDecimal getAmountAfterGST() {
-        return amountAfterGST;
+    public BigDecimal getBillAmount() {
+        return billAmount;
     }
 
-    public void setAmountAfterGST(BigDecimal amountAfterGST) {
-        this.amountAfterGST = amountAfterGST;
+    public void setBillAmount(BigDecimal billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public String getReceiptNumber() {
+        return receiptNumber;
+    }
+
+    public void setReceiptNumber(String receiptNumber) {
+        this.receiptNumber = receiptNumber;
     }
 }
